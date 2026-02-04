@@ -33,6 +33,7 @@ import { cn } from '@/lib/utils';
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
+  const [activeCategory, setActiveCategory] = useState<string | null>(null); // Controla se as especialidades devem aparecer
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
@@ -250,13 +251,21 @@ export default function MenuPage() {
                   <p className="text-muted-foreground text-lg font-medium">Em breve, muitas delícias para você!</p>
                 </div>
               ) : (
-                <Tabs defaultValue={mainNames[0]} className="w-full" onValueChange={() => setSelectedSubId('all')}>
+                <Tabs 
+                  defaultValue={mainNames[0]} 
+                  className="w-full" 
+                  onValueChange={(val) => {
+                    setActiveCategory(val);
+                    setSelectedSubId('all');
+                  }}
+                >
                   <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
                     <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
                       {mainNames.map((name) => (
                         <TabsTrigger 
                           key={name} 
                           value={name}
+                          onClick={() => setActiveCategory(name)}
                           className="rounded-2xl px-6 py-3 md:px-8 md:py-4 text-base md:text-lg font-black tracking-tight border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 flex items-center gap-2 group shadow-sm whitespace-nowrap"
                         >
                           <span className="opacity-70 group-data-[state=active]:opacity-100 transition-opacity">
@@ -275,8 +284,8 @@ export default function MenuPage() {
                     return (
                       <TabsContent key={name} value={name} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none space-y-10">
                         
-                        {/* Subcategorias (Filtros de Sabores/Tipos) */}
-                        {hasSubCategories && (
+                        {/* Subcategorias (Filtros de Sabores/Tipos) - Só aparece se a categoria principal for clicada */}
+                        {hasSubCategories && activeCategory === name && (
                           <div className="flex flex-col items-center gap-5">
                             <div className="flex items-center gap-2 px-4 py-1.5 bg-muted/50 rounded-full border border-muted-foreground/10">
                               <Filter className="h-3.5 w-3.5 text-muted-foreground" />
