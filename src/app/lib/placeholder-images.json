@@ -1,0 +1,41 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-pizza",
+      "description": "A delicious hot pizza with melting cheese",
+      "imageUrl": "https://picsum.photos/seed/pizzapp-hero/1200/600",
+      "imageHint": "delicious pizza"
+    },
+    {
+      "id": "pepperoni-pizza",
+      "description": "Traditional pepperoni pizza",
+      "imageUrl": "https://picsum.photos/seed/pepperoni/600/400",
+      "imageHint": "pepperoni pizza"
+    },
+    {
+      "id": "margherita-pizza",
+      "description": "Fresh margherita pizza with basil",
+      "imageUrl": "https://picsum.photos/seed/margherita/600/400",
+      "imageHint": "margherita pizza"
+    },
+    {
+      "id": "sweet-pizza",
+      "description": "Chocolate and strawberry dessert pizza",
+      "imageUrl": "https://picsum.photos/seed/dessert/600/400",
+      "imageHint": "dessert pizza"
+    },
+    {
+      "id": "soft-drink",
+      "description": "Refreshing soda in a glass with ice",
+      "imageUrl": "https://picsum.photos/seed/soda/600/400",
+      "imageHint": "soft drink"
+    },
+    {
+      "id": "pizzeria-logo",
+      "description": "A friendly pizzeria logo",
+      "imageUrl": "https://picsum.photos/seed/logo-piz/200/200",
+      "imageHint": "pizza logo"
+    }
+  ]
+}
