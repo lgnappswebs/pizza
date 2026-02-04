@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link';
@@ -48,17 +49,17 @@ export function Header() {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-2 md:gap-4">
+        <nav className="flex items-center gap-1.5 md:gap-4">
           <Link href="/menu">
             <Button variant="ghost" className="hidden sm:flex font-medium text-lg">Cardápio</Button>
           </Link>
           
           <Link href="/checkout">
-            <Button className="relative rounded-full h-10 md:h-12 px-4 md:px-6 bg-primary hover:bg-primary/90 text-white font-bold transition-transform hover:scale-105 active:scale-95">
-              <ShoppingBasket className="mr-1 md:mr-2 h-5 md:h-6 w-5 md:w-6" />
-              <span className="text-sm md:text-lg">Pedido</span>
+            <Button className="relative rounded-full h-9 md:h-12 px-3 md:px-6 bg-primary hover:bg-primary/90 text-white font-bold transition-transform hover:scale-105 active:scale-95">
+              <ShoppingBasket className="mr-1 md:mr-2 h-4 md:h-6 w-4 md:w-6" />
+              <span className="text-xs md:text-lg">Pedido</span>
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 md:h-6 w-5 md:w-6 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-[10px] md:text-xs font-bold border-2 border-background">
+                <span className="absolute -top-1 -right-1 flex h-4 md:h-6 w-4 md:w-6 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-[8px] md:text-xs font-bold border-2 border-background">
                   {itemCount}
                 </span>
               )}
@@ -68,8 +69,8 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full h-10 w-10 md:h-12 md:w-12 border-2">
-                  <User className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                <Button variant="outline" size="icon" className="rounded-full h-9 w-9 md:h-12 md:w-12 border-2">
+                  <User className="h-4 w-4 md:h-6 md:w-6 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 rounded-2xl">
@@ -88,7 +89,7 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Link href="/login">
-              <Button variant="outline" className="rounded-full h-10 md:h-12 px-4 md:px-6 font-bold border-2">
+              <Button variant="outline" className="rounded-full h-9 md:h-12 px-3 md:px-6 font-bold border-2 text-xs md:text-base">
                 Entrar
               </Button>
             </Link>
