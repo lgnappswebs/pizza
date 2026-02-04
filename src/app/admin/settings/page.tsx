@@ -186,7 +186,7 @@ export default function AdminSettingsPage() {
 
       <main className="flex-1 p-8 overflow-y-auto pb-24">
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Ajustes do Aplicativo</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Ajustes do Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
