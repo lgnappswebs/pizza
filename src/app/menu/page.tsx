@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { Header } from '@/components/pizzeria/Header';
+import { Footer } from '@/components/pizzeria/Footer';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck, Clock, AlertTriangle } from 'lucide-react';
@@ -151,6 +152,8 @@ export default function MenuPage() {
           )}
         </div>
       </main>
+
+      <Footer />
 
       {cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-6 left-4 md:left-8 z-40">
