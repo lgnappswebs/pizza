@@ -18,7 +18,9 @@ import {
   Layers,
   Image as ImageIcon,
   ExternalLink,
-  ChevronLeft
+  ChevronLeft,
+  Wallet,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -37,6 +39,13 @@ import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
@@ -104,7 +113,7 @@ export default function AdminOrdersPage() {
           </Link>
           <Link href="/admin/finance">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <SettingsIcon className="mr-3 h-5 w-5" /> Financeiro
+              <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
@@ -227,35 +236,56 @@ export default function AdminOrdersPage() {
         )}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 overflow-x-auto">
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <LayoutDashboard className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Painel</span>
-        </Link>
-        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <PizzaIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Prods</span>
         </Link>
         <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <Layers className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Cats</span>
         </Link>
-        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
-          <Package className="h-5 w-5" />
-          <span className="text-[10px] font-black uppercase">Peds</span>
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <PizzaIcon className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Prods</span>
         </Link>
-        <Link href="/admin/finance" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <SettingsIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Fin</span>
-        </Link>
-        <Link href="/admin/banners" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <ImageIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Banners</span>
-        </Link>
-        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <SettingsIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Personalizar</span>
-        </Link>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+              <Plus className="h-5 w-5" />
+              <span className="text-[10px] font-bold uppercase">Mais</span>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+            <DropdownMenuItem asChild>
+              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Package className="mr-2 h-4 w-4" /> Pedidos
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+                <Wallet className="mr-2 h-4 w-4" /> Financeiro
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+                <ImageIcon className="mr-2 h-4 w-4" /> Banners
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+                <SettingsIcon className="mr-2 h-4 w-4" /> Personalizar App
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/menu" target="_blank" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <ExternalLink className="mr-2 h-4 w-4" /> Ver Cardápio
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </nav>
     </div>
   );
