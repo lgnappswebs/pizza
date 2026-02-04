@@ -36,6 +36,9 @@ export default function MenuPage() {
     p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Define o e-mail administrativo autorizado
+  const isAdmin = user && user.email === 'lgngregorio@icloud.com';
+
   if (loadingCats || loadingProds) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -134,8 +137,8 @@ export default function MenuPage() {
         </div>
       )}
 
-      {/* Botão Suspenso do Administrador */}
-      {user && (
+      {/* Botão Suspenso do Administrador - Apenas visível para o admin autorizado */}
+      {isAdmin && (
         <div className="fixed bottom-6 right-4 md:right-8 z-40">
           <Link href="/admin/dashboard">
             <Button size="icon" className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all">
