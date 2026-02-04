@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { User, MapPin, Phone, Save, Loader2, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useUser, useFirestore, useDoc, useMemoFirebase, updateDocumentNonBlocking } from '@/firebase';
+import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 
@@ -73,7 +73,8 @@ export default function AccountPage() {
     if (!user) return;
     setLoading(true);
 
-    updateDocumentNonBlocking(doc(firestore, 'users', user.uid), formData);
+    // Usamos setDocumentNonBlocking com merge: true para garantir que o documento seja criado caso não exista
+    setDocumentNonBlocking(doc(firestore, 'users', user.uid), formData, { merge: true });
 
     setTimeout(() => {
       setLoading(false);
