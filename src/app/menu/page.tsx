@@ -75,14 +75,17 @@ export default function MenuPage() {
   const mainNames = useMemo(() => {
     if (!categories) return [];
     const names = Object.keys(groupedCategories).sort((a, b) => {
-      // PRIORIDADE ABSOLUTA: "Pizzas" sempre em primeiro
-      const isAPizza = a.toLowerCase() === 'pizzas';
-      const isBPizza = b.toLowerCase() === 'pizzas';
+      const aLow = a.toLowerCase();
+      const bLow = b.toLowerCase();
+      
+      // PRIORIDADE ABSOLUTA: "Pizzas" ou "Pizza" sempre em primeiro
+      const isAPizza = aLow === 'pizzas' || aLow === 'pizza';
+      const isBPizza = bLow === 'pizzas' || bLow === 'pizza';
       
       if (isAPizza && !isBPizza) return -1;
       if (!isAPizza && isBPizza) return 1;
       
-      // Caso contrário, usa a ordem do banco
+      // Caso contrário, usa a ordem do banco baseada no menor order das subcategorias
       const minA = Math.min(...groupedCategories[a].map(c => c.order));
       const minB = Math.min(...groupedCategories[b].map(c => c.order));
       return minA - minB;
@@ -100,7 +103,7 @@ export default function MenuPage() {
   useEffect(() => {
     if (mainNames.length > 0 && !activeCategory) {
       // Garante que Pizzas esteja selecionada por padrão
-      const pizzaName = mainNames.find(n => n.toLowerCase() === 'pizzas');
+      const pizzaName = mainNames.find(n => n.toLowerCase() === 'pizzas' || n.toLowerCase() === 'pizza');
       setActiveCategory(pizzaName || mainNames[0]);
     }
   }, [mainNames, activeCategory]);
@@ -203,13 +206,13 @@ export default function MenuPage() {
           )}
 
           <div className="mb-10 text-center space-y-3 min-h-[120px]">
-            {!loadingConfigs && (
+            {config && (
               <>
                 <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-                  {config?.menuTitle || "Nosso Cardápio"}
+                  {config.menuTitle || "Nosso Cardápio"}
                 </h1>
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-                  {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+                  {config.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
                 </p>
               </>
             )}
