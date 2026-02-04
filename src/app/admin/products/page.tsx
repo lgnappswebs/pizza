@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Plus, 
   Search, 
@@ -34,15 +34,25 @@ import {
   useMemoFirebase, 
   addDocumentNonBlocking, 
   updateDocumentNonBlocking, 
-  deleteDocumentNonBlocking 
+  deleteDocumentNonBlocking,
+  useUser 
 } from '@/firebase';
 import { collection, doc, query, orderBy } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 
 export default function AdminProductsPage() {
   const firestore = useFirestore();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -60,6 +70,10 @@ export default function AdminProductsPage() {
 
   const { data: categories } = useCollection(categoriesQuery);
   const { data: products, isLoading } = useCollection(productsQuery);
+
+  if (isUserLoading || !user) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
 
   const filteredProducts = products?.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -114,7 +128,6 @@ export default function AdminProductsPage() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar - Similar ao Dashboard para consistência */}
       <aside className="w-64 bg-white border-r hidden md:flex flex-col">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
@@ -132,7 +145,7 @@ export default function AdminProductsPage() {
           </Link>
           <Link href="/admin/orders">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <PizzaIcon className="mr-3 h-5 w-5" /> Pedidos
+              <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/settings">
@@ -211,7 +224,6 @@ export default function AdminProductsPage() {
           </CardContent>
         </Card>
 
-        {/* Product Modal */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px] rounded-3xl">
             <DialogHeader>

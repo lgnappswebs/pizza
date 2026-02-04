@@ -37,11 +37,18 @@ import {
   Cell 
 } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { useEffect } from 'react';
 
 export default function AdminDashboard() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
 
   const ordersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc'), limit(5)), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
@@ -51,13 +58,8 @@ export default function AdminDashboard() {
   const { data: allProducts } = useCollection(productsQuery);
   const { data: allOrders } = useCollection(allOrdersQuery);
 
-  if (isUserLoading) {
+  if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
-  }
-
-  if (!user) {
-    router.push('/admin/login');
-    return null;
   }
 
   const handleLogout = async () => {
@@ -73,7 +75,6 @@ export default function AdminDashboard() {
     return orderDate.toDateString() === today.toDateString();
   }).length || 0;
 
-  // Mock data para o gráfico (pode ser gerada dos pedidos reais futuramente)
   const chartData = [
     { name: 'Seg', total: 1200 },
     { name: 'Ter', total: 900 },

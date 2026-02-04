@@ -26,14 +26,24 @@ import {
   useFirestore, 
   useMemoFirebase, 
   setDocumentNonBlocking,
-  addDocumentNonBlocking
+  addDocumentNonBlocking,
+  useUser 
 } from '@/firebase';
 import { collection, doc } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
 
 export default function AdminSettingsPage() {
   const firestore = useFirestore();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs } = useCollection(configQuery);
@@ -56,6 +66,10 @@ export default function AdminSettingsPage() {
       });
     }
   }, [config]);
+
+  if (isUserLoading || !user) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
 
   const handleSave = () => {
     setLoading(true);

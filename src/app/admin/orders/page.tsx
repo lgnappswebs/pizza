@@ -25,16 +25,32 @@ import {
   useCollection, 
   useFirestore, 
   useMemoFirebase, 
-  updateDocumentNonBlocking 
+  updateDocumentNonBlocking,
+  useUser 
 } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
+
   const ordersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
   const { data: orders, isLoading } = useCollection(ordersQuery);
+
+  if (isUserLoading || !user) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
 
   const updateStatus = (orderId: string, newStatus: string) => {
     updateDocumentNonBlocking(doc(firestore, 'pedidos', orderId), { status: newStatus });
