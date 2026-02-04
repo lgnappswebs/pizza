@@ -79,14 +79,12 @@ export default function MenuPage() {
       const aLow = a.trim().toLowerCase();
       const bLow = b.trim().toLowerCase();
       
-      // PRIORIDADE ABSOLUTA: "Pizzas" ou "Pizza" sempre em primeiro lugar
       const isAPizza = aLow === 'pizzas' || aLow === 'pizza';
       const isBPizza = bLow === 'pizzas' || bLow === 'pizza';
       
       if (isAPizza && !isBPizza) return -1;
       if (!isAPizza && isBPizza) return 1;
       
-      // Caso contrário, usa a ordem do banco
       const minA = Math.min(...groupedCategories[a].map(c => c.order || 0));
       const minB = Math.min(...groupedCategories[b].map(c => c.order || 0));
       return minA - minB;
@@ -95,7 +93,6 @@ export default function MenuPage() {
     return names;
   }, [groupedCategories]);
 
-  // Garantir que a aba de Pizzas seja selecionada e a rolagem esteja no início
   useEffect(() => {
     if (mainNames.length > 0) {
       const pizzaName = mainNames.find(n => {
@@ -474,16 +471,16 @@ export default function MenuPage() {
             <Button className="h-auto min-h-[5rem] w-full px-4 md:px-6 py-3 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg md:text-2xl font-black shadow-2xl flex flex-row items-center justify-between gap-2 md:gap-4 transform hover:scale-[1.02] active:scale-95 transition-all border-4 border-white/30">
               <div className="flex items-center gap-2 md:gap-3 shrink-0">
                 <div className="bg-white/30 rounded-full p-2 md:p-2.5 shadow-sm shrink-0">
-                  <ShoppingBasket className="h-5 w-5 md:h-8 md:w-8" />
+                  <ShoppingBasket className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
                 <div className="text-left leading-tight">
-                  <span className="block text-[8px] md:text-[9px] uppercase font-black opacity-80 mb-0.5">Carrinho</span>
-                  <span className="text-base md:text-xl whitespace-nowrap">Ver Pedido</span>
+                  <span className="block text-[10px] md:text-[9px] uppercase font-black opacity-80 mb-0.5">Carrinho</span>
+                  <span className="text-xl md:text-xl whitespace-nowrap">Ver Pedido</span>
                 </div>
               </div>
               <div className="flex items-center gap-1.5 md:gap-2 bg-black/15 px-3 md:px-4 py-1.5 md:py-2 rounded-2xl border-2 border-white/20 shadow-inner shrink-0">
-                <span className="text-[10px] md:text-sm font-bold opacity-80">Total:</span>
-                <span className="text-base md:text-2xl font-black whitespace-nowrap">R$ {total.toFixed(2)}</span>
+                <span className="text-[12px] md:text-sm font-bold opacity-80">Total:</span>
+                <span className="text-xl md:text-2xl font-black whitespace-nowrap">R$ {total.toFixed(2)}</span>
               </div>
             </Button>
           </Link>
