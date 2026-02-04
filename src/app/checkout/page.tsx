@@ -11,13 +11,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Trash2, Send, ChevronLeft, MapPin, User, Phone, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
+import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
 
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
   const firestore = useFirestore();
+  const { user } = useUser();
+  
   const [form, setForm] = useState({
     name: '',
     address: '',
@@ -25,6 +27,22 @@ export default function CheckoutPage() {
     neighborhood: '',
     phone: ''
   });
+
+  // Busca dados do usuário logado para preencher automaticamente
+  const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
+  const { data: userProfile, isLoading: loadingProfile } = useDoc(userDocRef);
+
+  useEffect(() => {
+    if (userProfile) {
+      setForm({
+        name: userProfile.name || '',
+        address: `${userProfile.address || ''}, ${userProfile.number || ''}`,
+        complement: userProfile.complement || '',
+        neighborhood: userProfile.neighborhood || '',
+        phone: userProfile.phone || ''
+      });
+    }
+  }, [userProfile]);
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs } = useCollection(configQuery);
@@ -52,7 +70,8 @@ export default function CheckoutPage() {
         customerPhoneNumber: form.phone,
         createdAt: serverTimestamp(),
         totalAmount: total,
-        status: 'New'
+        status: 'New',
+        userId: user?.uid || null
       };
 
       await addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
@@ -208,69 +227,78 @@ export default function CheckoutPage() {
             <Card className="rounded-3xl border-2">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold">Dados de Entrega</CardTitle>
+                {user && !loadingProfile && (
+                  <p className="text-xs text-green-600 font-bold">Endereço carregado da sua conta!</p>
+                )}
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-lg font-semibold flex items-center gap-2">
-                    <User className="h-5 w-5 text-primary" /> Nome Completo
-                  </Label>
-                  <Input 
-                    id="name" 
-                    placeholder="Como devemos te chamar?" 
-                    className="h-14 rounded-xl text-lg"
-                    value={form.name}
-                    onChange={(e) => setForm({...form, name: e.target.value})}
-                  />
-                </div>
+                {loadingProfile ? (
+                  <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-lg font-semibold flex items-center gap-2">
+                        <User className="h-5 w-5 text-primary" /> Nome Completo
+                      </Label>
+                      <Input 
+                        id="name" 
+                        placeholder="Como devemos te chamar?" 
+                        className="h-14 rounded-xl text-lg"
+                        value={form.name}
+                        onChange={(e) => setForm({...form, name: e.target.value})}
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-lg font-semibold flex items-center gap-2">
-                    <Phone className="h-5 w-5 text-primary" /> Telefone / WhatsApp
-                  </Label>
-                  <Input 
-                    id="phone" 
-                    placeholder="(00) 00000-0000" 
-                    className="h-14 rounded-xl text-lg"
-                    value={form.phone}
-                    onChange={(e) => setForm({...form, phone: e.target.value})}
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-lg font-semibold flex items-center gap-2">
+                        <Phone className="h-5 w-5 text-primary" /> Telefone / WhatsApp
+                      </Label>
+                      <Input 
+                        id="phone" 
+                        placeholder="(00) 00000-0000" 
+                        className="h-14 rounded-xl text-lg"
+                        value={form.phone}
+                        onChange={(e) => setForm({...form, phone: e.target.value})}
+                      />
+                    </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="address" className="text-lg font-semibold flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary" /> Endereço (Rua e Número)
-                  </Label>
-                  <Input 
-                    id="address" 
-                    placeholder="Ex: Rua das Pizzas, 123" 
-                    className="h-14 rounded-xl text-lg"
-                    value={form.address}
-                    onChange={(e) => setForm({...form, address: e.target.value})}
-                  />
-                </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address" className="text-lg font-semibold flex items-center gap-2">
+                        <MapPin className="h-5 w-5 text-primary" /> Endereço (Rua e Número)
+                      </Label>
+                      <Input 
+                        id="address" 
+                        placeholder="Ex: Rua das Pizzas, 123" 
+                        className="h-14 rounded-xl text-lg"
+                        value={form.address}
+                        onChange={(e) => setForm({...form, address: e.target.value})}
+                      />
+                    </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="neighborhood" className="text-lg font-semibold">Bairro</Label>
-                    <Input 
-                      id="neighborhood" 
-                      placeholder="Ex: Centro" 
-                      className="h-14 rounded-xl text-lg"
-                      value={form.neighborhood}
-                      onChange={(e) => setForm({...form, neighborhood: e.target.value})}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="complement" className="text-lg font-semibold">Complemento</Label>
-                    <Input 
-                      id="complement" 
-                      placeholder="Ex: Ap 42" 
-                      className="h-14 rounded-xl text-lg"
-                      value={form.complement}
-                      onChange={(e) => setForm({...form, complement: e.target.value})}
-                    />
-                  </div>
-                </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="neighborhood" className="text-lg font-semibold">Bairro</Label>
+                        <Input 
+                          id="neighborhood" 
+                          placeholder="Ex: Centro" 
+                          className="h-14 rounded-xl text-lg"
+                          value={form.neighborhood}
+                          onChange={(e) => setForm({...form, neighborhood: e.target.value})}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="complement" className="text-lg font-semibold">Complemento</Label>
+                        <Input 
+                          id="complement" 
+                          placeholder="Ex: Ap 42" 
+                          className="h-14 rounded-xl text-lg"
+                          value={form.complement}
+                          onChange={(e) => setForm({...form, complement: e.target.value})}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <Button 
                   onClick={handleSendToWhatsApp}
@@ -280,9 +308,6 @@ export default function CheckoutPage() {
                   {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-8 w-8" />}
                   {loading ? 'Processando...' : 'Enviar Pedido pelo WhatsApp'}
                 </Button>
-                <p className="text-center text-sm text-muted-foreground mt-4">
-                  Ao clicar em enviar, seu pedido será registrado e você será redirecionado para o WhatsApp.
-                </p>
               </CardContent>
             </Card>
           </div>

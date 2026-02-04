@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn } from 'lucide-react';
+import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -76,15 +76,19 @@ export function Header() {
                   <User className="h-7 w-7 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 rounded-2xl">
-                <DropdownMenuLabel className="font-bold">
-                  Olá, {user.displayName || user.email?.split('@')[0]}
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
+                <DropdownMenuLabel className="font-bold flex flex-col gap-1">
+                  <span className="text-xs text-muted-foreground">Olá,</span>
+                  <span className="truncate">{user.displayName || user.email?.split('@')[0]}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/menu" className="cursor-pointer">Cardápio</Link>
+                  <Link href="/account" className="cursor-pointer flex items-center h-10 rounded-xl">
+                    <User className="mr-2 h-4 w-4" /> Minha Conta
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer flex items-center h-10 rounded-xl">
                   <LogOut className="mr-2 h-4 w-4" />
                   Sair
                 </DropdownMenuItem>
