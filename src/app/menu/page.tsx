@@ -54,7 +54,7 @@ export default function MenuPage() {
 
   const { data: categories, isLoading: loadingCats } = useCollection(categoriesQuery);
   const { data: products, isLoading: loadingProds } = useCollection(productsQuery);
-  const { data: configs } = useCollection(configQuery);
+  const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
   const config = configs?.[0];
 
   const groupedCategories = useMemo(() => {
@@ -132,7 +132,7 @@ export default function MenuPage() {
     }
   };
 
-  if (loadingCats || loadingProds) {
+  if (loadingCats || loadingProds || loadingConfigs) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-12 w-12 text-primary animate-spin" />
@@ -146,7 +146,7 @@ export default function MenuPage() {
       <main className="flex-1 pb-24">
         <div className="container mx-auto px-4 py-8">
           
-          {configs && config && !config.isStoreOpen && (
+          {config && !config.isStoreOpen && (
             <Alert variant="destructive" className="mb-8 rounded-3xl border-2 bg-red-50 text-red-900 border-red-200 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
               <div className="flex gap-4">
                 <div className="bg-red-600 p-3 rounded-2xl shrink-0 h-fit">
@@ -169,16 +169,12 @@ export default function MenuPage() {
           )}
 
           <div className="mb-10 text-center space-y-3 min-h-[120px]">
-            {configs ? (
-              <>
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-                  {config?.menuTitle || "Nosso Cardápio"}
-                </h1>
-                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-                  {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
-                </p>
-              </>
-            ) : null}
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
+              {config?.menuTitle || "Nosso Cardápio"}
+            </h1>
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
+              {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+            </p>
           </div>
 
           <div className="max-w-xl mx-auto mb-12 relative group">

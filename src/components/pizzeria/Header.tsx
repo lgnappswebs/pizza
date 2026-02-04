@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Settings } from 'lucide-react';
+import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -30,14 +30,12 @@ export function Header() {
   const firestore = useFirestore();
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
-  const { data: configs } = useCollection(configQuery);
+  const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Busca o perfil do usuário para obter o nome cadastrado
   const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
   const { data: userProfile } = useDoc(userDocRef);
 
-  // Lógica para exibir primeiro e segundo nome
   const customerName = useMemo(() => {
     const fullName = userProfile?.name || user?.displayName;
     if (fullName) {
@@ -47,7 +45,6 @@ export function Header() {
       }
       return parts[0];
     }
-    // Fallback caso o nome ainda não tenha sido carregado ou definido
     return user?.email?.split('@')[0] || 'Cliente';
   }, [user, userProfile]);
 
@@ -55,7 +52,6 @@ export function Header() {
     signOut(auth);
   };
 
-  // Dinamicamente carrega o ícone se existir
   const LogoIcon = config?.logoIconName && (LucideIcons as any)[config.logoIconName] 
     ? (LucideIcons as any)[config.logoIconName] 
     : LucideIcons.Pizza;
@@ -66,7 +62,7 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white">
-              {configs ? (
+              {!loadingConfigs && configs ? (
                 config?.logoImageUrl ? (
                   <Image 
                     src={config.logoImageUrl} 
@@ -87,11 +83,8 @@ export function Header() {
               ) : null}
             </div>
             <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap min-w-[50px]">
-              {configs ? (
-                <>
-                  {config?.restaurantName || "PizzApp"} 
-                  {!config?.restaurantName && <span className="text-secondary ml-1">Rápido</span>}
-                </>
+              {!loadingConfigs && configs ? (
+                config?.restaurantName || "PizzApp Rápido"
               ) : null}
             </span>
           </Link>
