@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from 'react';
@@ -40,8 +41,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
-      <Link href="/login" className="fixed top-8 left-8 flex items-center text-primary font-bold hover:underline gap-1">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
+      <Link href="/login" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm p-2 rounded-full shadow-md">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       

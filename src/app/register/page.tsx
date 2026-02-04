@@ -41,7 +41,6 @@ export default function RegisterPage() {
     if (value.length > 11) value = value.slice(0, 11);
     
     if (value.length > 10) {
-      value = value.replace(/^(\22)(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
       value = `(${value.slice(0,2)}) ${value.slice(2,7)}-${value.slice(7,11)}`;
     } else if (value.length > 6) {
       value = `(${value.slice(0,2)}) ${value.slice(2,6)}-${value.slice(6,10)}`;
@@ -69,19 +68,15 @@ export default function RegisterPage() {
     setLoading(true);
     
     try {
-      // Inicia o cadastro no Firebase Auth
       initiateEmailSignUp(auth, formData.email, formData.password);
       
-      // Monitora o estado da criação do usuário
       const checkInterval = setInterval(async () => {
         if (auth.currentUser) {
           clearInterval(checkInterval);
           const user = auth.currentUser;
 
-          // Atualiza o DisplayName no Auth
           await updateProfile(user, { displayName: formData.name });
 
-          // Salva o perfil completo no Firestore
           const profileData = {
             uid: user.uid,
             name: formData.name,
@@ -103,7 +98,6 @@ export default function RegisterPage() {
         }
       }, 500);
 
-      // Timeout de segurança
       setTimeout(() => {
         clearInterval(checkInterval);
         if (loading) setLoading(false);
@@ -120,8 +114,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 py-12">
-      <Link href="/login" className="fixed top-8 left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 py-20 relative">
+      <Link href="/login" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm p-2 rounded-full shadow-md">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       
@@ -132,7 +126,6 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent className="pt-8">
           <form onSubmit={handleRegister} className="space-y-8">
-            {/* Informações Pessoais */}
             <div className="space-y-4">
               <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
                 <User className="h-5 w-5 text-primary" /> Dados Pessoais
@@ -175,7 +168,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Endereço */}
             <div className="space-y-4">
               <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
                 <MapPin className="h-5 w-5 text-primary" /> Endereço de Entrega
@@ -227,7 +219,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Senha */}
             <div className="space-y-4">
               <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
                 <Lock className="h-5 w-5 text-primary" /> Segurança
