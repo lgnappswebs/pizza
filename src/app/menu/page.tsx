@@ -107,7 +107,6 @@ export default function MenuPage() {
         setActiveCategory(pizzaName || mainNames[0]);
       }
       
-      // Forçar scroll para o início (esquerda) com um pequeno delay para garantir renderização mobile
       const timer = setTimeout(() => {
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = 0;
@@ -184,7 +183,6 @@ export default function MenuPage() {
     }
   };
 
-  // Prevenir o flash de conteúdo antigo garantindo que configs foram carregadas
   if (loadingCats || loadingProds || loadingConfigs || loadingBanners || !configs) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -251,7 +249,6 @@ export default function MenuPage() {
             )}
           </div>
 
-          {/* Banners Superiores */}
           {topBanners.length > 0 && !searchTerm && (
             <div className="mb-12 animate-in fade-in duration-700">
               {topBanners.map(banner => (
@@ -410,7 +407,6 @@ export default function MenuPage() {
                           </div>
                         )}
 
-                        {/* Banners Intermediários */}
                         {middleBanners.length > 0 && activeCategory === name && (
                           <div className="animate-in fade-in duration-700">
                             {middleBanners.map(banner => (
@@ -460,7 +456,6 @@ export default function MenuPage() {
             </>
           )}
 
-          {/* Banners Inferiores */}
           {bottomBanners.length > 0 && !searchTerm && (
             <div className="mt-16 animate-in fade-in duration-700">
               {bottomBanners.map(banner => (
@@ -476,19 +471,19 @@ export default function MenuPage() {
       {cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-8 left-4 right-4 md:left-auto md:right-12 z-40 flex justify-center md:justify-end">
           <Link href="/checkout" className="w-full max-w-md md:w-auto">
-            <Button className="h-auto min-h-[5rem] w-full px-6 py-3 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl md:text-2xl font-black shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 transform hover:scale-[1.02] active:scale-95 transition-all border-4 border-white/30">
-              <div className="flex items-center gap-3">
-                <div className="bg-white/30 rounded-full p-2.5 shadow-sm shrink-0">
-                  <ShoppingBasket className="h-6 w-6 md:h-8 md:w-8" />
+            <Button className="h-auto min-h-[5rem] w-full px-4 md:px-6 py-3 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-lg md:text-2xl font-black shadow-2xl flex flex-row items-center justify-between gap-2 md:gap-4 transform hover:scale-[1.02] active:scale-95 transition-all border-4 border-white/30">
+              <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                <div className="bg-white/30 rounded-full p-2 md:p-2.5 shadow-sm shrink-0">
+                  <ShoppingBasket className="h-5 w-5 md:h-8 md:w-8" />
                 </div>
                 <div className="text-left leading-tight">
-                  <span className="block text-[9px] uppercase font-black opacity-80 mb-0.5">Seu Carrinho</span>
-                  <span className="text-lg md:text-xl whitespace-nowrap">Ver Pedido</span>
+                  <span className="block text-[8px] md:text-[9px] uppercase font-black opacity-80 mb-0.5">Carrinho</span>
+                  <span className="text-base md:text-xl whitespace-nowrap">Ver Pedido</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-black/15 px-4 py-2 rounded-2xl border-2 border-white/20 shadow-inner">
-                <span className="text-xs md:text-sm font-bold opacity-80">Total:</span>
-                <span className="text-xl md:text-2xl font-black whitespace-nowrap">R$ {total.toFixed(2)}</span>
+              <div className="flex items-center gap-1.5 md:gap-2 bg-black/15 px-3 md:px-4 py-1.5 md:py-2 rounded-2xl border-2 border-white/20 shadow-inner shrink-0">
+                <span className="text-[10px] md:text-sm font-bold opacity-80">Total:</span>
+                <span className="text-base md:text-2xl font-black whitespace-nowrap">R$ {total.toFixed(2)}</span>
               </div>
             </Button>
           </Link>
