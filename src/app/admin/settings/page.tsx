@@ -23,7 +23,8 @@ import {
   LogOut,
   Layers,
   Image as ImageIcon,
-  ExternalLink
+  ExternalLink,
+  ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -176,6 +177,11 @@ export default function AdminSettingsPage() {
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
+          <Link href="/admin/finance">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <SettingsIcon className="mr-3 h-5 w-5" /> Financeiro
+            </Button>
+          </Link>
           <Link href="/admin/banners">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
@@ -202,6 +208,10 @@ export default function AdminSettingsPage() {
       </aside>
 
       <main className="flex-1 p-8 overflow-y-auto pb-32">
+        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
+          <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
+        </Link>
+
         <div className="mb-8 text-center md:text-left">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
@@ -507,6 +517,10 @@ export default function AdminSettingsPage() {
         <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <Package className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Peds</span>
+        </Link>
+        <Link href="/admin/finance" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <SettingsIcon className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Fin</span>
         </Link>
         <Link href="/admin/banners" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <ImageIcon className="h-5 w-5" />

@@ -16,7 +16,8 @@ import {
   Layers,
   ExternalLink,
   Eye,
-  EyeOff
+  EyeOff,
+  ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -164,6 +165,10 @@ export default function AdminBannersPage() {
       </aside>
 
       <main className="flex-1 p-8 pb-32 md:pb-8">
+        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
+          <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
+        </Link>
+
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Banners Promocionais</h1>
