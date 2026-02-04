@@ -270,7 +270,7 @@ export default function AdminSettingsPage() {
         </Link>
 
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
+          <h1 className="text-3xl font-black md:text-2xl lg:text-3xl">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
@@ -552,7 +552,10 @@ export default function AdminSettingsPage() {
                   >
                     <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
                       <RadioGroupItem value="pattern" id="bg-pattern" />
-                      <Label htmlFor="bg-pattern" className="flex-1 cursor-pointer font-bold">Padrão Pizzaria (Ícones)</Label>
+                      <div className="flex-1 cursor-pointer">
+                        <Label htmlFor="bg-pattern" className="font-bold block">Padrão Pizzaria (Ícones)</Label>
+                        <p className="text-[10px] text-muted-foreground">Aplica um fundo com textura leve na cor principal do app.</p>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
                       <RadioGroupItem value="color" id="bg-color" />
