@@ -20,47 +20,47 @@ export function Footer() {
     : null;
 
   return (
-    <footer className="bg-white border-t py-16 mt-auto">
+    <footer className="bg-white border-t py-10 mt-auto">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left items-start">
           {/* Endereço */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-black text-primary uppercase tracking-tight">Onde Estamos</h3>
-            <div className="flex items-start justify-center md:justify-start gap-3 text-muted-foreground">
-              <div className="bg-primary/10 p-2 rounded-full shrink-0">
-                <MapPin className="h-6 w-6 text-primary" />
-              </div>
-              <p className="text-lg leading-relaxed">{config.address || "Endereço não configurado"}</p>
+          <div className="space-y-3">
+            <h3 className="text-sm font-black text-primary uppercase tracking-widest">Onde Estamos</h3>
+            <div className="flex items-start justify-center md:justify-start gap-2 text-muted-foreground">
+              <MapPin className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <p className="text-sm leading-snug max-w-[250px] mx-auto md:mx-0">
+                {config.address || "Endereço não configurado"}
+              </p>
             </div>
           </div>
 
           {/* Contato */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-black text-primary uppercase tracking-tight">Contato</h3>
-            <div className="space-y-6">
+          <div className="space-y-3">
+            <h3 className="text-sm font-black text-primary uppercase tracking-widest">Contato</h3>
+            <div className="flex flex-col gap-3">
               {whatsappLink && (
                 <Link 
                   href={whatsappLink}
                   target="_blank"
-                  className="flex items-center justify-center md:justify-start gap-4 text-muted-foreground hover:text-primary transition-all group"
+                  className="flex items-center justify-center md:justify-start gap-3 text-muted-foreground hover:text-primary transition-all group"
                 >
-                  <div className="bg-green-500/10 p-3 rounded-2xl group-hover:bg-green-500 group-hover:text-white transition-all shadow-sm">
-                    <Phone className="h-7 w-7 shrink-0" />
+                  <div className="bg-green-500/10 p-2 rounded-xl group-hover:bg-green-500 group-hover:text-white transition-all">
+                    <Phone className="h-5 w-5 shrink-0" />
                   </div>
-                  <div>
-                    <p className="text-xs uppercase font-black opacity-60 tracking-widest">WhatsApp</p>
-                    <p className="text-xl font-black">{config.contactPhone || config.whatsappNumber || "(00) 00000-0000"}</p>
+                  <div className="text-left">
+                    <p className="text-[10px] uppercase font-bold opacity-50 leading-none">WhatsApp</p>
+                    <p className="text-base font-black">{config.contactPhone || config.whatsappNumber || "(00) 00000-0000"}</p>
                   </div>
                 </Link>
               )}
               {config.contactEmail && (
-                <div className="flex items-center justify-center md:justify-start gap-4 text-muted-foreground">
-                  <div className="bg-muted p-3 rounded-2xl shadow-sm">
-                    <Mail className="h-7 w-7 shrink-0" />
+                <div className="flex items-center justify-center md:justify-start gap-3 text-muted-foreground">
+                  <div className="bg-muted p-2 rounded-xl">
+                    <Mail className="h-5 w-5 shrink-0" />
                   </div>
-                  <div>
-                    <p className="text-xs uppercase font-black opacity-60 tracking-widest">E-mail</p>
-                    <p className="text-lg font-medium">{config.contactEmail}</p>
+                  <div className="text-left">
+                    <p className="text-[10px] uppercase font-bold opacity-50 leading-none">E-mail</p>
+                    <p className="text-sm font-medium">{config.contactEmail}</p>
                   </div>
                 </div>
               )}
@@ -68,17 +68,17 @@ export function Footer() {
           </div>
 
           {/* Redes Sociais */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-black text-primary uppercase tracking-tight">Siga a Gente</h3>
-            <div className="flex items-center justify-center md:justify-start gap-4 flex-wrap">
+          <div className="space-y-3">
+            <h3 className="text-sm font-black text-primary uppercase tracking-widest">Siga a Gente</h3>
+            <div className="flex items-center justify-center md:justify-start gap-3 flex-wrap">
               {config.instagramUrl && (
                 <Link 
                   href={config.instagramUrl.startsWith('http') ? config.instagramUrl : `https://${config.instagramUrl}`} 
                   target="_blank" 
                   title="Instagram"
-                  className="bg-muted hover:bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 hover:text-white text-muted-foreground p-4 rounded-2xl transition-all hover:scale-110 active:scale-90 shadow-md"
+                  className="bg-muted hover:bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 hover:text-white text-muted-foreground p-3 rounded-xl transition-all hover:scale-110 active:scale-90 shadow-sm"
                 >
-                  <Instagram className="h-8 w-8" />
+                  <Instagram className="h-6 w-6" />
                 </Link>
               )}
               {config.facebookUrl && (
@@ -86,9 +86,9 @@ export function Footer() {
                   href={config.facebookUrl.startsWith('http') ? config.facebookUrl : `https://${config.facebookUrl}`} 
                   target="_blank" 
                   title="Facebook"
-                  className="bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground p-4 rounded-2xl transition-all hover:scale-110 active:scale-90 shadow-md"
+                  className="bg-muted hover:bg-[#1877F2] hover:text-white text-muted-foreground p-3 rounded-xl transition-all hover:scale-110 active:scale-90 shadow-sm"
                 >
-                  <Facebook className="h-8 w-8" />
+                  <Facebook className="h-6 w-6" />
                 </Link>
               )}
               {config.tiktokUrl && (
@@ -96,18 +96,22 @@ export function Footer() {
                   href={config.tiktokUrl.startsWith('http') ? config.tiktokUrl : `https://${config.tiktokUrl}`} 
                   target="_blank" 
                   title="TikTok"
-                  className="bg-muted hover:bg-black hover:text-white text-muted-foreground p-4 rounded-2xl transition-all hover:scale-110 active:scale-90 shadow-md"
+                  className="bg-muted hover:bg-black hover:text-white text-muted-foreground p-3 rounded-xl transition-all hover:scale-110 active:scale-90 shadow-sm"
                 >
-                  <Music2 className="h-8 w-8" />
+                  <Music2 className="h-6 w-6" />
                 </Link>
               )}
             </div>
           </div>
         </div>
         
-        <div className="mt-20 pt-8 border-t text-center">
-          <p className="text-muted-foreground font-medium">© {new Date().getFullYear()} <span className="font-black text-primary uppercase">{config.restaurantName || "PizzApp"}</span></p>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/40 mt-3 font-bold">O sabor que você merece, na velocidade que você precisa</p>
+        <div className="mt-10 pt-6 border-t text-center space-y-2">
+          <p className="text-muted-foreground text-sm font-medium">
+            © {new Date().getFullYear()} <span className="font-black text-primary uppercase">{config.restaurantName || "PizzApp"}</span>
+          </p>
+          <p className="text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40 font-bold">
+            O sabor que você merece, na velocidade que você precisa
+          </p>
         </div>
       </div>
     </footer>
