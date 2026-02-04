@@ -25,8 +25,8 @@ import {
   ExternalLink,
   Wallet,
   ChevronLeft,
-  Plus,
-  X
+  X,
+  Type
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -34,6 +34,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -75,7 +76,7 @@ export default function AdminSettingsPage() {
   const [form, setForm] = useState({
     restaurantName: '',
     showLogoIcon: true,
-    logoIconName: '',
+    logoIconName: 'Pizza',
     logoImageUrl: '',
     whatsappNumber: '',
     deliveryFee: '',
@@ -87,7 +88,9 @@ export default function AdminSettingsPage() {
     heroBannerText: '',
     heroBannerImageUrl: '',
     primaryColor: '#FF4136',
+    secondaryColor: '#FFD700',
     backgroundColor: '#FFFFFF',
+    appBackgroundType: 'pattern',
     appBackgroundImageUrl: '',
     address: '',
     contactPhone: '',
@@ -129,25 +132,27 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     if (config) {
       setForm({
-        restaurantName: config.restaurantName || '',
+        restaurantName: config.restaurantName || 'PizzApp',
         showLogoIcon: config.showLogoIcon ?? true,
-        logoIconName: config.logoIconName || '',
+        logoIconName: config.logoIconName || 'Pizza',
         logoImageUrl: config.logoImageUrl || '',
         whatsappNumber: handlePhoneMask(config.whatsappNumber || ''),
         deliveryFee: formatCurrency((config.deliveryFee || 0).toFixed(2).toString().replace('.', '')),
         isStoreOpen: config.isStoreOpen ?? true,
-        openingHoursText: config.openingHoursText || '',
-        closedMessage: config.closedMessage || '',
-        menuTitle: config.menuTitle || '',
-        menuSubtitle: config.menuSubtitle || '',
-        heroBannerText: config.heroBannerText || '',
+        openingHoursText: config.openingHoursText || 'Aberto das 18h às 23h30',
+        closedMessage: config.closedMessage || 'Estamos fechados agora. Volte em breve!',
+        menuTitle: config.menuTitle || 'Nosso Cardápio',
+        menuSubtitle: config.menuSubtitle || 'Escolha suas pizzas favoritas e monte seu pedido',
+        heroBannerText: config.heroBannerText || 'Pizza quentinha, sabor inesquecível 🍕🔥',
         heroBannerImageUrl: config.heroBannerImageUrl || '',
         primaryColor: config.primaryColor || '#FF4136',
+        secondaryColor: config.secondaryColor || '#FFD700',
         backgroundColor: config.backgroundColor || '#FFFFFF',
+        appBackgroundType: config.appBackgroundType || 'pattern',
         appBackgroundImageUrl: config.appBackgroundImageUrl || '',
-        address: config.address || '',
+        address: config.address || 'Rua das Pizzas, 123',
         contactPhone: config.contactPhone || '',
-        whatsappAutoMessage: config.whatsappAutoMessage || '',
+        whatsappAutoMessage: config.whatsappAutoMessage || 'Olá! Gostaria de tirar uma dúvida.',
         contactEmail: config.contactEmail || '',
         instagramUrl: config.instagramUrl || '',
         facebookUrl: config.facebookUrl || '',
@@ -204,7 +209,7 @@ export default function AdminSettingsPage() {
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary truncate">
-            {config?.restaurantName || "PizzApp"} Admin
+            {form.restaurantName || "PizzApp"} Admin
           </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
@@ -264,7 +269,7 @@ export default function AdminSettingsPage() {
         </Link>
 
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-4xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-2xl lg:text-3xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
@@ -421,10 +426,10 @@ export default function AdminSettingsPage() {
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-blue-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
-                <Palette className="h-7 w-7 text-blue-600" /> Aparência
+                <Palette className="h-7 w-7 text-blue-600" /> Aparência e Cores
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-8 space-y-6">
+            <CardContent className="p-8 space-y-8">
               <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="menuTitle" className="text-lg font-bold">Título do Cardápio</Label>
@@ -491,6 +496,123 @@ export default function AdminSettingsPage() {
                     </Button>
                     <input id="banner-hero-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('heroBannerImageUrl')} />
                   </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-8">
+                <div className="space-y-4">
+                  <Label className="text-xl font-black">Cores do App</Label>
+                  <div className="grid gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="primaryColor" className="text-base font-bold">Cor Principal (Primária)</Label>
+                      <div className="flex gap-3">
+                        <Input 
+                          id="primaryColor" 
+                          type="color" 
+                          value={form.primaryColor} 
+                          onChange={(e) => setForm({...form, primaryColor: e.target.value})}
+                          className="w-14 h-14 p-1 rounded-xl cursor-pointer"
+                        />
+                        <Input 
+                          type="text" 
+                          value={form.primaryColor} 
+                          onChange={(e) => setForm({...form, primaryColor: e.target.value})}
+                          className="rounded-xl h-14 flex-1 border-2 font-mono"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="secondaryColor" className="text-base font-bold">Cor de Destaque (Secundária)</Label>
+                      <div className="flex gap-3">
+                        <Input 
+                          id="secondaryColor" 
+                          type="color" 
+                          value={form.secondaryColor} 
+                          onChange={(e) => setForm({...form, secondaryColor: e.target.value})}
+                          className="w-14 h-14 p-1 rounded-xl cursor-pointer"
+                        />
+                        <Input 
+                          type="text" 
+                          value={form.secondaryColor} 
+                          onChange={(e) => setForm({...form, secondaryColor: e.target.value})}
+                          className="rounded-xl h-14 flex-1 border-2 font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <Label className="text-xl font-black">Fundo do App</Label>
+                  <RadioGroup 
+                    value={form.appBackgroundType} 
+                    onValueChange={(v) => setForm({...form, appBackgroundType: v})}
+                    className="grid gap-4"
+                  >
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                      <RadioGroupItem value="pattern" id="bg-pattern" />
+                      <Label htmlFor="bg-pattern" className="flex-1 cursor-pointer font-bold">Padrão Pizzaria (Ícones)</Label>
+                    </div>
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                      <RadioGroupItem value="color" id="bg-color" />
+                      <Label htmlFor="bg-color" className="flex-1 cursor-pointer font-bold">Cor Sólida</Label>
+                    </div>
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                      <RadioGroupItem value="image" id="bg-image" />
+                      <Label htmlFor="bg-image" className="flex-1 cursor-pointer font-bold">Imagem Personalizada</Label>
+                    </div>
+                  </RadioGroup>
+
+                  {form.appBackgroundType === 'color' && (
+                    <div className="mt-4 flex gap-3 animate-in fade-in zoom-in-95 duration-200">
+                      <Input 
+                        type="color" 
+                        value={form.backgroundColor} 
+                        onChange={(e) => setForm({...form, backgroundColor: e.target.value})}
+                        className="w-14 h-14 p-1 rounded-xl cursor-pointer"
+                      />
+                      <Input 
+                        type="text" 
+                        value={form.backgroundColor} 
+                        onChange={(e) => setForm({...form, backgroundColor: e.target.value})}
+                        className="rounded-xl h-14 flex-1 border-2 font-mono"
+                      />
+                    </div>
+                  )}
+
+                  {form.appBackgroundType === 'image' && (
+                    <div className="mt-4 space-y-2 animate-in fade-in zoom-in-95 duration-200">
+                      {form.appBackgroundImageUrl && (
+                        <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
+                          <img src={form.appBackgroundImageUrl} alt="Fundo" className="object-cover w-full h-full" />
+                          <Button 
+                            variant="destructive" 
+                            size="icon" 
+                            className="absolute top-2 right-2 rounded-full h-8 w-8"
+                            onClick={() => setForm({...form, appBackgroundImageUrl: ''})}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      )}
+                      <div className="flex gap-2">
+                        <Input 
+                          placeholder="URL da Imagem"
+                          value={form.appBackgroundImageUrl} 
+                          onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
+                          className="rounded-xl h-14 flex-1 border-2"
+                        />
+                        <Button 
+                          variant="outline" 
+                          className="h-14 rounded-xl border-2 px-6"
+                          onClick={() => document.getElementById('bg-upload')?.click()}
+                        >
+                          <ImageIcon className="h-6 w-6 text-primary" />
+                        </Button>
+                        <input id="bg-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('appBackgroundImageUrl')} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
