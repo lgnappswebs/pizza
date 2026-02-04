@@ -66,6 +66,9 @@
         "name": {
           "type": "string"
         },
+        "subName": {
+          "type": "string"
+        },
         "order": {
           "type": "number"
         }

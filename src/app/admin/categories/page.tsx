@@ -17,11 +17,15 @@ import {
   ExternalLink,
   ArrowUpDown,
   ChevronLeft,
-  Wallet
+  Wallet,
+  Sparkles,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { 
   Dialog, 
   DialogContent, 
@@ -30,6 +34,11 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { 
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -51,12 +60,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const SUBCATEGORY_SUGGESTIONS = [
+  "Salgadas", "Doces", "Especiais", "Premium", "Gourmet", 
+  "Tradicionais", "Promoção", "Veganas", "Zero Lactose",
+  "Importadas", "Artesanais", "Da Casa"
+];
+
 export default function AdminCategoriesPage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -66,6 +82,7 @@ export default function AdminCategoriesPage() {
 
   const [formData, setFormData] = useState({
     name: '',
+    subName: '',
     order: '0'
   });
 
@@ -86,21 +103,25 @@ export default function AdminCategoriesPage() {
       setEditingCategory(category);
       setFormData({
         name: category.name,
+        subName: category.subName || '',
         order: category.order.toString()
       });
     } else {
       setEditingCategory(null);
       setFormData({
         name: '',
+        subName: '',
         order: (categories?.length || 0).toString()
       });
     }
     setIsDialogOpen(true);
+    setIsSuggestionsOpen(false);
   };
 
   const handleSave = () => {
     const data = {
       name: formData.name,
+      subName: formData.subName,
       order: parseInt(formData.order) || 0
     };
 
@@ -116,6 +137,10 @@ export default function AdminCategoriesPage() {
     if (confirm('Tem certeza que deseja excluir esta categoria?')) {
       deleteDocumentNonBlocking(doc(firestore, 'categorias', id));
     }
+  };
+
+  const addSuggestion = (suggestion: string) => {
+    setFormData({ ...formData, subName: suggestion });
   };
 
   return (
@@ -205,7 +230,14 @@ export default function AdminCategoriesPage() {
                         {category.order}
                       </div>
                       <div>
-                        <p className="font-bold text-lg">{category.name}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-lg">{category.name}</p>
+                          {category.subName && (
+                            <Badge variant="outline" className="text-xs font-normal">
+                              {category.subName}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -229,7 +261,7 @@ export default function AdminCategoriesPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[425px] rounded-3xl">
+          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-3xl font-black text-primary">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
@@ -238,8 +270,38 @@ export default function AdminCategoriesPage() {
             <div className="grid gap-6 py-6">
               <div className="grid gap-2">
                 <Label htmlFor="name" className="text-lg font-bold">Nome da Categoria</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas Salgadas" />
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas" />
               </div>
+              
+              <div className="grid gap-2">
+                <Label htmlFor="subName" className="text-lg font-bold">Subcategoria <span className="text-sm font-normal text-muted-foreground">(Opcional)</span></Label>
+                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Salgadas" />
+                
+                <Collapsible open={isSuggestionsOpen} onOpenChange={setIsSuggestionsOpen} className="w-full mt-2">
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10">
+                      <Sparkles className="h-4 w-4" />
+                      {isSuggestionsOpen ? 'Esconder Sugestões' : 'Ver Sugestões'}
+                      {isSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-3">
+                    <div className="flex flex-wrap gap-2 p-3 bg-muted/30 rounded-2xl border-2 border-dashed">
+                      {SUBCATEGORY_SUGGESTIONS.map((suggestion) => (
+                        <Badge 
+                          key={suggestion} 
+                          variant="secondary" 
+                          className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-3 rounded-full"
+                          onClick={() => addSuggestion(suggestion)}
+                        >
+                          {suggestion}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
+
               <div className="grid gap-2">
                 <Label htmlFor="order" className="text-lg font-bold">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
@@ -251,7 +313,7 @@ export default function AdminCategoriesPage() {
             </div>
             <DialogFooter>
               <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg transform transition active:scale-95">
-                Salvar Categoria
+                {editingCategory ? 'Salvar Alterações' : 'Salvar Categoria'}
               </Button>
             </DialogFooter>
           </DialogContent>

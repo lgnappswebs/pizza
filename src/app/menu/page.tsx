@@ -81,9 +81,14 @@ export default function MenuPage() {
                     <TabsTrigger 
                       key={cat.id} 
                       value={cat.id}
-                      className="rounded-xl px-6 py-3 text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
+                      className="rounded-xl px-6 py-3 text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all flex flex-col items-center"
                     >
-                      {cat.name}
+                      <span>{cat.name}</span>
+                      {cat.subName && (
+                        <span className="text-[10px] uppercase font-normal opacity-70 leading-none mt-0.5">
+                          {cat.subName}
+                        </span>
+                      )}
                     </TabsTrigger>
                   ))}
                 </TabsList>
