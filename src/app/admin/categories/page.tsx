@@ -63,23 +63,27 @@ import {
 const CATEGORIZED_SUGGESTIONS = [
   {
     title: "Pizzas",
-    items: ["Salgadas", "Doces", "Especiais", "Premium", "Gourmet", "Tradicionais", "Veganas", "Zero Lactose"]
+    items: ["Salgadas", "Doces", "Especiais", "Premium", "Tradicionais", "Veganas", "Zero Lactose", "Meio a Meio", "Broto", "Gigante", "Borda Recheada", "Promocionais"]
   },
   {
     title: "Bebidas",
-    items: ["Lata 350ml", "600ml", "Garrafa 2L", "Suco Natural", "Cerveja Long Neck", "Cerveja 600ml", "Vinho", "Água"]
+    items: ["Refrigerantes", "Lata 350ml", "600ml", "Garrafa 2L", "Sucos Naturais", "Cervejas", "Vinhos", "Água Mineral", "Energéticos", "Drinks & Coquetéis", "Doses", "Chás Gelados"]
   },
   {
     title: "Porções & Entradas",
-    items: ["Batata Frita", "Frango a Passarinho", "Calabresa Acebolada", "Anéis de Cebola", "Mix de Aperitivos", "Bruschettas"]
+    items: ["Batata Frita", "Calabresa Acebolada", "Frango a Passarinho", "Mandioca Frita", "Pastéis Mistos", "Bolinhos Gourmet", "Tábua de Frios", "Pão de Alho", "Bruschettas", "Anéis de Cebola"]
+  },
+  {
+    title: "Pratos & Massas",
+    items: ["Lasanhas", "Espaguetes", "Nhoques", "Lanches & Burgers", "Saladas Leves", "Pratos Kids", "Grelhados", "Risotos", "Massas Artesanais"]
   },
   {
     title: "Combos & Ofertas",
-    items: ["Combo Família", "Combo Galera", "Combo Casal", "Combo Individual", "Promoção do Dia", "Mais Vendidos"]
+    items: ["Combo Família", "Combo Galera", "Combo Casal", "Combo Individual", "Promoção do Dia", "Mais Vendidos", "Almoço Executivo", "Happy Hour"]
   },
   {
-    title: "Especiais",
-    items: ["Artesanal", "Da Casa", "Importados", "Lançamento", "Gourmet", "Edição Limitada"]
+    title: "Sobremesas",
+    items: ["Pizzas Doces", "Petit Gâteau", "Brownie", "Pudim", "Sorvetes", "Milk Shakes", "Açaí", "Mousses", "Tortas Fatiadas"]
   }
 ];
 
