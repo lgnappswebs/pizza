@@ -11,10 +11,11 @@ import {
   Users, 
   ShoppingBag,
   Bell,
-  Loader2
+  Loader2,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -26,6 +27,16 @@ import {
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
+import { 
+  Bar, 
+  BarChart, 
+  ResponsiveContainer, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  Cell 
+} from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 export default function AdminDashboard() {
   const firestore = useFirestore();
@@ -62,6 +73,17 @@ export default function AdminDashboard() {
     return orderDate.toDateString() === today.toDateString();
   }).length || 0;
 
+  // Mock data para o gráfico (pode ser gerada dos pedidos reais futuramente)
+  const chartData = [
+    { name: 'Seg', total: 1200 },
+    { name: 'Ter', total: 900 },
+    { name: 'Qua', total: 1500 },
+    { name: 'Qui', total: 1100 },
+    { name: 'Sex', total: 2400 },
+    { name: 'Sáb', total: 3200 },
+    { name: 'Dom', total: 2800 },
+  ];
+
   const stats = [
     { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600' },
     { title: 'Produtos Ativos', value: allProducts?.length.toString() || '0', icon: PizzaIcon, color: 'text-primary' },
@@ -71,7 +93,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      <aside className="w-64 bg-white border-r hidden md:flex flex-col">
+      <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
         </div>
@@ -105,7 +127,7 @@ export default function AdminDashboard() {
       </aside>
 
       <main className="flex-1 overflow-auto">
-        <header className="bg-white border-b h-20 flex items-center justify-between px-8">
+        <header className="bg-white border-b h-20 flex items-center justify-between px-8 sticky top-0 z-20">
           <h1 className="text-2xl font-bold">Painel de Controle</h1>
           <div className="flex items-center gap-4">
             <Button variant="outline" size="icon" className="relative rounded-full">
@@ -127,7 +149,7 @@ export default function AdminDashboard() {
         <div className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
-              <Card key={idx} className="border-2 rounded-2xl overflow-hidden">
+              <Card key={idx} className="border-2 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="p-6 flex items-center gap-4">
                   <div className={`p-3 rounded-2xl bg-muted/50 ${stat.color}`}>
                     <stat.icon className="h-8 w-8" />
@@ -143,68 +165,78 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <Card className="lg:col-span-2 rounded-2xl border-2">
+              <CardHeader className="flex flex-row items-center justify-between pb-8">
+                <div>
+                  <CardTitle className="text-xl font-bold">Resumo de Vendas</CardTitle>
+                  <CardDescription>Desempenho da última semana</CardDescription>
+                </div>
+                <Badge variant="outline" className="flex items-center gap-1 rounded-full px-4 py-1">
+                  <Calendar className="h-4 w-4" /> últimos 7 dias
+                </Badge>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[300px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={chartData}>
+                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} dy={10} />
+                      <YAxis hide />
+                      <Tooltip 
+                        cursor={{fill: 'transparent'}}
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            return (
+                              <div className="bg-white border-2 border-primary/20 p-3 rounded-xl shadow-xl">
+                                <p className="font-bold text-primary">{`R$ ${payload[0].value}`}</p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                      <Bar dataKey="total" radius={[8, 8, 0, 0]}>
+                        {chartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={index === 5 || index === 6 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.3)'} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-2xl border-2 flex flex-col">
               <CardHeader>
                 <CardTitle className="text-xl font-bold">Pedidos Recentes</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="flex-1">
                 <div className="space-y-4">
                   {loadingOrders ? (
                     <div className="flex justify-center py-8"><Loader2 className="animate-spin" /></div>
                   ) : (
                     recentOrders?.map((order) => (
                       <div key={order.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
-                        <div className="flex items-center gap-4">
-                          <div className="font-bold text-primary">#{order.id.slice(-4).toUpperCase()}</div>
-                          <div>
-                            <p className="font-bold">{order.customerName}</p>
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 bg-muted flex items-center justify-center rounded-full">
+                            <ShoppingBag className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                          <div className="max-w-[120px]">
+                            <p className="font-bold truncate">{order.customerName}</p>
                             <p className="text-xs text-muted-foreground">R$ {order.totalAmount.toFixed(2)}</p>
                           </div>
                         </div>
-                        <div className="text-right flex items-center gap-6">
-                          <div className="hidden sm:block">
-                            <Badge variant="secondary" className="mt-1">{order.status}</Badge>
-                          </div>
-                          <Link href="/admin/orders">
-                            <Button variant="outline" className="rounded-xl">Ver Pedidos</Button>
-                          </Link>
-                        </div>
+                        <Badge variant="secondary" className="text-[10px]">{order.status}</Badge>
                       </div>
                     ))
                   )}
                   {recentOrders?.length === 0 && (
-                    <p className="text-center py-8 text-muted-foreground">Nenhum pedido registrado ainda.</p>
+                    <p className="text-center py-8 text-muted-foreground italic">Nenhum pedido hoje.</p>
                   )}
                 </div>
                 <Link href="/admin/orders">
-                  <Button variant="link" className="w-full mt-4 text-primary font-bold">
+                  <Button variant="link" className="w-full mt-6 text-primary font-bold">
                     Ver todos os pedidos
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-2xl border-2">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold">Gestão Rápida</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Link da Loja</p>
-                  <Button variant="outline" className="w-full justify-start rounded-xl truncate" onClick={() => window.open('/', '_blank')}>
-                    Abrir Cardápio Público
-                  </Button>
-                </div>
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Produtos</p>
-                  <Link href="/admin/products">
-                    <Button className="w-full rounded-xl bg-primary">Gerenciar Cardápio</Button>
-                  </Link>
-                </div>
-                <div className="pt-4 border-t">
-                  <p className="text-xs text-muted-foreground text-center">
-                    PizzApp v1.0 - Conectado ao Firebase
-                  </p>
-                </div>
               </CardContent>
             </Card>
           </div>

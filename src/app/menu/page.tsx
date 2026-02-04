@@ -1,17 +1,20 @@
 
 "use client"
 
+import { useState } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBasket, Pizza as PizzaIcon, Loader2 } from 'lucide-react';
+import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 
 export default function MenuPage() {
+  const [searchTerm, setSearchTerm] = useState('');
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
@@ -27,6 +30,11 @@ export default function MenuPage() {
   const { data: categories, isLoading: loadingCats } = useCollection(categoriesQuery);
   const { data: products, isLoading: loadingProds } = useCollection(productsQuery);
 
+  const filteredProducts = products?.filter(p => 
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loadingCats || loadingProds) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -40,9 +48,19 @@ export default function MenuPage() {
       <Header />
       <main className="flex-1 pb-24">
         <div className="container mx-auto px-4 py-8">
-          <div className="mb-10 text-center space-y-2">
+          <div className="mb-8 text-center space-y-2">
             <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Nosso Cardápio</h1>
             <p className="text-muted-foreground text-lg">Escolha suas pizzas favoritas e monte seu pedido</p>
+          </div>
+
+          <div className="max-w-md mx-auto mb-10 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Input 
+              placeholder="Buscar no cardápio..." 
+              className="h-14 pl-12 rounded-2xl border-2 focus:ring-primary shadow-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
 
           {!categories || categories.length === 0 ? (
@@ -67,27 +85,32 @@ export default function MenuPage() {
                 </TabsList>
               </div>
 
-              {categories.map((cat) => (
-                <TabsContent key={cat.id} value={cat.id} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products?.filter(p => p.categoryId === cat.id).map((product) => (
-                      <ProductCard 
-                        key={product.id}
-                        id={product.id}
-                        name={product.name}
-                        description={product.description}
-                        price={product.price}
-                        imageUrl={product.imageUrl}
-                        category={product.categoryId}
-                        isPromotion={product.isPromotion}
-                      />
-                    ))}
-                  </div>
-                  {products?.filter(p => p.categoryId === cat.id).length === 0 && (
-                    <p className="text-center text-muted-foreground py-10">Nenhum produto nesta categoria.</p>
-                  )}
-                </TabsContent>
-              ))}
+              {categories.map((cat) => {
+                const categoryProducts = filteredProducts?.filter(p => p.categoryId === cat.id);
+                return (
+                  <TabsContent key={cat.id} value={cat.id} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {categoryProducts?.map((product) => (
+                        <ProductCard 
+                          key={product.id}
+                          id={product.id}
+                          name={product.name}
+                          description={product.description}
+                          price={product.price}
+                          imageUrl={product.imageUrl}
+                          category={product.categoryId}
+                          isPromotion={product.isPromotion}
+                        />
+                      ))}
+                    </div>
+                    {categoryProducts?.length === 0 && (
+                      <div className="text-center py-16 bg-muted/20 rounded-3xl border-2 border-dashed">
+                         <p className="text-muted-foreground text-lg">Nenhum produto encontrado nesta categoria.</p>
+                      </div>
+                    )}
+                  </TabsContent>
+                );
+              })}
             </Tabs>
           )}
         </div>

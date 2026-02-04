@@ -28,10 +28,10 @@ export default function Home() {
           
           <div className="container relative z-10 px-4 text-center space-y-8 max-w-4xl">
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <h1 className="text-5xl md:text-7xl font-bold text-white font-headline leading-tight drop-shadow-lg">
+              <h1 className="text-3xl sm:text-4xl md:text-7xl font-bold text-white font-headline leading-tight drop-shadow-lg">
                 Pizza quentinha, sabor <span className="text-secondary">inesquecível</span> 🍕🔥
               </h1>
-              <p className="text-xl md:text-2xl text-white/90 font-medium mt-6 drop-shadow-md">
+              <p className="text-lg md:text-2xl text-white/90 font-medium mt-6 drop-shadow-md">
                 A melhor pizzaria da cidade na palma da sua mão. 
                 Peça agora e receba em minutos!
               </p>
@@ -39,7 +39,7 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-8 duration-1000">
               <Link href="/menu">
-                <Button className="rounded-full h-16 px-10 text-2xl font-bold bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/40 transform transition hover:scale-105 active:scale-95 group">
+                <Button className="rounded-full h-14 md:h-16 px-8 md:px-10 text-xl md:text-2xl font-bold bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/40 transform transition hover:scale-105 active:scale-95 group">
                   Fazer Pedido Agora
                   <ChevronRight className="ml-2 h-6 w-6 group-hover:translate-x-1 transition-transform" />
                 </Button>
