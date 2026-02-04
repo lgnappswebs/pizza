@@ -228,13 +228,13 @@ export default function AdminFinancePage() {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
-            <p className="text-muted-foreground">Relatórios detalhados de faturamento</p>
+            <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 print:hidden">
-            <div className="flex items-center gap-2 bg-white p-2 rounded-2xl border-2 shadow-sm">
+          <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:w-auto">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto justify-center">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="w-16 h-10 border-none font-bold">
+                <SelectTrigger className="w-14 h-9 border-none font-bold px-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -243,7 +243,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="w-32 h-10 border-none font-bold">
+                <SelectTrigger className="w-28 h-9 border-none font-bold px-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -252,7 +252,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="w-24 h-10 border-none font-bold">
+                <SelectTrigger className="w-20 h-9 border-none font-bold px-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -263,8 +263,8 @@ export default function AdminFinancePage() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20">
-                  <Share2 className="mr-2 h-5 w-5" /> Exportar
+                <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-bold bg-primary shadow-lg shadow-primary/20">
+                  <Share2 className="mr-2 h-4 w-4" /> Exportar
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
@@ -287,113 +287,113 @@ export default function AdminFinancePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-4 opacity-20">
-              <DollarSign className="h-16 w-16" />
+            <div className="absolute top-0 right-0 p-3 opacity-20">
+              <DollarSign className="h-12 w-12" />
             </div>
-            <CardHeader className="pb-2">
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[10px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
-              <CardTitle className="text-3xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
+            <CardHeader className="pb-2 p-4">
+              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-[10px] font-medium opacity-80">Atualizado em tempo real</p>
+            <CardContent className="p-4 pt-0">
+              <p className="text-[9px] font-medium opacity-80">Atualizado em tempo real</p>
             </CardContent>
           </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
-            <CardHeader className="pb-2">
-              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Faturamento Período Selecionado</CardDescription>
-              <CardTitle className="text-3xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
+            <CardHeader className="pb-2 p-4">
+              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
+              <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-[10px] text-muted-foreground font-medium">Data: {selectedDay}/{selectedMonth}/{selectedYear}</p>
+            <CardContent className="p-4 pt-0">
+              <p className="text-[9px] text-muted-foreground font-medium">{selectedDay}/{selectedMonth}/{selectedYear}</p>
             </CardContent>
           </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
-            <CardHeader className="pb-2">
-              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Pedidos no Período</CardDescription>
-              <CardTitle className="text-3xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
+            <CardHeader className="pb-2 p-4">
+              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Pedidos Período</CardDescription>
+              <CardTitle className="text-2xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-[10px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues com sucesso</p>
+            <CardContent className="p-4 pt-0">
+              <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
           </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
-            <CardHeader className="pb-2">
-              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Ticket Médio (Período)</CardDescription>
-              <CardTitle className="text-3xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
+            <CardHeader className="pb-2 p-4">
+              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Ticket Médio</CardDescription>
+              <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-[10px] text-muted-foreground font-medium">Média por pedido finalizado</p>
+            <CardContent className="p-4 pt-0">
+              <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 gap-8">
-          <Card className="rounded-3xl border-2 overflow-hidden shadow-sm">
-            <CardHeader className="border-b bg-muted/10">
+          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm">
+            <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle className="text-xl font-bold">Detalhamento de Pedidos</CardTitle>
-                  <CardDescription>Lista completa de vendas no período selecionado</CardDescription>
+                  <CardTitle className="text-lg font-bold">Detalhamento</CardTitle>
+                  <CardDescription className="text-xs">Vendas no período selecionado</CardDescription>
                 </div>
-                <Badge variant="outline" className="text-xs">{filteredOrders.length} Resultados</Badge>
+                <Badge variant="outline" className="text-[10px] px-2">{filteredOrders.length} Itens</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="w-full overflow-hidden">
                 <table className="w-full text-left">
-                  <thead className="bg-muted/30 text-[10px] uppercase font-bold text-muted-foreground border-b">
+                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b">
                     <tr>
-                      <th className="px-6 py-4">ID / Hora</th>
-                      <th className="px-6 py-4">Cliente</th>
-                      <th className="px-6 py-4">Status</th>
-                      <th className="px-6 py-4 text-right">Valor</th>
+                      <th className="px-3 py-3 w-[80px]">Hora</th>
+                      <th className="px-3 py-3">Cliente</th>
+                      <th className="px-3 py-3 w-[70px]">Status</th>
+                      <th className="px-3 py-3 text-right w-[80px]">Valor</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {isLoading ? (
                       <tr>
-                        <td colSpan={4} className="text-center py-20">
-                          <Loader2 className="animate-spin h-8 w-8 mx-auto text-primary" />
+                        <td colSpan={4} className="text-center py-12">
+                          <Loader2 className="animate-spin h-6 w-6 mx-auto text-primary" />
                         </td>
                       </tr>
                     ) : filteredOrders.map((order) => (
-                      <tr key={order.id} className="hover:bg-muted/20 transition-colors group">
-                        <td className="px-6 py-4">
-                          <p className="font-black text-primary text-xs">#{order.id.slice(-4).toUpperCase()}</p>
-                          <p className="text-[10px] text-muted-foreground">
+                      <tr key={order.id} className="hover:bg-muted/10 transition-colors group">
+                        <td className="px-3 py-3 align-top">
+                          <p className="font-black text-primary text-[10px]">#{order.id.slice(-4).toUpperCase()}</p>
+                          <p className="text-[9px] text-muted-foreground">
                             {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
                           </p>
                         </td>
-                        <td className="px-6 py-4">
-                          <p className="font-bold text-sm">{order.customerName}</p>
-                          <p className="text-[10px] text-muted-foreground truncate max-w-[150px]">{order.customerAddress}</p>
+                        <td className="px-3 py-3 align-top min-w-0">
+                          <p className="font-bold text-[11px] truncate leading-tight mb-0.5">{order.customerName}</p>
+                          <p className="text-[9px] text-muted-foreground truncate opacity-70">{order.customerAddress}</p>
                         </td>
-                        <td className="px-6 py-4">
-                          <Badge variant="outline" className={`text-[9px] uppercase font-black ${
+                        <td className="px-3 py-3 align-top">
+                          <Badge variant="outline" className={`text-[8px] h-4 px-1 uppercase font-black tracking-tighter ${
                             order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600' : 
                             order.status === 'Cancelled' ? 'border-red-500 text-red-600' : 
                             'border-amber-500 text-amber-600'
                           }`}>
                             {order.status === 'New' ? 'Novo' : 
-                             order.status === 'Preparing' ? 'Preparo' : 
-                             order.status === 'Out for Delivery' ? 'Entrega' : 
-                             order.status === 'Delivered' ? 'Entregue' : order.status}
+                             order.status === 'Preparing' ? 'Prep' : 
+                             order.status === 'Out for Delivery' ? 'Ent' : 
+                             order.status === 'Delivered' ? 'Ok' : order.status}
                           </Badge>
                         </td>
-                        <td className="px-6 py-4 text-right font-black text-sm">
+                        <td className="px-3 py-3 text-right font-black text-[11px] align-top whitespace-nowrap">
                           R$ {order.totalAmount?.toFixed(2)}
                         </td>
                       </tr>
                     ))}
                     {!isLoading && filteredOrders.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="text-center py-20 text-muted-foreground italic">
-                          Nenhum pedido encontrado para a data selecionada.
+                        <td colSpan={4} className="text-center py-12 text-muted-foreground text-xs italic">
+                          Sem pedidos nesta data.
                         </td>
                       </tr>
                     )}
