@@ -7,22 +7,40 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldAlert, LogIn, ChevronLeft } from 'lucide-react';
+import { ShieldAlert, LogIn, ChevronLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth, initiateEmailSignIn } from '@/firebase';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const auth = useAuth();
+  const { toast } = useToast();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would use Firebase Auth
-    if (email === 'admin@pizzapp.com' && password === 'admin123') {
-      router.push('/admin/dashboard');
-    } else {
-      alert('Credenciais inválidas. Use admin@pizzapp.com / admin123 para o demo.');
-    }
+    setLoading(true);
+    
+    initiateEmailSignIn(auth, email, password);
+    
+    // We listen to auth state changes in the layout/provider
+    // But we can add a small timeout or wait for the provider to update
+    // For a smoother demo, we check if successful after a brief moment
+    setTimeout(() => {
+      if (auth.currentUser) {
+        router.push('/admin/dashboard');
+      } else {
+        setLoading(false);
+        toast({
+          variant: "destructive",
+          title: "Erro de Autenticação",
+          description: "Verifique suas credenciais e tente novamente."
+        });
+      }
+    }, 1500);
   };
 
   return (
@@ -67,8 +85,9 @@ export default function AdminLoginPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full h-14 rounded-full text-xl font-bold bg-primary">
-              <LogIn className="mr-2 h-6 w-6" /> Entrar no Painel
+            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary">
+              {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <LogIn className="mr-2 h-6 w-6" />}
+              Entrar no Painel
             </Button>
           </form>
           <div className="mt-6 text-center text-sm text-muted-foreground">

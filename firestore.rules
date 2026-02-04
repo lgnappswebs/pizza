@@ -1,125 +1,37 @@
+
 rules_version = '2';
-
-/**
- * FIRESTORE SECURITY RULES - PIZZARIA WEB APP (PROTOTYPING MODE)
- *
- * Core Philosophy:
- * This ruleset implements a "Public Catalog / Private Management" model. 
- * It prioritizes a seamless customer experience by allowing public access to the menu 
- * and unauthenticated order submission, while restricting all administrative 
- * modifications (products, categories, banners, settings) and order management 
- * to authenticated administrative users.
- *
- * Data Structure:
- * - /produtos, /categorias, /banners, /configuracoes: Publicly readable top-level collections.
- * - /pedidos: Publicly writable collection for order submission; read/update/delete restricted to admins.
- * - /pedidos/{orderId}/items: Subcollection containing line items for a specific order.
- *
- * Key Security Decisions:
- * 1. Admin Authorization: Per user instructions, any authenticated user (`request.auth != null`) 
- *    is treated as an administrator with write access to the catalog and management access to orders.
- * 2. Unauthenticated Orders: To facilitate rapid ordering without friction, `create` permissions 
- *    on the `pedidos` collection are open to everyone.
- * 3. Prototyping Flexibility: Rules enforce authorization and relational integrity (e.g., matching IDs) 
- *    but do not validate the specific data types or presence of non-security fields.
- */
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- GLOBAL HELPER FUNCTIONS ---
-
-    /**
-     * @description Checks if the request is from an authenticated user.
-     */
-    function isSignedIn() {
-      return request.auth != null;
+    // Leitura pública
+    match /produtos/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    /**
-     * @description Combines authentication check with document existence for updates and deletes.
-     */
-    function isExistingAdmin() {
-      return isSignedIn() && resource != null;
+    match /categorias/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    // --- COLLECTION RULES ---
-
-    /**
-     * @description Manages the menu products. Publicly visible, admin managed.
-     * @path /produtos/{productId}
-     * @allow (get, list) if true; (create) if isSignedIn();
-     * @deny (write) if request.auth == null;
-     * @principle Public catalog access with admin-only management.
-     */
-    match /produtos/{productId} {
-      allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == productId;
-      allow update, delete: if isExistingAdmin();
+    match /banners/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    /**
-     * @description Manages product categories (e.g., Pizzas, Drinks).
-     * @path /categorias/{categoryId}
-     * @allow (get, list) if true; (create) if isSignedIn();
-     * @deny (update) if requested by unauthenticated user.
-     * @principle Ensures administrative control over organizational taxonomy.
-     */
-    match /categorias/{categoryId} {
-      allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == categoryId;
-      allow update, delete: if isExistingAdmin();
+    match /configuracoes/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null;
     }
 
-    /**
-     * @description Manages promotional banners.
-     * @path /banners/{bannerId}
-     * @allow (get, list) if true; (create) if authenticated.
-     * @deny (delete) if unauthenticated.
-     * @principle Public visibility for marketing content with protected modification.
-     */
-    match /banners/{bannerId} {
-      allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == bannerId;
-      allow update, delete: if isExistingAdmin();
-    }
-
-    /**
-     * @description Global restaurant configuration and theme settings.
-     * @path /configuracoes/{configId}
-     * @allow (get, list) if true; (create) if authenticated.
-     * @deny (create) if document ID does not match path ID.
-     * @principle Protects global app state from unauthorized tampering.
-     */
-    match /configuracoes/{configId} {
-      allow get, list: if true;
-      allow create: if isSignedIn() && request.resource.data.id == configId;
-      allow update, delete: if isExistingAdmin();
-    }
-
-    /**
-     * @description Customer order records. Supports public submission (no login).
-     * @path /pedidos/{orderId}
-     * @allow (create) if true; (get, list, update) if isSignedIn().
-     * @deny (get) if customer attempts to read their own order without auth.
-     * @principle Facilitates zero-friction ordering while securing PII and order status management.
-     */
-    match /pedidos/{orderId} {
-      allow create: if request.resource.data.id == orderId;
-      allow get, list: if isSignedIn();
-      allow update, delete: if isExistingAdmin();
-
-      /**
-       * @description Line items associated with a specific order.
-       * @path /pedidos/{orderId}/items/{itemId}
-       * @allow (create) if parent order path is valid; (read/write) if admin.
-       * @deny (list) if not authenticated.
-       * @principle Inherits security posture from the parent order for administration.
-       */
-      match /items/{itemId} {
-        allow create: if request.resource.data.orderId == orderId && request.resource.data.id == itemId;
-        allow get, list: if isSignedIn();
-        allow update, delete: if isExistingAdmin();
+    // Pedidos
+    match /pedidos/{doc} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+      
+      match /items/{itemDoc} {
+        allow create: if true;
+        allow read, update, delete: if request.auth != null;
       }
     }
   }

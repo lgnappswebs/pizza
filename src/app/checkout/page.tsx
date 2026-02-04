@@ -1,20 +1,23 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { useCartStore } from '@/lib/cart-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Send, ChevronLeft, MapPin, User, Phone } from 'lucide-react';
+import { Trash2, Send, ChevronLeft, MapPin, User, Phone, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, doc, serverTimestamp } from 'firebase/firestore';
 
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
+  const firestore = useFirestore();
   const [form, setForm] = useState({
     name: '',
     address: '',
@@ -23,9 +26,13 @@ export default function CheckoutPage() {
     phone: ''
   });
 
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
+
   const total = getTotal();
 
-  const handleSendToWhatsApp = () => {
+  const handleSendToWhatsApp = async () => {
     if (!form.name || !form.address || !form.neighborhood || !form.phone) {
       alert("Por favor, preencha todos os campos obrigatórios.");
       return;
@@ -33,28 +40,63 @@ export default function CheckoutPage() {
 
     setLoading(true);
     
-    const pizzeriaNumber = "5511999999999"; // Exemplo
-    let message = `*NOVO PEDIDO - PizzApp Rápido*%0A%0A`;
-    message += `*CLIENTE:* ${form.name}%0A`;
-    message += `*TELEFONE:* ${form.phone}%0A`;
-    message += `*ENDEREÇO:* ${form.address}%0A`;
-    message += `*BAIRRO:* ${form.neighborhood}%0A`;
-    if (form.complement) message += `*COMPLEMENTO:* ${form.complement}%0A`;
-    message += `%0A*ITENS:*%0A`;
+    try {
+      // 1. Save order to Firestore
+      const orderId = doc(collection(firestore, 'pedidos')).id;
+      const orderRef = doc(firestore, 'pedidos', orderId);
+      
+      const orderData = {
+        id: orderId,
+        customerName: form.name,
+        customerAddress: `${form.address}, ${form.neighborhood}${form.complement ? ` - ${form.complement}` : ''}`,
+        customerPhoneNumber: form.phone,
+        createdAt: serverTimestamp(),
+        totalAmount: total,
+        status: 'New'
+      };
 
-    items.forEach(item => {
-      message += `- ${item.quantity}x ${item.name} (${item.size})`;
-      if (item.crust !== 'Tradicional') message += ` (Borda: ${item.crust})`;
-      if (item.notes) message += ` [Obs: ${item.notes}]`;
-      message += `%0A`;
-    });
+      await addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
+      
+      // Save items
+      for (const item of items) {
+        const itemRef = doc(collection(firestore, 'pedidos', orderId, 'items'));
+        await addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
+          ...item,
+          id: itemRef.id,
+          orderId
+        });
+      }
 
-    message += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A%0A`;
-    message += `_Enviado via PizzApp Rápido_`;
+      // 2. Prepare WhatsApp message
+      const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
+      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'PizzApp Rápido'}*%0A%0A`;
+      message += `*CLIENTE:* ${form.name}%0A`;
+      message += `*TELEFONE:* ${form.phone}%0A`;
+      message += `*ENDEREÇO:* ${form.address}%0A`;
+      message += `*BAIRRO:* ${form.neighborhood}%0A`;
+      if (form.complement) message += `*COMPLEMENTO:* ${form.complement}%0A`;
+      message += `%0A*ITENS:*%0A`;
 
-    const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
-    window.open(whatsappUrl, '_blank');
-    setLoading(false);
+      items.forEach(item => {
+        message += `- ${item.quantity}x ${item.name} (${item.size})`;
+        if (item.crust !== 'Tradicional') message += ` (Borda: ${item.crust})`;
+        if (item.notes) message += ` [Obs: ${item.notes}]`;
+        message += `%0A`;
+      });
+
+      message += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A%0A`;
+      message += `_Pedido registrado com ID: ${orderId}_`;
+
+      const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
+      window.open(whatsappUrl, '_blank');
+      
+      clearCart();
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      alert("Erro ao enviar pedido. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (items.length === 0) {
@@ -86,7 +128,6 @@ export default function CheckoutPage() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Order Summary */}
           <div className="space-y-6">
             <Card className="rounded-3xl border-2">
               <CardHeader>
@@ -152,18 +193,17 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-lg">
                     <span>Taxa de Entrega</span>
-                    <span className="text-green-600 font-bold">Grátis</span>
+                    <span className="text-green-600 font-bold">{config?.deliveryFee ? `R$ ${config.deliveryFee.toFixed(2)}` : 'Grátis'}</span>
                   </div>
                   <div className="flex justify-between text-3xl font-black text-primary pt-2">
                     <span>Total</span>
-                    <span>R$ {total.toFixed(2)}</span>
+                    <span>R$ {(total + (config?.deliveryFee || 0)).toFixed(2)}</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Delivery Details */}
           <div className="space-y-6">
             <Card className="rounded-3xl border-2">
               <CardHeader>
@@ -237,11 +277,11 @@ export default function CheckoutPage() {
                   disabled={loading}
                   className="w-full h-20 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-xl shadow-[#25D366]/30 flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6"
                 >
-                  <Send className="h-8 w-8" />
+                  {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-8 w-8" />}
                   {loading ? 'Processando...' : 'Enviar Pedido pelo WhatsApp'}
                 </Button>
                 <p className="text-center text-sm text-muted-foreground mt-4">
-                  Ao clicar em enviar, você será redirecionado para o WhatsApp com a mensagem pronta.
+                  Ao clicar em enviar, seu pedido será registrado e você será redirecionado para o WhatsApp.
                 </p>
               </CardContent>
             </Card>
