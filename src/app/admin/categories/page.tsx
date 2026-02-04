@@ -34,6 +34,16 @@ import {
   DialogTitle, 
   DialogFooter
 } from '@/components/ui/dialog';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from '@/components/ui/label';
 import { 
   Collapsible,
@@ -60,6 +70,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from '@/hooks/use-toast';
 
 const MAIN_CATEGORY_SUGGESTIONS = [
   "Pizzas", "Bebidas", "Porções", "Combos", "Acompanhamentos", "Sobremesas", "Outros"
@@ -96,10 +107,16 @@ export default function AdminCategoriesPage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+  const { toast } = useToast();
+  
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [isMainSuggestionsOpen, setIsMainSuggestionsOpen] = useState(false);
+  
+  // Estado para exclusão
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -159,15 +176,29 @@ export default function AdminCategoriesPage() {
 
     if (editingCategory) {
       updateDocumentNonBlocking(doc(firestore, 'categorias', editingCategory.id), data);
+      toast({ title: "Categoria atualizada!", description: "As mudanças foram salvas." });
     } else {
       addDocumentNonBlocking(collection(firestore, 'categorias'), data);
+      toast({ title: "Categoria criada!", description: "Nova categoria adicionada ao cardápio." });
     }
     setIsDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Tem certeza que deseja excluir esta categoria?')) {
-      deleteDocumentNonBlocking(doc(firestore, 'categorias', id));
+  const handleDeleteClick = (category: any) => {
+    setCategoryToDelete(category);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (categoryToDelete) {
+      deleteDocumentNonBlocking(doc(firestore, 'categorias', categoryToDelete.id));
+      toast({
+        title: "Categoria excluída",
+        description: `A categoria "${categoryToDelete.name}" foi removida.`,
+        variant: "destructive"
+      });
+      setIsDeleteDialogOpen(false);
+      setCategoryToDelete(null);
     }
   };
 
@@ -284,7 +315,12 @@ export default function AdminCategoriesPage() {
                       <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10">
                         <Edit2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => handleDelete(category.id)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive hover:bg-destructive/10">
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        onClick={() => handleDeleteClick(category)} 
+                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive hover:bg-destructive/10"
+                      >
                         <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
                     </div>
@@ -300,6 +336,7 @@ export default function AdminCategoriesPage() {
           </CardContent>
         </Card>
 
+        {/* Modal de Criação/Edição */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
@@ -393,6 +430,25 @@ export default function AdminCategoriesPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Diálogo de Confirmação de Exclusão */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent className="rounded-3xl border-2">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
+              <AlertDialogDescription className="text-lg">
+                Tem certeza que deseja excluir a categoria <strong>"{categoryToDelete?.name}"</strong>? 
+                Esta ação não pode ser desfeita e pode afetar a exibição de produtos vinculados.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2">
+              <AlertDialogCancel className="rounded-full h-12 font-bold">Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
+                Sim, Excluir Categoria
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
