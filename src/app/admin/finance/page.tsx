@@ -223,7 +223,7 @@ export default function AdminFinancePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
                 <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
                   <SelectValue />

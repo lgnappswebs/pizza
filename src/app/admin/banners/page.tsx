@@ -105,8 +105,8 @@ export default function AdminBannersPage() {
       setFormData({
         title: banner.title || '',
         description: banner.description || '',
-        imageUrl: banner.imageUrl,
-        isActive: banner.isActive,
+        imageUrl: banner.imageUrl || '',
+        isActive: banner.isActive ?? true,
         textPosition: banner.textPosition || 'center',
         bannerPosition: banner.bannerPosition || 'top',
         linkCategoryId: banner.linkCategoryId || 'none'
@@ -273,7 +273,7 @@ export default function AdminBannersPage() {
                       {banner.title && <p className="text-white font-bold text-sm truncate">{banner.title}</p>}
                       {banner.linkCategoryId !== 'none' && (
                         <p className="text-white/80 text-[10px] flex items-center gap-1 mt-1">
-                          <LinkIcon className="h-2 w-2" /> Vinculado à categoria
+                          <LinkIcon className="h-3 w-3" /> Vinculado à categoria
                         </p>
                       )}
                     </div>
@@ -478,7 +478,7 @@ export default function AdminBannersPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </for>
+      </main>
     </div>
   );
 }
