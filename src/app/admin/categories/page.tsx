@@ -231,26 +231,26 @@ export default function AdminCategoriesPage() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[425px] rounded-3xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">
+              <DialogTitle className="text-3xl font-black text-primary">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
               </DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-6 py-6">
               <div className="grid gap-2">
-                <Label htmlFor="name">Nome da Categoria</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2" placeholder="Ex: Pizzas Salgadas" />
+                <Label htmlFor="name" className="text-lg font-bold">Nome da Categoria</Label>
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas Salgadas" />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="order">Ordem de Exibição</Label>
+                <Label htmlFor="order" className="text-lg font-bold">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
-                   <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
-                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2" />
+                   <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
+                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
                 </div>
-                <p className="text-xs text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
+                <p className="text-sm text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-12 rounded-full font-bold bg-primary">
+              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg transform transition active:scale-95">
                 Salvar Categoria
               </Button>
             </DialogFooter>

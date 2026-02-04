@@ -266,7 +266,7 @@ export default function AdminProductsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 placeholder="Buscar produto pelo nome..." 
-                className="pl-10 h-12 rounded-xl border-2"
+                className="pl-10 h-12 rounded-xl border-2 text-lg"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -322,51 +322,51 @@ export default function AdminProductsPage() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">
+              <DialogTitle className="text-3xl font-black text-primary">
                 {editingProduct ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-6 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">Nome do Produto</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2" />
+                <Label htmlFor="name" className="text-lg font-bold">Nome do Produto</Label>
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="desc">Descrição / Ingredientes</Label>
-                <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2" />
+                <Label htmlFor="desc" className="text-lg font-bold">Descrição / Ingredientes</Label>
+                <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="category">Categoria</Label>
+                <Label htmlFor="category" className="text-lg font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="rounded-xl h-12 border-2">
-                    <SelectValue placeholder="Selecione" />
+                  <SelectTrigger className="rounded-xl h-12 border-2 text-lg">
+                    <SelectValue placeholder="Selecione uma categoria" />
                   </SelectTrigger>
                   <SelectContent>
                     {categories?.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                      <SelectItem key={cat.id} value={cat.id} className="text-lg">{cat.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2 border-dashed">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
                 <div className="space-y-0.5">
-                  <Label>Múltiplos Tamanhos</Label>
-                  <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
+                  <Label className="text-lg font-bold">Múltiplos Tamanhos</Label>
+                  <p className="text-sm text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
                 </div>
-                <Switch checked={formData.hasMultipleSizes} onCheckedChange={(v) => setFormData({...formData, hasMultipleSizes: v})} />
+                <Switch checked={formData.hasMultipleSizes} onCheckedChange={(v) => setFormData({...formData, hasMultipleSizes: v})} className="scale-125" />
               </div>
 
               {!formData.hasMultipleSizes ? (
                 <div className="grid gap-2">
-                  <Label htmlFor="price">Preço Único (R$)</Label>
+                  <Label htmlFor="price" className="text-lg font-bold">Preço Único (R$)</Label>
                   <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">R$</span>
                     <Input 
                       id="price" 
                       value={formData.price} 
                       onChange={(e) => handlePriceChange('price', e.target.value)} 
-                      className="rounded-xl h-12 pl-10 border-2" 
+                      className="rounded-xl h-12 pl-12 border-2 text-lg" 
                       placeholder="0,00"
                     />
                   </div>
@@ -374,40 +374,40 @@ export default function AdminProductsPage() {
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 bg-muted/20 rounded-2xl border-2">
                   <div className="grid gap-2">
-                    <Label htmlFor="pSmall">Preço Pequena (Broto)</Label>
+                    <Label htmlFor="pSmall" className="text-base font-bold">Preço Pequena (Broto)</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pSmall" 
                         value={formData.priceSmall} 
                         onChange={(e) => handlePriceChange('priceSmall', e.target.value)} 
-                        className="rounded-xl h-12 pl-10 border-2" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
                         placeholder="0,00"
                       />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="pMedium">Preço Médio</Label>
+                    <Label htmlFor="pMedium" className="text-base font-bold">Preço Médio</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pMedium" 
                         value={formData.priceMedium} 
                         onChange={(e) => handlePriceChange('priceMedium', e.target.value)} 
-                        className="rounded-xl h-12 pl-10 border-2" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
                         placeholder="0,00"
                       />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="pLarge">Preço Grande</Label>
+                    <Label htmlFor="pLarge" className="text-base font-bold">Preço Grande</Label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pLarge" 
                         value={formData.priceLarge} 
                         onChange={(e) => handlePriceChange('priceLarge', e.target.value)} 
-                        className="rounded-xl h-12 pl-10 border-2" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
                         placeholder="0,00"
                       />
                     </div>
@@ -416,13 +416,13 @@ export default function AdminProductsPage() {
               )}
 
               <div className="grid gap-2">
-                <Label htmlFor="image">Imagem do Produto (URL ou Galeria)</Label>
+                <Label htmlFor="image" className="text-lg font-bold">Imagem do Produto (URL ou Galeria)</Label>
                 <div className="flex gap-2">
                   <Input 
                     id="image" 
                     value={formData.imageUrl} 
                     onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
-                    className="rounded-xl h-12 flex-1 border-2" 
+                    className="rounded-xl h-12 flex-1 border-2 text-lg" 
                     placeholder="https://..." 
                   />
                   <Button 
@@ -431,7 +431,7 @@ export default function AdminProductsPage() {
                     className="h-12 w-12 rounded-xl shrink-0 p-0 border-2"
                     onClick={() => document.getElementById('product-image-upload')?.click()}
                   >
-                    <ImageIcon className="h-5 w-5 text-primary" />
+                    <ImageIcon className="h-6 w-6 text-primary" />
                   </Button>
                   <input 
                     id="product-image-upload" 
@@ -443,22 +443,22 @@ export default function AdminProductsPage() {
                 </div>
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
-                  <Label>Disponível na Loja</Label>
+                  <Label className="text-lg font-bold">Disponível na Loja</Label>
                 </div>
-                <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} />
+                <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} className="scale-125" />
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
+              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
-                  <Label>Produto em Promoção</Label>
+                  <Label className="text-lg font-bold">Produto em Promoção</Label>
                 </div>
-                <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} />
+                <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} className="scale-125" />
               </div>
             </div>
-            <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-12 rounded-full font-bold bg-primary shadow-lg shadow-primary/20">
+            <DialogFooter className="mt-6">
+              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95">
                 Salvar Alterações
               </Button>
             </DialogFooter>
