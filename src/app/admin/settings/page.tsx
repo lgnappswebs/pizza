@@ -159,6 +159,17 @@ export default function AdminSettingsPage() {
     }, 1000);
   };
 
+  const handleFileChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm(prev => ({ ...prev, [field]: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
@@ -268,18 +279,23 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="logoImageUrl">Logotipo da Pizzaria (Imagem URL)</Label>
+                  <Label htmlFor="logoImageUrl">Logotipo da Pizzaria (URL ou Galeria)</Label>
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
                       placeholder="https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
-                      className="rounded-xl h-12"
+                      className="rounded-xl h-12 flex-1"
                     />
-                    <Button variant="outline" className="h-12 rounded-xl" title="Visualizar">
-                      <Eye className="h-5 w-5" />
+                    <Button 
+                      variant="outline" 
+                      className="h-12 rounded-xl"
+                      onClick={() => document.getElementById('logo-upload')?.click()}
+                    >
+                      <ImageIcon className="h-5 w-5 text-primary" />
                     </Button>
+                    <input id="logo-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('logoImageUrl')} />
                   </div>
                 </div>
               </div>
@@ -392,13 +408,23 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bannerImage">Imagem do Banner Principal (URL)</Label>
-                  <Input 
-                    id="bannerImage" 
-                    value={form.heroBannerImageUrl} 
-                    onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
-                    className="rounded-xl h-12"
-                  />
+                  <Label htmlFor="bannerImage">Banner Principal (URL ou Galeria)</Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="bannerImage" 
+                      value={form.heroBannerImageUrl} 
+                      onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
+                      className="rounded-xl h-12 flex-1"
+                    />
+                    <Button 
+                      variant="outline" 
+                      className="h-12 rounded-xl"
+                      onClick={() => document.getElementById('banner-hero-upload')?.click()}
+                    >
+                      <ImageIcon className="h-5 w-5 text-primary" />
+                    </Button>
+                    <input id="banner-hero-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('heroBannerImageUrl')} />
+                  </div>
                 </div>
               </div>
 
@@ -418,14 +444,24 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bgPattern">Plano de Fundo do App (URL)</Label>
-                  <Input 
-                    id="bgPattern" 
-                    placeholder="URL de padrão ou imagem"
-                    value={form.appBackgroundImageUrl} 
-                    onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
-                    className="rounded-xl h-12"
-                  />
+                  <Label htmlFor="bgPattern">Plano de Fundo (URL ou Galeria)</Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="bgPattern" 
+                      placeholder="URL de padrão ou imagem"
+                      value={form.appBackgroundImageUrl} 
+                      onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
+                      className="rounded-xl h-12 flex-1"
+                    />
+                    <Button 
+                      variant="outline" 
+                      className="h-12 rounded-xl"
+                      onClick={() => document.getElementById('bg-app-upload')?.click()}
+                    >
+                      <ImageIcon className="h-5 w-5 text-primary" />
+                    </Button>
+                    <input id="bg-app-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('appBackgroundImageUrl')} />
+                  </div>
                 </div>
               </div>
             </CardContent>

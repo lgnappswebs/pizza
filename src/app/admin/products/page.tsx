@@ -177,6 +177,17 @@ export default function AdminProductsPage() {
     setFormData({ ...formData, [field]: formatCurrency(value) });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, imageUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
@@ -405,8 +416,31 @@ export default function AdminProductsPage() {
               )}
 
               <div className="grid gap-2">
-                <Label htmlFor="image">URL da Imagem</Label>
-                <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl h-12" placeholder="https://..." />
+                <Label htmlFor="image">Imagem do Produto (URL ou Galeria)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    id="image" 
+                    value={formData.imageUrl} 
+                    onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
+                    className="rounded-xl h-12 flex-1" 
+                    placeholder="https://..." 
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="h-12 w-12 rounded-xl shrink-0 p-0"
+                    onClick={() => document.getElementById('product-image-upload')?.click()}
+                  >
+                    <ImageIcon className="h-5 w-5 text-primary" />
+                  </Button>
+                  <input 
+                    id="product-image-upload" 
+                    type="file" 
+                    accept="image/*" 
+                    className="hidden" 
+                    onChange={handleFileChange} 
+                  />
+                </div>
               </div>
               
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
