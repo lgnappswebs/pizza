@@ -118,7 +118,7 @@ export default function AdminCategoriesPage() {
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <LayoutDashboard className="mr-3 h-5 w-5" /> Dashboard
+              <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
@@ -243,7 +243,7 @@ export default function AdminCategoriesPage() {
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 overflow-x-auto">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <LayoutDashboard className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Home</span>
+          <span className="text-[10px] font-bold uppercase">Painel</span>
         </Link>
         <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <PizzaIcon className="h-5 w-5" />
