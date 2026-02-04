@@ -526,9 +526,9 @@ export default function AdminSettingsPage() {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+            <button className="flex flex-col items-center gap-1 min-w-[60px] text-primary">
               <Plus className="h-5 w-5 text-violet-600" />
-              <span className="text-[11px] font-bold uppercase">Mais</span>
+              <span className="text-[11px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
