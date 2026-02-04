@@ -304,11 +304,11 @@ export default function AdminBannersPage() {
               <div className="grid gap-2">
                 <Label htmlFor="image">Imagem do Banner (URL ou Galeria)</Label>
                 <div className="flex gap-2">
-                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1" placeholder="https://..." />
+                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2" placeholder="https://..." />
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="shrink-0 rounded-xl"
+                    className="shrink-0 rounded-xl border-2"
                     onClick={() => document.getElementById('banner-upload')?.click()}
                   >
                     <ImageIcon className="h-5 w-5 text-primary" />
@@ -316,7 +316,7 @@ export default function AdminBannersPage() {
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
               </div>
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
                   <Label>Exibir no App</Label>
                   <p className="text-xs text-muted-foreground">O banner aparecerá na página inicial</p>

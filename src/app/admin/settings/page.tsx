@@ -253,7 +253,7 @@ export default function AdminSettingsPage() {
                     id="restaurantName" 
                     value={form.restaurantName} 
                     onChange={(e) => setForm({...form, restaurantName: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
@@ -275,7 +275,7 @@ export default function AdminSettingsPage() {
                     placeholder="Ex: Pizza, Flame, Utensils"
                     value={form.logoIconName} 
                     onChange={(e) => setForm({...form, logoIconName: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -286,11 +286,11 @@ export default function AdminSettingsPage() {
                       placeholder="https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1"
+                      className="rounded-xl h-12 flex-1 border-2"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-12 rounded-xl"
+                      className="h-12 rounded-xl border-2"
                       onClick={() => document.getElementById('logo-upload')?.click()}
                     >
                       <ImageIcon className="h-5 w-5 text-primary" />
@@ -308,7 +308,7 @@ export default function AdminSettingsPage() {
                     placeholder="5511999999999"
                     value={form.whatsappNumber} 
                     onChange={(e) => setForm({...form, whatsappNumber: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -319,7 +319,7 @@ export default function AdminSettingsPage() {
                     step="0.01"
                     value={form.deliveryFee} 
                     onChange={(e) => setForm({...form, deliveryFee: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
               </div>
@@ -352,7 +352,7 @@ export default function AdminSettingsPage() {
                   placeholder="Ex: Aberto das 18h às 23h30"
                   value={form.openingHoursText} 
                   onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
-                  className="rounded-xl h-12"
+                  className="rounded-xl h-12 border-2"
                 />
               </div>
 
@@ -363,7 +363,7 @@ export default function AdminSettingsPage() {
                   placeholder="Esta mensagem aparecerá no topo do cardápio quando a loja estiver fechada."
                   value={form.closedMessage} 
                   onChange={(e) => setForm({...form, closedMessage: e.target.value})}
-                  className="rounded-2xl min-h-[100px]"
+                  className="rounded-2xl min-h-[100px] border-2"
                 />
               </div>
             </CardContent>
@@ -383,7 +383,7 @@ export default function AdminSettingsPage() {
                     id="menuTitle" 
                     value={form.menuTitle} 
                     onChange={(e) => setForm({...form, menuTitle: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -392,7 +392,7 @@ export default function AdminSettingsPage() {
                     id="menuSubtitle" 
                     value={form.menuSubtitle} 
                     onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
               </div>
@@ -404,7 +404,7 @@ export default function AdminSettingsPage() {
                     id="bannerText" 
                     value={form.heroBannerText} 
                     onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -414,11 +414,11 @@ export default function AdminSettingsPage() {
                       id="bannerImage" 
                       value={form.heroBannerImageUrl} 
                       onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1"
+                      className="rounded-xl h-12 flex-1 border-2"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-12 rounded-xl"
+                      className="h-12 rounded-xl border-2"
                       onClick={() => document.getElementById('banner-hero-upload')?.click()}
                     >
                       <ImageIcon className="h-5 w-5 text-primary" />
@@ -432,14 +432,14 @@ export default function AdminSettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="pColor">Cor Principal</Label>
                   <div className="flex gap-2">
-                    <Input id="pColor" value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="rounded-xl h-12 font-mono" />
+                    <Input id="pColor" value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="rounded-xl h-12 font-mono border-2" />
                     <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.primaryColor }}></div>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bgColor">Cor de Fundo</Label>
                   <div className="flex gap-2">
-                    <Input id="bgColor" value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="rounded-xl h-12 font-mono" />
+                    <Input id="bgColor" value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="rounded-xl h-12 font-mono border-2" />
                     <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.backgroundColor }}></div>
                   </div>
                 </div>
@@ -451,11 +451,11 @@ export default function AdminSettingsPage() {
                       placeholder="URL de padrão ou imagem"
                       value={form.appBackgroundImageUrl} 
                       onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1"
+                      className="rounded-xl h-12 flex-1 border-2"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-12 rounded-xl"
+                      className="h-12 rounded-xl border-2"
                       onClick={() => document.getElementById('bg-app-upload')?.click()}
                     >
                       <ImageIcon className="h-5 w-5 text-primary" />
@@ -480,7 +480,7 @@ export default function AdminSettingsPage() {
                   id="addressFooter" 
                   value={form.address} 
                   onChange={(e) => setForm({...form, address: e.target.value})}
-                  className="rounded-xl h-12"
+                  className="rounded-xl h-12 border-2"
                 />
               </div>
 
@@ -491,7 +491,7 @@ export default function AdminSettingsPage() {
                     id="contactPhone" 
                     value={form.contactPhone} 
                     onChange={(e) => setForm({...form, contactPhone: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
                 <div className="space-y-2">
@@ -500,7 +500,7 @@ export default function AdminSettingsPage() {
                     id="contactEmail" 
                     value={form.contactEmail} 
                     onChange={(e) => setForm({...form, contactEmail: e.target.value})}
-                    className="rounded-xl h-12"
+                    className="rounded-xl h-12 border-2"
                   />
                 </div>
               </div>
@@ -512,22 +512,22 @@ export default function AdminSettingsPage() {
                   placeholder="Ex: Olá, gostaria de tirar uma dúvida!"
                   value={form.whatsappAutoMessage} 
                   onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
-                  className="rounded-xl h-12"
+                  className="rounded-xl h-12 border-2"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1"><Instagram className="h-4 w-4" /> Instagram URL</Label>
-                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-12" />
+                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-12 border-2" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1"><Facebook className="h-4 w-4" /> Facebook URL</Label>
-                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-12" />
+                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-12 border-2" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1"><Music2 className="h-4 w-4" /> TikTok URL</Label>
-                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-12" />
+                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-12 border-2" />
                 </div>
               </div>
             </CardContent>

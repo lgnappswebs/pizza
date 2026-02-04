@@ -266,7 +266,7 @@ export default function AdminProductsPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 placeholder="Buscar produto pelo nome..." 
-                className="pl-10 h-12 rounded-xl"
+                className="pl-10 h-12 rounded-xl border-2"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -329,16 +329,16 @@ export default function AdminProductsPage() {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Nome do Produto</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl" />
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="desc">Descrição / Ingredientes</Label>
-                <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl" />
+                <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="category">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="rounded-xl h-12">
+                  <SelectTrigger className="rounded-xl h-12 border-2">
                     <SelectValue placeholder="Selecione" />
                   </SelectTrigger>
                   <SelectContent>
@@ -366,13 +366,13 @@ export default function AdminProductsPage() {
                       id="price" 
                       value={formData.price} 
                       onChange={(e) => handlePriceChange('price', e.target.value)} 
-                      className="rounded-xl h-12 pl-10" 
+                      className="rounded-xl h-12 pl-10 border-2" 
                       placeholder="0,00"
                     />
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-4 p-4 bg-muted/20 rounded-2xl border">
+                <div className="grid grid-cols-1 gap-4 p-4 bg-muted/20 rounded-2xl border-2">
                   <div className="grid gap-2">
                     <Label htmlFor="pSmall">Preço Pequena (Broto)</Label>
                     <div className="relative">
@@ -381,7 +381,7 @@ export default function AdminProductsPage() {
                         id="pSmall" 
                         value={formData.priceSmall} 
                         onChange={(e) => handlePriceChange('priceSmall', e.target.value)} 
-                        className="rounded-xl h-12 pl-10" 
+                        className="rounded-xl h-12 pl-10 border-2" 
                         placeholder="0,00"
                       />
                     </div>
@@ -394,7 +394,7 @@ export default function AdminProductsPage() {
                         id="pMedium" 
                         value={formData.priceMedium} 
                         onChange={(e) => handlePriceChange('priceMedium', e.target.value)} 
-                        className="rounded-xl h-12 pl-10" 
+                        className="rounded-xl h-12 pl-10 border-2" 
                         placeholder="0,00"
                       />
                     </div>
@@ -407,7 +407,7 @@ export default function AdminProductsPage() {
                         id="pLarge" 
                         value={formData.priceLarge} 
                         onChange={(e) => handlePriceChange('priceLarge', e.target.value)} 
-                        className="rounded-xl h-12 pl-10" 
+                        className="rounded-xl h-12 pl-10 border-2" 
                         placeholder="0,00"
                       />
                     </div>
@@ -422,13 +422,13 @@ export default function AdminProductsPage() {
                     id="image" 
                     value={formData.imageUrl} 
                     onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
-                    className="rounded-xl h-12 flex-1" 
+                    className="rounded-xl h-12 flex-1 border-2" 
                     placeholder="https://..." 
                   />
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="h-12 w-12 rounded-xl shrink-0 p-0"
+                    className="h-12 w-12 rounded-xl shrink-0 p-0 border-2"
                     onClick={() => document.getElementById('product-image-upload')?.click()}
                   >
                     <ImageIcon className="h-5 w-5 text-primary" />
@@ -443,14 +443,14 @@ export default function AdminProductsPage() {
                 </div>
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
                   <Label>Disponível na Loja</Label>
                 </div>
                 <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} />
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
                   <Label>Produto em Promoção</Label>
                 </div>

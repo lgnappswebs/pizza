@@ -238,13 +238,13 @@ export default function AdminCategoriesPage() {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name">Nome da Categoria</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl" placeholder="Ex: Pizzas Salgadas" />
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2" placeholder="Ex: Pizzas Salgadas" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="order">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
                    <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
-                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl" />
+                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2" />
                 </div>
                 <p className="text-xs text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
               </div>
