@@ -89,10 +89,10 @@ export default function AdminDashboard() {
   ];
 
   const stats = [
-    { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600' },
-    { title: 'Produtos Ativos', value: allProducts?.length.toString() || '0', icon: PizzaIcon, color: 'text-primary' },
-    { title: 'Total Pedidos', value: allOrders?.length.toString() || '0', icon: Users, color: 'text-green-600' },
-    { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: TrendingUp, color: 'text-secondary' },
+    { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600', href: '/admin/orders' },
+    { title: 'Produtos Ativos', value: allProducts?.length.toString() || '0', icon: PizzaIcon, color: 'text-primary', href: '/admin/products' },
+    { title: 'Total Pedidos', value: allOrders?.length.toString() || '0', icon: Users, color: 'text-green-600', href: '/admin/orders' },
+    { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: TrendingUp, color: 'text-secondary', href: '/admin/orders' },
   ];
 
   return (
@@ -170,17 +170,19 @@ export default function AdminDashboard() {
         <div className="p-8 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
-              <Card key={idx} className="border-2 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6 flex items-center gap-4">
-                  <div className={`p-3 rounded-2xl bg-muted/50 ${stat.color}`}>
-                    <stat.icon className="h-8 w-8" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</p>
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <Link key={idx} href={stat.href}>
+                <Card className="border-2 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer active:scale-95 transform transition duration-200">
+                  <CardContent className="p-6 flex items-center gap-4">
+                    <div className={`p-3 rounded-2xl bg-muted/50 ${stat.color}`}>
+                      <stat.icon className="h-8 w-8" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</p>
+                      <p className="text-2xl font-bold">{stat.value}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 
