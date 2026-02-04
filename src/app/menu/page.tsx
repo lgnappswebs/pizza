@@ -19,7 +19,8 @@ import {
   IceCream,
   Utensils,
   Salad,
-  LayoutGrid
+  LayoutGrid,
+  ChevronUp
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,7 +34,9 @@ import { cn } from '@/lib/utils';
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
-  const [activeCategory, setActiveCategory] = useState<string | null>(null); // Controla se as especialidades devem aparecer
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [showSpecialties, setShowSpecialties] = useState(false);
+  
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
@@ -54,7 +57,6 @@ export default function MenuPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Agrupar categorias pelo nome principal
   const groupedCategories = useMemo(() => {
     if (!categories) return {};
     const groups: Record<string, any[]> = {};
@@ -65,7 +67,6 @@ export default function MenuPage() {
     return groups;
   }, [categories]);
 
-  // Nomes únicos das categorias principais ordenados pela menor ordem encontrada no grupo
   const mainNames = useMemo(() => {
     if (!categories) return [];
     return Object.keys(groupedCategories).sort((a, b) => {
@@ -75,7 +76,12 @@ export default function MenuPage() {
     });
   }, [groupedCategories, categories]);
 
-  // Helper para ícones baseados no nome
+  useEffect(() => {
+    if (mainNames.length > 0 && !activeCategory) {
+      setActiveCategory(mainNames[0]);
+    }
+  }, [mainNames, activeCategory]);
+
   const getCategoryIcon = (name: string) => {
     const lowerName = name.toLowerCase();
     if (lowerName.includes('pizza')) return <PizzaIcon className="h-5 w-5" />;
@@ -87,7 +93,6 @@ export default function MenuPage() {
     return <LayoutGrid className="h-5 w-5" />;
   };
 
-  // Busca aprimorada
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     if (!searchTerm.trim()) return [];
@@ -117,6 +122,16 @@ export default function MenuPage() {
 
   const isAdmin = user && user.email === 'lgngregorio@icloud.com';
 
+  const handleTabClick = (name: string) => {
+    if (activeCategory === name) {
+      setShowSpecialties(!showSpecialties);
+    } else {
+      setActiveCategory(name);
+      setShowSpecialties(true);
+      setSelectedSubId('all');
+    }
+  };
+
   if (loadingCats || loadingProds) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -131,7 +146,6 @@ export default function MenuPage() {
       <main className="flex-1 pb-24">
         <div className="container mx-auto px-4 py-8">
           
-          {/* Alerta de Loja Fechada */}
           {config && !config.isStoreOpen && (
             <Alert variant="destructive" className="mb-8 rounded-3xl border-2 bg-red-50 text-red-900 border-red-200 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
               <div className="flex gap-4">
@@ -252,12 +266,9 @@ export default function MenuPage() {
                 </div>
               ) : (
                 <Tabs 
-                  defaultValue={mainNames[0]} 
+                  value={activeCategory || undefined}
                   className="w-full" 
-                  onValueChange={(val) => {
-                    setActiveCategory(val);
-                    setSelectedSubId('all');
-                  }}
+                  onValueChange={setActiveCategory}
                 >
                   <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
                     <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
@@ -265,7 +276,7 @@ export default function MenuPage() {
                         <TabsTrigger 
                           key={name} 
                           value={name}
-                          onClick={() => setActiveCategory(name)}
+                          onClick={() => handleTabClick(name)}
                           className="rounded-2xl px-6 py-3 md:px-8 md:py-4 text-base md:text-lg font-black tracking-tight border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 flex items-center gap-2 group shadow-sm whitespace-nowrap"
                         >
                           <span className="opacity-70 group-data-[state=active]:opacity-100 transition-opacity">
@@ -284,12 +295,22 @@ export default function MenuPage() {
                     return (
                       <TabsContent key={name} value={name} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none space-y-10">
                         
-                        {/* Subcategorias (Filtros de Sabores/Tipos) - Só aparece se a categoria principal for clicada */}
-                        {hasSubCategories && activeCategory === name && (
-                          <div className="flex flex-col items-center gap-5">
-                            <div className="flex items-center gap-2 px-4 py-1.5 bg-muted/50 rounded-full border border-muted-foreground/10">
-                              <Filter className="h-3.5 w-3.5 text-muted-foreground" />
-                              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Especialidade</span>
+                        {hasSubCategories && activeCategory === name && showSpecialties && (
+                          <div className="flex flex-col items-center gap-5 animate-in slide-in-from-top-4 fade-in duration-300">
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-2 px-4 py-1.5 bg-muted/50 rounded-full border border-muted-foreground/10">
+                                <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Especialidade</span>
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => setShowSpecialties(false)}
+                                className="h-8 rounded-full px-3 text-[10px] font-black uppercase tracking-wider text-muted-foreground hover:bg-destructive/10 hover:text-destructive flex items-center gap-1"
+                              >
+                                <ChevronUp className="h-3 w-3" />
+                                Ocultar Filtros
+                              </Button>
                             </div>
                             <div className="flex flex-wrap justify-center gap-3 max-w-3xl">
                               <Button 
@@ -323,7 +344,6 @@ export default function MenuPage() {
                           </div>
                         )}
 
-                        {/* Lista de Produtos */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                           {products?.filter(p => {
                             const pCat = categories?.find(c => c.id === p.categoryId);
