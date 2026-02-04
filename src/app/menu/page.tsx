@@ -485,9 +485,9 @@ export default function MenuPage() {
                   <span>Ver Pedido</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-black/10 px-5 py-2 rounded-2xl">
+              <div className="flex items-center gap-2 bg-black/20 px-5 py-2 rounded-2xl border-2 border-white/10 shadow-inner">
                 <span className="text-sm opacity-70">Total:</span>
-                <span className="text-2xl">R$ {total.toFixed(2)}</span>
+                <span className="text-2xl font-black">R$ {total.toFixed(2)}</span>
               </div>
             </Button>
           </Link>
