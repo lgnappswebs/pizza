@@ -42,7 +42,7 @@ import {
   useUser 
 } from '@/firebase';
 import { collection, doc } from 'firebase/firestore';
-import { useRouter } from 'navigation';
+import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 
 export default function AdminSettingsPage() {
@@ -493,7 +493,7 @@ export default function AdminSettingsPage() {
           <span className="text-[10px] font-bold uppercase">Pedidos</span>
         </Link>
         <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-primary">
-          <SettingsIcon className="h-6 w-6" />
+          <Settings className="h-6 w-6" />
           <span className="text-[10px] font-black uppercase">Ajustes</span>
         </Link>
         <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-destructive">
