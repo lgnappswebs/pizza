@@ -60,10 +60,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const SUBCATEGORY_SUGGESTIONS = [
-  "Salgadas", "Doces", "Especiais", "Premium", "Gourmet", 
-  "Tradicionais", "Promoção", "Veganas", "Zero Lactose",
-  "Importadas", "Artesanais", "Da Casa"
+const CATEGORIZED_SUGGESTIONS = [
+  {
+    title: "Pizzas",
+    items: ["Salgadas", "Doces", "Especiais", "Premium", "Gourmet", "Tradicionais", "Veganas", "Zero Lactose"]
+  },
+  {
+    title: "Bebidas",
+    items: ["Lata 350ml", "600ml", "Garrafa 2L", "Suco Natural", "Cerveja Long Neck", "Cerveja 600ml", "Vinho", "Água"]
+  },
+  {
+    title: "Porções & Entradas",
+    items: ["Batata Frita", "Frango a Passarinho", "Calabresa Acebolada", "Anéis de Cebola", "Mix de Aperitivos", "Bruschettas"]
+  },
+  {
+    title: "Combos & Ofertas",
+    items: ["Combo Família", "Combo Galera", "Combo Casal", "Combo Individual", "Promoção do Dia", "Mais Vendidos"]
+  },
+  {
+    title: "Especiais",
+    items: ["Artesanal", "Da Casa", "Importados", "Lançamento", "Gourmet", "Edição Limitada"]
+  }
 ];
 
 export default function AdminCategoriesPage() {
@@ -286,16 +303,23 @@ export default function AdminCategoriesPage() {
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
-                    <div className="flex flex-wrap gap-2 p-3 bg-muted/30 rounded-2xl border-2 border-dashed">
-                      {SUBCATEGORY_SUGGESTIONS.map((suggestion) => (
-                        <Badge 
-                          key={suggestion} 
-                          variant="secondary" 
-                          className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-3 rounded-full"
-                          onClick={() => addSuggestion(suggestion)}
-                        >
-                          {suggestion}
-                        </Badge>
+                    <div className="space-y-4 p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
+                      {CATEGORIZED_SUGGESTIONS.map((group) => (
+                        <div key={group.title} className="space-y-2">
+                          <p className="text-[10px] font-black uppercase text-muted-foreground ml-1">{group.title}</p>
+                          <div className="flex flex-wrap gap-2">
+                            {group.items.map((suggestion) => (
+                              <Badge 
+                                key={suggestion} 
+                                variant="secondary" 
+                                className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1 px-3 rounded-full text-[11px]"
+                                onClick={() => addSuggestion(suggestion)}
+                              >
+                                {suggestion}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
                       ))}
                     </div>
                   </CollapsibleContent>
