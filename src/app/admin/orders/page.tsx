@@ -3,7 +3,6 @@
 
 import { 
   Package, 
-  Search, 
   Clock, 
   MapPin, 
   Phone, 
@@ -15,12 +14,13 @@ import {
   LayoutDashboard,
   Pizza as PizzaIcon,
   Settings as SettingsIcon,
-  Plus,
-  LogOut
+  LogOut,
+  Layers,
+  Image as ImageIcon,
+  ExternalLink
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { 
@@ -91,9 +91,19 @@ export default function AdminOrdersPage() {
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
+          <Link href="/admin/categories">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Layers className="mr-3 h-5 w-5" /> Categorias
+            </Button>
+          </Link>
           <Link href="/admin/orders">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
               <Package className="mr-3 h-5 w-5" /> Pedidos
+            </Button>
+          </Link>
+          <Link href="/admin/banners">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
@@ -101,6 +111,13 @@ export default function AdminOrdersPage() {
               <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
             </Button>
           </Link>
+          <div className="pt-4 border-t mt-4">
+            <Link href="/menu" target="_blank">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+                <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
+              </Button>
+            </Link>
+          </div>
         </nav>
         <div className="p-4 border-t">
           <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
@@ -109,7 +126,7 @@ export default function AdminOrdersPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 pb-24 md:pb-8">
+      <main className="flex-1 p-8 pb-32 md:pb-8">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Monitor de Pedidos</h1>
@@ -200,28 +217,31 @@ export default function AdminOrdersPage() {
         )}
       </main>
 
-      {/* Menu Inferior para Mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-4 z-50">
-        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground">
-          <LayoutDashboard className="h-6 w-6" />
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 overflow-x-auto">
+        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <LayoutDashboard className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Home</span>
         </Link>
-        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground">
-          <PizzaIcon className="h-6 w-6" />
-          <span className="text-[10px] font-bold uppercase">Produtos</span>
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <PizzaIcon className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Prods</span>
         </Link>
-        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-primary">
-          <Package className="h-6 w-6" />
-          <span className="text-[10px] font-black uppercase">Pedidos</span>
+        <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Layers className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Cats</span>
         </Link>
-        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground">
-          <SettingsIcon className="h-6 w-6" />
+        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
+          <Package className="h-5 w-5" />
+          <span className="text-[10px] font-black uppercase">Peds</span>
+        </Link>
+        <Link href="/admin/banners" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <ImageIcon className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Banners</span>
+        </Link>
+        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <SettingsIcon className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Ajustes</span>
         </Link>
-        <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-destructive">
-          <LogOut className="h-6 w-6" />
-          <span className="text-[10px] font-bold uppercase">Sair</span>
-        </button>
       </nav>
     </div>
   );
