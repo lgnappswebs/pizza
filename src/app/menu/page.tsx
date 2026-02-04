@@ -412,7 +412,7 @@ export default function MenuPage() {
       )}
 
       {isAdmin && (
-        <div className="fixed top-24 right-4 md:right-8 z-40">
+        <div className="fixed bottom-32 md:bottom-8 left-4 md:left-8 z-40">
           <Link href="/admin/dashboard">
             <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all border-4 border-white">
               <LayoutGrid className="h-7 w-7" />
