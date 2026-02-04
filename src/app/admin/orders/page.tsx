@@ -1,0 +1,175 @@
+
+"use client"
+
+import { 
+  Package, 
+  Search, 
+  Clock, 
+  MapPin, 
+  Phone, 
+  User, 
+  Loader2,
+  CheckCircle2,
+  Truck,
+  Timer,
+  LayoutDashboard,
+  Pizza as PizzaIcon,
+  Plus
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { 
+  useCollection, 
+  useFirestore, 
+  useMemoFirebase, 
+  updateDocumentNonBlocking 
+} from '@/firebase';
+import { collection, query, orderBy, doc } from 'firebase/firestore';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+export default function AdminOrdersPage() {
+  const firestore = useFirestore();
+  const ordersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
+  const { data: orders, isLoading } = useCollection(ordersQuery);
+
+  const updateStatus = (orderId: string, newStatus: string) => {
+    updateDocumentNonBlocking(doc(firestore, 'pedidos', orderId), { status: newStatus });
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'New': return <Badge className="bg-blue-500">Novo</Badge>;
+      case 'Preparing': return <Badge className="bg-yellow-500">Em Preparo</Badge>;
+      case 'Out for Delivery': return <Badge className="bg-purple-500">Saiu para Entrega</Badge>;
+      case 'Delivered': return <Badge className="bg-green-500">Entregue</Badge>;
+      default: return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-muted/30 flex">
+      <aside className="w-64 bg-white border-r hidden md:flex flex-col">
+        <div className="p-6 border-b">
+          <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
+        </div>
+        <nav className="flex-1 p-4 space-y-2">
+          <Link href="/admin/dashboard">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <LayoutDashboard className="mr-3 h-5 w-5" /> Dashboard
+            </Button>
+          </Link>
+          <Link href="/admin/products">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
+            </Button>
+          </Link>
+          <Link href="/admin/orders">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
+              <Package className="mr-3 h-5 w-5" /> Pedidos
+            </Button>
+          </Link>
+          <Link href="/admin/settings">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Plus className="mr-3 h-5 w-5" /> Ajustes
+            </Button>
+          </Link>
+        </nav>
+      </aside>
+
+      <main className="flex-1 p-8">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Monitor de Pedidos</h1>
+            <p className="text-muted-foreground">Acompanhe e gerencie os pedidos em tempo real</p>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {orders?.map((order) => (
+              <Card key={order.id} className="rounded-2xl border-2 overflow-hidden">
+                <div className="flex flex-col md:flex-row">
+                  <div className="p-6 flex-1 space-y-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-black text-xl text-primary">#{order.id.slice(-4).toUpperCase()}</span>
+                          {getStatusBadge(order.status)}
+                        </div>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm 'de' d 'de' MMM", { locale: ptBR }) : 'Recentemente'}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-black text-primary">R$ {order.totalAmount.toFixed(2)}</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-dashed">
+                      <div className="space-y-2">
+                        <p className="flex items-center gap-2 font-bold"><User className="h-4 w-4 text-muted-foreground" /> {order.customerName}</p>
+                        <p className="flex items-center gap-2 text-sm text-muted-foreground"><Phone className="h-4 w-4" /> {order.customerPhoneNumber}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="flex items-start gap-2 text-sm">
+                          <MapPin className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" /> 
+                          {order.customerAddress}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-muted/30 p-6 w-full md:w-80 border-t md:border-t-0 md:border-l space-y-4">
+                    <p className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Atualizar Status</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button 
+                        variant={order.status === 'Preparing' ? 'default' : 'outline'} 
+                        size="sm" 
+                        className="rounded-xl h-10"
+                        onClick={() => updateStatus(order.id, 'Preparing')}
+                      >
+                        <Timer className="h-4 w-4 mr-2" /> Preparar
+                      </Button>
+                      <Button 
+                        variant={order.status === 'Out for Delivery' ? 'default' : 'outline'} 
+                        size="sm" 
+                        className="rounded-xl h-10"
+                        onClick={() => updateStatus(order.id, 'Out for Delivery')}
+                      >
+                        <Truck className="h-4 w-4 mr-2" /> Entregar
+                      </Button>
+                      <Button 
+                        variant={order.status === 'Delivered' ? 'default' : 'outline'} 
+                        size="sm" 
+                        className="rounded-xl h-10 col-span-2"
+                        onClick={() => updateStatus(order.id, 'Delivered')}
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-2" /> Finalizar
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+            {orders?.length === 0 && (
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
+                <Package className="h-16 w-16 mx-auto mb-4 text-muted" />
+                <h3 className="text-xl font-bold">Nenhum pedido hoje</h3>
+                <p className="text-muted-foreground">Assim que alguém pedir, aparecerá aqui!</p>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}

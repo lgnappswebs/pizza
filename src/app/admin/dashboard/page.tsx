@@ -3,37 +3,74 @@
 
 import { 
   LayoutDashboard, 
-  Pizza, 
+  Pizza as PizzaIcon, 
   Package, 
-  Settings, 
+  Settings as SettingsIcon, 
   LogOut, 
   TrendingUp, 
   Users, 
   ShoppingBag,
-  Bell
+  Bell,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
+import { 
+  useCollection, 
+  useFirestore, 
+  useMemoFirebase,
+  useUser 
+} from '@/firebase';
+import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { useRouter } from 'next/navigation';
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function AdminDashboard() {
-  const stats = [
-    { title: 'Pedidos Hoje', value: '24', icon: ShoppingBag, color: 'text-blue-600' },
-    { title: 'Produtos Ativos', value: '18', icon: Pizza, color: 'text-primary' },
-    { title: 'Novos Clientes', value: '12', icon: Users, color: 'text-green-600' },
-    { title: 'Receita Prevista', value: 'R$ 1.250,00', icon: TrendingUp, color: 'text-secondary' },
-  ];
+  const firestore = useFirestore();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
 
-  const recentOrders = [
-    { id: '#1234', client: 'João Silva', total: 'R$ 85,90', status: 'Novo', time: '10 min' },
-    { id: '#1233', client: 'Maria Oliveira', total: 'R$ 42,00', status: 'Em preparo', time: '25 min' },
-    { id: '#1232', client: 'Carlos Santos', total: 'R$ 120,50', status: 'Saiu para entrega', time: '40 min' },
+  const ordersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc'), limit(5)), [firestore]);
+  const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
+  const allOrdersQuery = useMemoFirebase(() => collection(firestore, 'pedidos'), [firestore]);
+
+  const { data: recentOrders, isLoading: loadingOrders } = useCollection(ordersQuery);
+  const { data: allProducts } = useCollection(productsQuery);
+  const { data: allOrders } = useCollection(allOrdersQuery);
+
+  if (isUserLoading) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
+
+  if (!user) {
+    router.push('/admin/login');
+    return null;
+  }
+
+  const handleLogout = async () => {
+    await signOut(getAuth());
+    router.push('/admin/login');
+  };
+
+  const totalRevenue = allOrders?.reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
+  const todayOrders = allOrders?.filter(order => {
+    if (!order.createdAt?.seconds) return false;
+    const orderDate = new Date(order.createdAt.seconds * 1000);
+    const today = new Date();
+    return orderDate.toDateString() === today.toDateString();
+  }).length || 0;
+
+  const stats = [
+    { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600' },
+    { title: 'Produtos Ativos', value: allProducts?.length.toString() || '0', icon: PizzaIcon, color: 'text-primary' },
+    { title: 'Total Pedidos', value: allOrders?.length.toString() || '0', icon: Users, color: 'text-green-600' },
+    { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: TrendingUp, color: 'text-secondary' },
   ];
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      {/* Sidebar */}
       <aside className="w-64 bg-white border-r hidden md:flex flex-col">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
@@ -46,7 +83,7 @@ export default function AdminDashboard() {
           </Link>
           <Link href="/admin/products">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <Pizza className="mr-3 h-5 w-5" /> Produtos
+              <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/orders">
@@ -56,20 +93,17 @@ export default function AdminDashboard() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <Settings className="mr-3 h-5 w-5" /> Ajustes
+              <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
             </Button>
           </Link>
         </nav>
         <div className="p-4 border-t">
-          <Link href="/">
-            <Button variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
-              <LogOut className="mr-3 h-5 w-5" /> Sair
-            </Button>
-          </Link>
+          <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
+            <LogOut className="mr-3 h-5 w-5" /> Sair
+          </Button>
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 overflow-auto">
         <header className="bg-white border-b h-20 flex items-center justify-between px-8">
           <h1 className="text-2xl font-bold">Painel de Controle</h1>
@@ -80,16 +114,17 @@ export default function AdminDashboard() {
             </Button>
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="font-bold">Admin PizzApp</p>
-                <p className="text-xs text-muted-foreground">Gerente</p>
+                <p className="font-bold">{user.email?.split('@')[0] || 'Admin'}</p>
+                <p className="text-xs text-muted-foreground">Administrador</p>
               </div>
-              <div className="h-10 w-10 bg-primary rounded-full"></div>
+              <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
+                {user.email?.charAt(0).toUpperCase()}
+              </div>
             </div>
           </div>
         </header>
 
         <div className="p-8 space-y-8">
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
               <Card key={idx} className="border-2 rounded-2xl overflow-hidden">
@@ -106,7 +141,6 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          {/* Recent Orders Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <Card className="lg:col-span-2 rounded-2xl border-2">
               <CardHeader>
@@ -114,50 +148,62 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
-                      <div className="flex items-center gap-4">
-                        <div className="font-bold text-primary">{order.id}</div>
-                        <div>
-                          <p className="font-bold">{order.client}</p>
-                          <p className="text-xs text-muted-foreground">Há {order.time}</p>
+                  {loadingOrders ? (
+                    <div className="flex justify-center py-8"><Loader2 className="animate-spin" /></div>
+                  ) : (
+                    recentOrders?.map((order) => (
+                      <div key={order.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
+                        <div className="flex items-center gap-4">
+                          <div className="font-bold text-primary">#{order.id.slice(-4).toUpperCase()}</div>
+                          <div>
+                            <p className="font-bold">{order.customerName}</p>
+                            <p className="text-xs text-muted-foreground">R$ {order.totalAmount.toFixed(2)}</p>
+                          </div>
+                        </div>
+                        <div className="text-right flex items-center gap-6">
+                          <div className="hidden sm:block">
+                            <Badge variant="secondary" className="mt-1">{order.status}</Badge>
+                          </div>
+                          <Link href="/admin/orders">
+                            <Button variant="outline" className="rounded-xl">Ver Pedidos</Button>
+                          </Link>
                         </div>
                       </div>
-                      <div className="text-right flex items-center gap-6">
-                        <div className="hidden sm:block">
-                          <p className="font-bold">{order.total}</p>
-                          <Badge variant="secondary" className="mt-1">{order.status}</Badge>
-                        </div>
-                        <Button variant="outline" className="rounded-xl">Ver Detalhes</Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
+                  {recentOrders?.length === 0 && (
+                    <p className="text-center py-8 text-muted-foreground">Nenhum pedido registrado ainda.</p>
+                  )}
                 </div>
-                <Button variant="link" className="w-full mt-4 text-primary font-bold">
-                  Ver todos os pedidos
-                </Button>
+                <Link href="/admin/orders">
+                  <Button variant="link" className="w-full mt-4 text-primary font-bold">
+                    Ver todos os pedidos
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
             <Card className="rounded-2xl border-2">
               <CardHeader>
-                <CardTitle className="text-xl font-bold">Configuração Rápida</CardTitle>
+                <CardTitle className="text-xl font-bold">Gestão Rápida</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Status da Loja</p>
-                  <div className="flex items-center justify-between p-3 bg-green-50 text-green-700 rounded-xl border border-green-200">
-                    <span className="font-bold">LOJA ABERTA</span>
-                    <Button size="sm" variant="destructive" className="rounded-lg h-8">Fechar Agora</Button>
-                  </div>
+                  <p className="text-sm font-medium">Link da Loja</p>
+                  <Button variant="outline" className="w-full justify-start rounded-xl truncate" onClick={() => window.open('/', '_blank')}>
+                    Abrir Cardápio Público
+                  </Button>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Promoção em Destaque</p>
-                  <div className="p-4 bg-secondary/10 rounded-xl border border-secondary/20">
-                    <p className="font-bold">Combo Família</p>
-                    <p className="text-sm text-muted-foreground">Pizza GG + Refri 2L por R$ 59,90</p>
-                    <Button variant="outline" className="w-full mt-3 h-8 border-secondary text-secondary-foreground hover:bg-secondary/20">Editar Promoção</Button>
-                  </div>
+                  <p className="text-sm font-medium">Produtos</p>
+                  <Link href="/admin/products">
+                    <Button className="w-full rounded-xl bg-primary">Gerenciar Cardápio</Button>
+                  </Link>
+                </div>
+                <div className="pt-4 border-t">
+                  <p className="text-xs text-muted-foreground text-center">
+                    PizzApp v1.0 - Conectado ao Firebase
+                  </p>
                 </div>
               </CardContent>
             </Card>
