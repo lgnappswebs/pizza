@@ -232,9 +232,9 @@ export default function AdminFinancePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:flex-1 lg:max-w-md justify-center">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:flex-1 lg:max-w-md">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="w-14 h-9 border-none font-bold px-1">
+                <SelectTrigger className="flex-1 h-9 border-none font-bold px-1 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -243,7 +243,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="w-28 h-9 border-none font-bold px-1">
+                <SelectTrigger className="flex-[2] h-9 border-none font-bold px-1 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -252,7 +252,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="w-20 h-9 border-none font-bold px-1">
+                <SelectTrigger className="flex-1 h-9 border-none font-bold px-1 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -469,4 +469,3 @@ export default function AdminFinancePage() {
     </div>
   );
 }
-
