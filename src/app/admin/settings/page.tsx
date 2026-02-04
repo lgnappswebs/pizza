@@ -134,7 +134,7 @@ export default function AdminSettingsPage() {
         logoIconName: config.logoIconName || '',
         logoImageUrl: config.logoImageUrl || '',
         whatsappNumber: handlePhoneMask(config.whatsappNumber || ''),
-        deliveryFee: formatCurrency((config.deliveryFee || 0).toFixed(2).replace('.', '')),
+        deliveryFee: formatCurrency((config.deliveryFee || 0).toFixed(2).toString().replace('.', '')),
         isStoreOpen: config.isStoreOpen ?? true,
         openingHoursText: config.openingHoursText || '',
         closedMessage: config.closedMessage || '',
@@ -264,7 +264,7 @@ export default function AdminSettingsPage() {
         </Link>
 
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-4xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
@@ -282,7 +282,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="restaurantName" className="text-lg font-bold">Nome da Pizzaria</Label>
                   <Input 
                     id="restaurantName" 
-                    placeholder="Ex: PizzApp Rápido"
+                    placeholder="Ex: PizzApp"
                     value={form.restaurantName} 
                     onChange={(e) => setForm({...form, restaurantName: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -303,7 +303,7 @@ export default function AdminSettingsPage() {
                   </Label>
                   <Input 
                     id="logoIconName" 
-                    placeholder="Ex: Pizza, Flame, Utensils, Flame"
+                    placeholder="Ex: Pizza"
                     value={form.logoIconName} 
                     onChange={(e) => setForm({...form, logoIconName: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -331,7 +331,7 @@ export default function AdminSettingsPage() {
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
-                      placeholder="Ex: https://suaimagem.com/logo.png"
+                      placeholder="https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
                       className="rounded-xl h-14 flex-1 border-2 text-lg"
@@ -351,7 +351,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="whatsapp" className="text-lg font-bold">Número do WhatsApp para Pedidos</Label>
                   <Input 
                     id="whatsapp" 
-                    placeholder="Ex: (11) 99999-9999"
+                    placeholder="(00) 00000-0000"
                     value={form.whatsappNumber} 
                     onChange={(e) => setForm({...form, whatsappNumber: handlePhoneMask(e.target.value)})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -364,7 +364,7 @@ export default function AdminSettingsPage() {
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">R$</span>
                     <Input 
                       id="fee" 
-                      placeholder="Ex: 5,00"
+                      placeholder="0,00"
                       value={form.deliveryFee} 
                       onChange={(e) => setForm({...form, deliveryFee: formatCurrency(e.target.value)})}
                       className="rounded-xl h-14 pl-14 border-2 text-lg"
@@ -430,7 +430,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="menuTitle" className="text-lg font-bold">Título do Cardápio</Label>
                   <Input 
                     id="menuTitle" 
-                    placeholder="Ex: Nosso Cardápio"
+                    placeholder="Nosso Cardápio"
                     value={form.menuTitle} 
                     onChange={(e) => setForm({...form, menuTitle: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -440,7 +440,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="menuSubtitle" className="text-lg font-bold">Subtítulo do Cardápio</Label>
                   <Input 
                     id="menuSubtitle" 
-                    placeholder="Ex: Escolha suas pizzas favoritas e monte seu pedido"
+                    placeholder="Escolha suas pizzas favoritas e monte seu pedido"
                     value={form.menuSubtitle} 
                     onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -450,7 +450,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="bannerText" className="text-lg font-bold">Texto do Banner Principal</Label>
                   <Input 
                     id="bannerText" 
-                    placeholder="Ex: Pizza quentinha, sabor inesquecível 🍕🔥"
+                    placeholder="Pizza quentinha, sabor inesquecível 🍕🔥"
                     value={form.heroBannerText} 
                     onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -477,7 +477,7 @@ export default function AdminSettingsPage() {
                   <div className="flex gap-2">
                     <Input 
                       id="bannerImage" 
-                      placeholder="Ex: https://suaimagem.com/banner-pizza.jpg"
+                      placeholder="https://suaimagem.com/banner-pizza.jpg"
                       value={form.heroBannerImageUrl} 
                       onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
                       className="rounded-xl h-14 flex-1 border-2 text-lg"
@@ -507,7 +507,7 @@ export default function AdminSettingsPage() {
                 <Label htmlFor="addressFooter" className="text-lg font-bold">Endereço Físico (Rodapé)</Label>
                 <Input 
                   id="addressFooter" 
-                  placeholder="Ex: Rua das Pizzas, 123 - Centro"
+                  placeholder="Rua das Pizzas, 123"
                   value={form.address} 
                   onChange={(e) => setForm({...form, address: e.target.value})}
                   className="rounded-xl h-14 border-2 text-lg"
@@ -519,9 +519,9 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="contactPhone" className="text-lg font-bold">Telefone de Contato (Rodapé)</Label>
                   <Input 
                     id="contactPhone" 
-                    placeholder="Ex: (11) 1234-5678"
+                    placeholder="(00) 0000-0000"
                     value={form.contactPhone} 
-                    onChange={(e) => setForm({...form, contactPhone: e.target.value})}
+                    onChange={(e) => setForm({...form, contactPhone: handlePhoneMask(e.target.value)})}
                     className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
@@ -529,7 +529,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="contactEmail" className="text-lg font-bold">E-mail de Contato</Label>
                   <Input 
                     id="contactEmail" 
-                    placeholder="Ex: contato@suapizzaria.com"
+                    placeholder="contato@suapizzaria.com"
                     value={form.contactEmail} 
                     onChange={(e) => setForm({...form, contactEmail: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -541,7 +541,7 @@ export default function AdminSettingsPage() {
                 <Label htmlFor="waAuto" className="text-lg font-bold">Mensagem Automática do WhatsApp (Rodapé)</Label>
                 <Input 
                   id="waAuto" 
-                  placeholder="Ex: Olá, gostaria de tirar uma dúvida!"
+                  placeholder="Olá! Gostaria de tirar uma dúvida."
                   value={form.whatsappAutoMessage} 
                   onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
                   className="rounded-xl h-14 border-2 text-lg"
