@@ -1,0 +1,367 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product in the pizza restaurant's menu.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the product."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product's image.",
+          "format": "uri"
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the product."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Product)"
+        },
+        "isAvailable": {
+          "type": "boolean",
+          "description": "Indicates whether the product is currently available."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "imageUrl",
+        "price",
+        "categoryId",
+        "isAvailable"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a category of products (e.g., Pizzas, Drinks).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the category."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the category."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the category's image.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "imageUrl"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order."
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Name of the customer who placed the order."
+        },
+        "customerAddress": {
+          "type": "string",
+          "description": "Delivery address for the order."
+        },
+        "customerPhoneNumber": {
+          "type": "string",
+          "description": "Phone number of the customer."
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "Date and time the order was placed.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total amount of the order."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the order (e.g., New, Preparing, Out for Delivery, Delivered)."
+        },
+        "items": {
+          "type": "array",
+          "description": "References to OrderItem. (Relationship: Order 1:N OrderItem)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "customerName",
+        "customerAddress",
+        "customerPhoneNumber",
+        "orderDate",
+        "totalAmount",
+        "status",
+        "items"
+      ]
+    },
+    "Banner": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Banner",
+      "type": "object",
+      "description": "Represents a banner displayed on the app with promotional content.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the banner."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the banner."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the banner's image.",
+          "format": "uri"
+        },
+        "link": {
+          "type": "string",
+          "description": "URL to which the banner links.",
+          "format": "uri"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the banner is currently active."
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "imageUrl",
+        "link",
+        "isActive"
+      ]
+    },
+    "Configuration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Configuration",
+      "type": "object",
+      "description": "Represents global configuration settings for the app.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the configuration settings. Should only have one document for this collection."
+        },
+        "restaurantName": {
+          "type": "string",
+          "description": "Name of the pizza restaurant."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL of the restaurant's logo.",
+          "format": "uri"
+        },
+        "primaryColor": {
+          "type": "string",
+          "description": "Primary color of the app's theme (hex code)."
+        },
+        "secondaryColor": {
+          "type": "string",
+          "description": "Secondary color of the app's theme (hex code)."
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "description": "The restaurant's WhatsApp number to receive orders."
+        },
+        "deliveryFee": {
+          "type": "number",
+          "description": "The delivery fee charged by the restaurant"
+        }
+      },
+      "required": [
+        "id",
+        "restaurantName",
+        "logoUrl",
+        "primaryColor",
+        "secondaryColor",
+        "whatsappNumber",
+        "deliveryFee"
+      ]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents an item within an order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the order item."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to Order. (Relationship: Order 1:N OrderItem)"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N OrderItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the product in the order item."
+        },
+        "size": {
+          "type": "string",
+          "description": "Size of the product. Applicable if the product has size options."
+        },
+        "extraNotes": {
+          "type": "string",
+          "description": "Extra notes added to the product from the user."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "productId",
+        "quantity"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/produtos/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores information about each product offered by the pizzeria. Public read access, restricted write access to authenticated users.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categorias/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores categories of products (e.g., Pizzas, Drinks). Public read access, restricted write access to authenticated users.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pedidos/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores information about customer orders. Public create access. Restricted read, update, and delete access to authenticated users.",
+          "params": [
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/pedidos/{orderId}/items/{orderItemId}",
+        "definition": {
+          "entityName": "OrderItem",
+          "schema": {
+            "$ref": "#/backend/entities/OrderItem"
+          },
+          "description": "Stores items associated with each order.  Restricted read, update, and delete access to authenticated users.",
+          "params": [
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            },
+            {
+              "name": "orderItemId",
+              "description": "The unique identifier for the order item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/banners/{bannerId}",
+        "definition": {
+          "entityName": "Banner",
+          "schema": {
+            "$ref": "#/backend/entities/Banner"
+          },
+          "description": "Stores promotional banners displayed in the app. Public read access, restricted write access to authenticated users.",
+          "params": [
+            {
+              "name": "bannerId",
+              "description": "The unique identifier for the banner."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/configuracoes/{configId}",
+        "definition": {
+          "entityName": "Configuration",
+          "schema": {
+            "$ref": "#/backend/entities/Configuration"
+          },
+          "description": "Stores global configuration settings for the app. Should only have one document. Public read access, restricted write access to authenticated users.",
+          "params": [
+            {
+              "name": "configId",
+              "description": "The unique identifier for the configuration. Should only have one document."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed for a pizza ordering application, prioritizing ease of management and scalability. It leverages Structural Segregation, separating data with different access requirements into different collections. Authorization Independence is achieved by limiting write access based on authentication, ensuring only authenticated users (admins) can modify product, category, banner and configuration data. Orders are publicly accessible for creation to facilitate the lack of authentication required. The structure supports the QAPs by using collection-based rules, enabling efficient listing and filtering of data. This design ensures security, simplicity, and efficient querying for the application's core features."
+  }
+}
