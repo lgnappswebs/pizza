@@ -66,26 +66,33 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white">
-              {config?.logoImageUrl ? (
-                <Image 
-                  src={config.logoImageUrl} 
-                  alt={config.restaurantName || "Logo"} 
-                  fill 
-                  className="object-cover"
-                />
-              ) : config?.showLogoIcon ? (
-                <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-              ) : (
-                <Image 
-                  src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
-                  alt="Logo" 
-                  fill 
-                  className="object-cover"
-                />
-              )}
+              {configs ? (
+                config?.logoImageUrl ? (
+                  <Image 
+                    src={config.logoImageUrl} 
+                    alt={config.restaurantName || "Logo"} 
+                    fill 
+                    className="object-cover"
+                  />
+                ) : config?.showLogoIcon ? (
+                  <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                ) : (
+                  <Image 
+                    src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                    alt="Logo" 
+                    fill 
+                    className="object-cover"
+                  />
+                )
+              ) : null}
             </div>
-            <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap">
-              {config?.restaurantName || "PizzApp"} <span className="text-secondary">{config?.restaurantName ? "" : "Rápido"}</span>
+            <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap min-w-[50px]">
+              {configs ? (
+                <>
+                  {config?.restaurantName || "PizzApp"} 
+                  {!config?.restaurantName && <span className="text-secondary ml-1">Rápido</span>}
+                </>
+              ) : null}
             </span>
           </Link>
         </div>

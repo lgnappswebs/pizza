@@ -146,7 +146,7 @@ export default function MenuPage() {
       <main className="flex-1 pb-24">
         <div className="container mx-auto px-4 py-8">
           
-          {config && !config.isStoreOpen && (
+          {configs && config && !config.isStoreOpen && (
             <Alert variant="destructive" className="mb-8 rounded-3xl border-2 bg-red-50 text-red-900 border-red-200 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
               <div className="flex gap-4">
                 <div className="bg-red-600 p-3 rounded-2xl shrink-0 h-fit">
@@ -168,13 +168,17 @@ export default function MenuPage() {
             </Alert>
           )}
 
-          <div className="mb-10 text-center space-y-3">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-              {config?.menuTitle || "Nosso Cardápio"}
-            </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-              {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
-            </p>
+          <div className="mb-10 text-center space-y-3 min-h-[120px]">
+            {configs ? (
+              <>
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
+                  {config?.menuTitle || "Nosso Cardápio"}
+                </h1>
+                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
+                  {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+                </p>
+              </>
+            ) : null}
           </div>
 
           <div className="max-w-xl mx-auto mb-12 relative group">
@@ -412,7 +416,7 @@ export default function MenuPage() {
       )}
 
       {isAdmin && (
-        <div className="fixed bottom-32 md:bottom-28 right-4 md:right-8 z-40">
+        <div className="fixed bottom-10 right-4 md:right-8 z-40">
           <Link href="/admin/dashboard">
             <Button size="icon" className="h-16 w-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all border-4 border-white">
               <LayoutGrid className="h-8 w-8" />
