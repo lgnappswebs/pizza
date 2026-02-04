@@ -22,7 +22,8 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  Eye
+  Eye,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -41,7 +42,8 @@ import {
   useUser 
 } from '@/firebase';
 import { collection, doc } from 'firebase/firestore';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'navigation';
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function AdminSettingsPage() {
   const firestore = useFirestore();
@@ -120,6 +122,11 @@ export default function AdminSettingsPage() {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
   }
 
+  const handleLogout = async () => {
+    await signOut(getAuth());
+    router.push('/admin/login');
+  };
+
   const handleSave = () => {
     setLoading(true);
     const data = {
@@ -143,7 +150,7 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
@@ -170,9 +177,14 @@ export default function AdminSettingsPage() {
             </Button>
           </Link>
         </nav>
+        <div className="p-4 border-t">
+          <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
+            <LogOut className="mr-3 h-5 w-5" /> Sair
+          </Button>
+        </div>
       </aside>
 
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-8 overflow-y-auto pb-24">
         <div className="mb-8">
           <h1 className="text-4xl font-black">Ajustes do Aplicativo</h1>
           <p className="text-muted-foreground text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
@@ -465,6 +477,30 @@ export default function AdminSettingsPage() {
           </div>
         </div>
       </main>
+
+      {/* Menu Inferior para Mobile */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-4 z-50">
+        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <LayoutDashboard className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Home</span>
+        </Link>
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <PizzaIcon className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Produtos</span>
+        </Link>
+        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <Package className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Pedidos</span>
+        </Link>
+        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-primary">
+          <SettingsIcon className="h-6 w-6" />
+          <span className="text-[10px] font-black uppercase">Ajustes</span>
+        </Link>
+        <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-destructive">
+          <LogOut className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Sair</span>
+        </button>
+      </nav>
     </div>
   );
 }

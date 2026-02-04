@@ -14,7 +14,9 @@ import {
   Timer,
   LayoutDashboard,
   Pizza as PizzaIcon,
-  Plus
+  Settings as SettingsIcon,
+  Plus,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,6 +35,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
@@ -52,6 +55,11 @@ export default function AdminOrdersPage() {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
   }
 
+  const handleLogout = async () => {
+    await signOut(getAuth());
+    router.push('/admin/login');
+  };
+
   const updateStatus = (orderId: string, newStatus: string) => {
     updateDocumentNonBlocking(doc(firestore, 'pedidos', orderId), { status: newStatus });
   };
@@ -67,8 +75,8 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
-      <aside className="w-64 bg-white border-r hidden md:flex flex-col">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
+      <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
         </div>
@@ -90,13 +98,18 @@ export default function AdminOrdersPage() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <Plus className="mr-3 h-5 w-5" /> Ajustes
+              <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
             </Button>
           </Link>
         </nav>
+        <div className="p-4 border-t">
+          <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
+            <LogOut className="mr-3 h-5 w-5" /> Sair
+          </Button>
+        </div>
       </aside>
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 pb-24 md:pb-8">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">Monitor de Pedidos</h1>
@@ -186,6 +199,30 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </main>
+
+      {/* Menu Inferior para Mobile */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-4 z-50">
+        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <LayoutDashboard className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Home</span>
+        </Link>
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <PizzaIcon className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Produtos</span>
+        </Link>
+        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-primary">
+          <Package className="h-6 w-6" />
+          <span className="text-[10px] font-black uppercase">Pedidos</span>
+        </Link>
+        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <SettingsIcon className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Ajustes</span>
+        </Link>
+        <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-destructive">
+          <LogOut className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Sair</span>
+        </button>
+      </nav>
     </div>
   );
 }

@@ -93,7 +93,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-muted/30 flex">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
@@ -127,7 +127,7 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-24 md:pb-0">
         <header className="bg-white border-b h-20 flex items-center justify-between px-8 sticky top-0 z-20">
           <h1 className="text-2xl font-bold">Painel de Controle</h1>
           <div className="flex items-center gap-4">
@@ -243,6 +243,30 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Menu Inferior para Mobile */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-4 z-50">
+        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-primary">
+          <LayoutDashboard className="h-6 w-6" />
+          <span className="text-[10px] font-black uppercase">Home</span>
+        </Link>
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <PizzaIcon className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Produtos</span>
+        </Link>
+        <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <Package className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Pedidos</span>
+        </Link>
+        <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground">
+          <SettingsIcon className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Ajustes</span>
+        </Link>
+        <button onClick={handleLogout} className="flex flex-col items-center gap-1 text-destructive">
+          <LogOut className="h-6 w-6" />
+          <span className="text-[10px] font-bold uppercase">Sair</span>
+        </button>
+      </nav>
     </div>
   );
 }
