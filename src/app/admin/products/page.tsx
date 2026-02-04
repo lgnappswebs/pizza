@@ -171,7 +171,7 @@ export default function AdminProductsPage() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-              <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
+              <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
@@ -343,7 +343,7 @@ export default function AdminProductsPage() {
         </Link>
         <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <SettingsIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Ajustes</span>
+          <span className="text-[10px] font-bold uppercase">Personalizar</span>
         </Link>
       </nav>
     </div>

@@ -183,7 +183,7 @@ export default function AdminSettingsPage() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
-              <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
+              <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
@@ -203,7 +203,7 @@ export default function AdminSettingsPage() {
 
       <main className="flex-1 p-8 overflow-y-auto pb-32">
         <div className="mb-8 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Ajustes do Aplicativo</h1>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black whitespace-nowrap overflow-hidden text-ellipsis">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
@@ -514,7 +514,7 @@ export default function AdminSettingsPage() {
         </Link>
         <Link href="/admin/settings" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
           <SettingsIcon className="h-5 w-5" />
-          <span className="text-[10px] font-black uppercase">Ajustes</span>
+          <span className="text-[10px] font-black uppercase">Personalizar</span>
         </Link>
       </nav>
     </div>
