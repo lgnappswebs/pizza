@@ -55,6 +55,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
 import { format, isSameDay, isSameMonth, isSameYear, startOfToday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -79,16 +80,7 @@ export default function AdminFinancePage() {
   const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
   const { data: allOrders, isLoading } = useCollection(allOrdersQuery);
 
-  if (isUserLoading || !user) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
-  }
-
-  const handleLogout = async () => {
-    await signOut(getAuth());
-    router.push('/admin/login');
-  };
-
-  // Lógica de Filtragem
+  // Lógica de Filtragem (Hooks movidos para cima para evitar erro de Rules of Hooks)
   const filteredOrders = useMemo(() => {
     if (!allOrders) return [];
     return allOrders.filter(order => {
@@ -103,8 +95,8 @@ export default function AdminFinancePage() {
     });
   }, [allOrders, selectedDay, selectedMonth, selectedYear]);
 
-  const deliveredInPeriod = filteredOrders.filter(o => o.status === 'Delivered');
-  const revenueInPeriod = deliveredInPeriod.reduce((acc, order) => acc + (order.totalAmount || 0), 0);
+  const deliveredInPeriod = useMemo(() => filteredOrders.filter(o => o.status === 'Delivered'), [filteredOrders]);
+  const revenueInPeriod = useMemo(() => deliveredInPeriod.reduce((acc, order) => acc + (order.totalAmount || 0), 0), [deliveredInPeriod]);
   
   // Faturamento HOJE (Sempre atualizado para o dia real)
   const revenueToday = useMemo(() => {
@@ -120,7 +112,16 @@ export default function AdminFinancePage() {
   }, [allOrders]);
 
   // Médias e Estatísticas
-  const averageTicket = deliveredInPeriod.length > 0 ? revenueInPeriod / deliveredInPeriod.length : 0;
+  const averageTicket = useMemo(() => deliveredInPeriod.length > 0 ? revenueInPeriod / deliveredInPeriod.length : 0, [deliveredInPeriod.length, revenueInPeriod]);
+
+  if (isUserLoading || !user) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
+
+  const handleLogout = async () => {
+    await signOut(getAuth());
+    router.push('/admin/login');
+  };
 
   // Gerar Relatório de Texto
   const handleShareText = (period: 'day' | 'month' | 'year') => {
