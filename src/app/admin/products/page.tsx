@@ -471,7 +471,7 @@ export default function AdminProductsPage() {
             </div>
             <DialogFooter className="mt-6">
               <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95">
-                Salvar Alterações
+                Salvar Produto
               </Button>
             </DialogFooter>
           </DialogContent>
