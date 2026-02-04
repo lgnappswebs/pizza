@@ -1,12 +1,12 @@
 
 "use client"
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { Footer } from '@/components/pizzeria/Footer';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck, Clock, X } from 'lucide-react';
+import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck, Clock, X, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -14,9 +14,11 @@ import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
+import { cn } from '@/lib/utils';
 
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSubId, setSelectedSubId] = useState('all');
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
@@ -37,7 +39,28 @@ export default function MenuPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Busca aprimorada que aceita múltiplos termos e termos de linguagem natural
+  // Agrupar categorias pelo nome principal
+  const groupedCategories = useMemo(() => {
+    if (!categories) return {};
+    const groups: Record<string, any[]> = {};
+    categories.forEach(cat => {
+      if (!groups[cat.name]) groups[cat.name] = [];
+      groups[cat.name].push(cat);
+    });
+    return groups;
+  }, [categories]);
+
+  // Nomes únicos das categorias principais ordenados pela menor ordem encontrada no grupo
+  const mainNames = useMemo(() => {
+    if (!categories) return [];
+    return Object.keys(groupedCategories).sort((a, b) => {
+      const minA = Math.min(...groupedCategories[a].map(c => c.order));
+      const minB = Math.min(...groupedCategories[b].map(c => c.order));
+      return minA - minB;
+    });
+  }, [groupedCategories, categories]);
+
+  // Busca aprimorada
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     if (!searchTerm.trim()) return [];
@@ -51,12 +74,10 @@ export default function MenuPage() {
       const category = categories?.find(c => c.id === p.categoryId)?.name.toLowerCase() || '';
       const subCategory = categories?.find(c => c.id === p.categoryId)?.subName?.toLowerCase() || '';
 
-      // Busca por frase completa
       if (name.includes(searchLower) || desc.includes(searchLower) || category.includes(searchLower)) {
         return true;
       }
 
-      // Busca por termos individuais (linguagem flexível)
       if (searchTerms.length > 0) {
         return searchTerms.some(term => 
           name.includes(term) || desc.includes(term) || category.includes(term) || subCategory.includes(term)
@@ -185,39 +206,84 @@ export default function MenuPage() {
             </div>
           ) : (
             <>
-              {!categories || categories.length === 0 ? (
+              {!mainNames || mainNames.length === 0 ? (
                 <div className="text-center py-20">
                   <PizzaIcon className="h-16 w-16 text-muted mx-auto mb-4" />
                   <h2 className="text-2xl font-bold">Nenhuma categoria encontrada</h2>
                   <p className="text-muted-foreground">O cardápio está sendo preparado!</p>
                 </div>
               ) : (
-                <Tabs defaultValue={categories[0].id} className="w-full">
+                <Tabs defaultValue={mainNames[0]} className="w-full" onValueChange={() => setSelectedSubId('all')}>
                   <div className="flex justify-center mb-8">
                     <TabsList className="bg-muted p-1 rounded-2xl h-auto flex-wrap justify-center overflow-x-auto">
-                      {categories.map((cat) => (
+                      {mainNames.map((name) => (
                         <TabsTrigger 
-                          key={cat.id} 
-                          value={cat.id}
-                          className="rounded-xl px-6 py-3 text-lg font-bold data-[state=active]:bg-primary data-[state=active]:text-white transition-all flex flex-col items-center"
+                          key={name} 
+                          value={name}
+                          className="rounded-xl px-8 py-4 text-xl font-black data-[state=active]:bg-primary data-[state=active]:text-white transition-all shadow-sm"
                         >
-                          <span>{cat.name}</span>
-                          {cat.subName && (
-                            <span className="text-[10px] uppercase font-normal opacity-70 leading-none mt-0.5">
-                              {cat.subName}
-                            </span>
-                          )}
+                          {name}
                         </TabsTrigger>
                       ))}
                     </TabsList>
                   </div>
 
-                  {categories.map((cat) => {
-                    const categoryProducts = products?.filter(p => p.categoryId === cat.id);
+                  {mainNames.map((name) => {
+                    const group = groupedCategories[name];
+                    const hasSubCategories = group.some(c => c.subName) || group.length > 1;
+                    
                     return (
-                      <TabsContent key={cat.id} value={cat.id} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none">
+                      <TabsContent key={name} value={name} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none space-y-8">
+                        
+                        {/* Subcategorias (Filtros de Sabores/Tipos) */}
+                        {hasSubCategories && (
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <Filter className="h-4 w-4" />
+                              <span className="text-xs font-bold uppercase tracking-wider">Filtrar por:</span>
+                            </div>
+                            <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
+                              <Button 
+                                variant={selectedSubId === 'all' ? 'default' : 'outline'}
+                                onClick={() => setSelectedSubId('all')}
+                                className={cn(
+                                  "rounded-full h-10 px-6 font-bold transition-all",
+                                  selectedSubId === 'all' && "shadow-md bg-primary hover:bg-primary/90"
+                                )}
+                              >
+                                Todos
+                              </Button>
+                              {group.map((sub) => (
+                                <Button 
+                                  key={sub.id}
+                                  variant={selectedSubId === sub.id ? 'default' : 'outline'}
+                                  onClick={() => setSelectedSubId(sub.id)}
+                                  className={cn(
+                                    "rounded-full h-10 px-6 font-bold transition-all",
+                                    selectedSubId === sub.id && "shadow-md bg-primary hover:bg-primary/90"
+                                  )}
+                                >
+                                  {sub.subName || 'Geral'}
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Lista de Produtos */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {categoryProducts?.map((product) => (
+                          {products?.filter(p => {
+                            const pCat = categories?.find(c => c.id === p.categoryId);
+                            if (!pCat) return false;
+                            
+                            // Filtrar primeiro pelo nome da categoria principal
+                            if (pCat.name !== name) return false;
+                            
+                            // Depois filtrar pela subcategoria selecionada
+                            if (selectedSubId !== 'all' && p.categoryId !== selectedSubId) return false;
+                            
+                            return true;
+                          }).map((product) => (
                             <ProductCard 
                               key={product.id}
                               id={product.id}
@@ -234,9 +300,13 @@ export default function MenuPage() {
                             />
                           ))}
                         </div>
-                        {categoryProducts?.length === 0 && (
+                        
+                        {products?.filter(p => {
+                          const pCat = categories?.find(c => c.id === p.categoryId);
+                          return pCat && pCat.name === name && (selectedSubId === 'all' || p.categoryId === selectedSubId);
+                        }).length === 0 && (
                           <div className="text-center py-16 bg-muted/20 rounded-3xl border-2 border-dashed">
-                             <p className="text-muted-foreground text-lg">Nenhum produto encontrado nesta categoria.</p>
+                             <p className="text-muted-foreground text-lg">Nenhum produto encontrado nesta seleção.</p>
                           </div>
                         )}
                       </TabsContent>
