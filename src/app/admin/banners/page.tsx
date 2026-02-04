@@ -237,11 +237,11 @@ export default function AdminBannersPage() {
           </Link>
           <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
             <Layers className="h-5 w-5" />
-            <span className="text-[10px] font-bold uppercase">Cats</span>
+            <span className="text-[10px] font-bold uppercase">Categorias</span>
           </Link>
           <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
             <PizzaIcon className="h-5 w-5" />
-            <span className="text-[10px] font-bold uppercase">Prods</span>
+            <span className="text-[10px] font-bold uppercase">Produtos</span>
           </Link>
           
           <DropdownMenu>
@@ -299,7 +299,9 @@ export default function AdminBannersPage() {
                   <Label>Exibir no App</Label>
                   <p className="text-xs text-muted-foreground">O banner aparecerá na página inicial</p>
                 </div>
-                <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} />
+                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                  <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} />
+                </span>
               </div>
             </div>
             <DialogFooter>

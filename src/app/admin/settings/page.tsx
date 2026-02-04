@@ -227,7 +227,6 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="max-w-4xl space-y-8 pb-20">
-          {/* Card Configs - OMITTED for brevity as no changes needed here */}
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
@@ -518,11 +517,11 @@ export default function AdminSettingsPage() {
         </Link>
         <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <Layers className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Cats</span>
+          <span className="text-[10px] font-bold uppercase">Categorias</span>
         </Link>
         <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <PizzaIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Prods</span>
+          <span className="text-[10px] font-bold uppercase">Produtos</span>
         </Link>
         
         <DropdownMenu>

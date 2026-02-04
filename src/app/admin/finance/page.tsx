@@ -273,11 +273,11 @@ export default function AdminFinancePage() {
         </Link>
         <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <Layers className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Cats</span>
+          <span className="text-[10px] font-bold uppercase">Categorias</span>
         </Link>
         <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <PizzaIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Prods</span>
+          <span className="text-[10px] font-bold uppercase">Produtos</span>
         </Link>
         
         <DropdownMenu>
