@@ -7,10 +7,11 @@ import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Settings } from '
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { useUser, useAuth, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { useUser, useAuth, useFirestore, useCollection, useMemoFirebase, useDoc } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { collection } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import * as LucideIcons from 'lucide-react';
+import { useMemo } from 'react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -31,6 +32,24 @@ export function Header() {
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
+
+  // Busca o perfil do usuário para obter o nome cadastrado
+  const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
+  const { data: userProfile } = useDoc(userDocRef);
+
+  // Lógica para exibir primeiro e segundo nome
+  const customerName = useMemo(() => {
+    const fullName = userProfile?.name || user?.displayName;
+    if (fullName) {
+      const parts = fullName.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return `${parts[0]} ${parts[1]}`;
+      }
+      return parts[0];
+    }
+    // Fallback caso o nome ainda não tenha sido carregado ou definido
+    return user?.email?.split('@')[0] || 'Cliente';
+  }, [user, userProfile]);
 
   const handleLogout = () => {
     signOut(auth);
@@ -101,7 +120,7 @@ export function Header() {
               <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
                 <DropdownMenuLabel className="font-bold flex flex-col gap-1">
                   <span className="text-xs text-muted-foreground">Olá,</span>
-                  <span className="truncate">{user.displayName || user.email?.split('@')[0]}</span>
+                  <span className="truncate">{customerName}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
