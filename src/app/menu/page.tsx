@@ -184,7 +184,8 @@ export default function MenuPage() {
     }
   };
 
-  if (loadingCats || loadingProds || loadingConfigs || loadingBanners) {
+  // Prevenir o flash de conteúdo antigo garantindo que configs foram carregadas
+  if (loadingCats || loadingProds || loadingConfigs || loadingBanners || !configs) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-12 w-12 text-primary animate-spin" />
@@ -336,7 +337,7 @@ export default function MenuPage() {
                     ref={scrollRef}
                     className="flex justify-start md:justify-center mb-12 overflow-x-auto pb-4 no-scrollbar scroll-smooth"
                   >
-                    <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 border-none shadow-none">
+                    <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
                       {mainNames.map((name) => (
                         <TabsTrigger 
                           key={name} 
@@ -475,19 +476,19 @@ export default function MenuPage() {
       {cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-8 left-4 right-4 md:left-auto md:right-12 z-40 flex justify-center md:justify-end">
           <Link href="/checkout" className="w-full max-w-md md:w-auto">
-            <Button className="h-20 w-full px-10 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-2xl font-black shadow-2xl flex items-center justify-between gap-10 transform hover:scale-105 active:scale-95 transition-all border-4 border-white/20">
-              <div className="flex items-center gap-4">
-                <div className="bg-white/40 rounded-full p-3 shadow-sm">
-                  <ShoppingBasket className="h-8 w-8" />
+            <Button className="h-auto min-h-[5rem] w-full px-6 py-3 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl md:text-2xl font-black shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 transform hover:scale-[1.02] active:scale-95 transition-all border-4 border-white/30">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/30 rounded-full p-2.5 shadow-sm shrink-0">
+                  <ShoppingBasket className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
-                <div className="text-left leading-none">
-                  <span className="block text-[10px] uppercase font-black opacity-70 mb-1">Seu Carrinho</span>
-                  <span>Ver Pedido</span>
+                <div className="text-left leading-tight">
+                  <span className="block text-[9px] uppercase font-black opacity-80 mb-0.5">Seu Carrinho</span>
+                  <span className="text-lg md:text-xl whitespace-nowrap">Ver Pedido</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-black/20 px-5 py-2 rounded-2xl border-2 border-white/10 shadow-inner">
-                <span className="text-sm opacity-70">Total:</span>
-                <span className="text-2xl font-black">R$ {total.toFixed(2)}</span>
+              <div className="flex items-center gap-2 bg-black/15 px-4 py-2 rounded-2xl border-2 border-white/20 shadow-inner">
+                <span className="text-xs md:text-sm font-bold opacity-80">Total:</span>
+                <span className="text-xl md:text-2xl font-black whitespace-nowrap">R$ {total.toFixed(2)}</span>
               </div>
             </Button>
           </Link>
@@ -497,7 +498,7 @@ export default function MenuPage() {
       {isAdmin && (
         <div className={cn(
           "fixed right-4 md:right-8 z-40 transition-all duration-500 ease-in-out",
-          cartItems.length > 0 && config?.isStoreOpen ? "bottom-32" : "bottom-10"
+          cartItems.length > 0 && config?.isStoreOpen ? "bottom-36" : "bottom-10"
         )}>
           <Link href="/admin/dashboard">
             <Button size="icon" className="h-16 w-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all border-4 border-white">
