@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search } from 'lucide-react';
+import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 
 export default function MenuPage() {
@@ -18,6 +18,7 @@ export default function MenuPage() {
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
+  const { user } = useUser();
 
   const categoriesQuery = useMemoFirebase(() => {
     return query(collection(firestore, 'categorias'), orderBy('order', 'asc'));
@@ -116,10 +117,11 @@ export default function MenuPage() {
         </div>
       </main>
 
+      {/* Botão de Carrinho / Checkout */}
       {cartItems.length > 0 && (
-        <div className="fixed bottom-6 inset-x-4 md:inset-x-auto md:right-8 z-40">
+        <div className="fixed bottom-6 left-4 md:left-8 z-40">
           <Link href="/checkout">
-            <Button className="w-full md:w-auto h-16 px-8 rounded-full bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl font-black shadow-2xl flex items-center justify-between gap-8 transform hover:scale-105 active:scale-95 transition-all">
+            <Button className="h-16 px-8 rounded-full bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl font-black shadow-2xl flex items-center justify-between gap-8 transform hover:scale-105 active:scale-95 transition-all">
               <div className="flex items-center gap-3">
                 <div className="bg-white/30 rounded-full p-2">
                   <ShoppingBasket className="h-6 w-6" />
@@ -127,6 +129,17 @@ export default function MenuPage() {
                 <span>Finalizar Pedido</span>
               </div>
               <span className="bg-black/10 px-4 py-1 rounded-full">R$ {total.toFixed(2)}</span>
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {/* Botão Suspenso do Administrador */}
+      {user && (
+        <div className="fixed bottom-6 right-4 md:right-8 z-40">
+          <Link href="/admin/dashboard">
+            <Button size="icon" className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all">
+              <ShieldCheck className="h-8 w-8" />
             </Button>
           </Link>
         </div>

@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBasket, Menu as MenuIcon, User } from 'lucide-react';
+import { ShoppingBasket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -46,11 +46,6 @@ export function Header() {
                   {itemCount}
                 </span>
               )}
-            </Button>
-          </Link>
-          <Link href="/admin/login">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-6 w-6 text-muted-foreground" />
             </Button>
           </Link>
         </nav>
