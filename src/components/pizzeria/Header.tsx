@@ -34,7 +34,7 @@ export function Header() {
       <div className="container mx-auto px-4 flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative w-10 h-10 overflow-hidden rounded-full border-2 border-primary">
+            <div className="relative w-8 h-8 md:w-10 md:h-10 overflow-hidden rounded-full border-2 border-primary shrink-0">
               <Image 
                 src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
                 alt="PizzApp Logo" 
@@ -43,7 +43,7 @@ export function Header() {
                 data-ai-hint="pizza logo"
               />
             </div>
-            <span className="text-xl font-bold font-headline hidden sm:inline-block text-primary">
+            <span className="text-sm md:text-xl font-bold font-headline text-primary whitespace-nowrap">
               PizzApp <span className="text-secondary">Rápido</span>
             </span>
           </Link>
