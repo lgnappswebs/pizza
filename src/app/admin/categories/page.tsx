@@ -175,6 +175,7 @@ export default function AdminCategoriesPage() {
 
   const addSubSuggestion = (suggestion: string) => {
     setFormData({ ...formData, subName: suggestion });
+    setIsSuggestionsOpen(false);
   };
 
   return (
