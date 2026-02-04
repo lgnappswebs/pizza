@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-pizza",
+      "description": "A delicious hot pizza with melting cheese",
+      "imageUrl": "https://images.unsplash.com/photo-1693609930470-2eb935294945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkZWxpY2lvdXMlMjBwaXp6YXxlbnwwfHx8fDE3NzAyMTA0Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "delicious pizza"
+    },
+    {
+      "id": "pepperoni-pizza",
+      "description": "Traditional pepperoni pizza",
+      "imageUrl": "https://images.unsplash.com/photo-1609795829951-325b91a41471?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZXBwZXJvbmklMjBwaXp6YXxlbnwwfHx8fDE3NzAyMDU0NTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pepperoni pizza"
+    },
+    {
+      "id": "margherita-pizza",
+      "description": "Fresh margherita pizza with basil",
+      "imageUrl": "https://images.unsplash.com/photo-1573821663912-6df460f9c684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFyZ2hlcml0YSUyMHBpenphfGVufDB8fHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "margherita pizza"
+    },
+    {
+      "id": "sweet-pizza",
+      "description": "Chocolate and strawberry dessert pizza",
+      "imageUrl": "https://images.unsplash.com/photo-1600160916724-df8b8dc61a48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxkZXNzZXJ0JTIwcGl6emF8ZW58MHx8fHwxNzcwMjEwNDc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dessert pizza"
+    },
+    {
+      "id": "soft-drink",
+      "description": "Refreshing soda in a glass with ice",
+      "imageUrl": "https://images.unsplash.com/photo-1527960471264-932f39eb5846?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzb2Z0JTIwZHJpbmt8ZW58MHx8fHwxNzcwMTQ1NzQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "soft drink"
+    },
+    {
+      "id": "pizzeria-logo",
+      "description": "A friendly pizzeria logo",
+      "imageUrl": "https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHx8fHwxNzcwMjEwNDc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "pizza logo"
+    }
+  ]
 }

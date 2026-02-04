@@ -20,7 +20,7 @@ export function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-10 h-10 overflow-hidden rounded-full border-2 border-primary">
               <Image 
-                src={logo?.imageUrl || ''} 
+                src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
                 alt="PizzApp Logo" 
                 fill 
                 className="object-cover"

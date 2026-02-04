@@ -24,7 +24,7 @@ const PRODUCTS = [
     description: 'Molho de tomate, mussarela, calabresa fatiada e cebola.', 
     price: 35.90, 
     category: 'tradicionais',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'pepperoni-pizza')?.imageUrl || '' 
+    imageUrl: PlaceHolderImages.find(img => img.id === 'pepperoni-pizza')?.imageUrl || 'https://placehold.co/600x400?text=Pizza'
   },
   { 
     id: 'p2', 
@@ -32,7 +32,7 @@ const PRODUCTS = [
     description: 'Molho de tomate, mussarela e orégano.', 
     price: 32.90, 
     category: 'tradicionais',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'margherita-pizza')?.imageUrl || '' 
+    imageUrl: PlaceHolderImages.find(img => img.id === 'margherita-pizza')?.imageUrl || 'https://placehold.co/600x400?text=Pizza'
   },
   { 
     id: 'p3', 
@@ -41,7 +41,7 @@ const PRODUCTS = [
     price: 42.90, 
     category: 'especiais',
     isPromotion: true,
-    imageUrl: PlaceHolderImages.find(img => img.id === 'pepperoni-pizza')?.imageUrl || '' 
+    imageUrl: PlaceHolderImages.find(img => img.id === 'pepperoni-pizza')?.imageUrl || 'https://placehold.co/600x400?text=Pizza'
   },
   { 
     id: 'p4', 
@@ -49,7 +49,7 @@ const PRODUCTS = [
     description: 'Chocolate ao leite com granulado.', 
     price: 38.90, 
     category: 'doces',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'sweet-pizza')?.imageUrl || '' 
+    imageUrl: PlaceHolderImages.find(img => img.id === 'sweet-pizza')?.imageUrl || 'https://placehold.co/600x400?text=Pizza'
   },
   { 
     id: 'p5', 
@@ -57,7 +57,7 @@ const PRODUCTS = [
     description: 'Refrigerante gelado 2 litros.', 
     price: 12.00, 
     category: 'bebidas',
-    imageUrl: PlaceHolderImages.find(img => img.id === 'soft-drink')?.imageUrl || '' 
+    imageUrl: PlaceHolderImages.find(img => img.id === 'soft-drink')?.imageUrl || 'https://placehold.co/600x400?text=Bebida'
   },
 ];
 

@@ -98,7 +98,12 @@ export default function CheckoutPage() {
                 {items.map((item) => (
                   <div key={item.id} className="flex gap-4 p-4 rounded-2xl bg-muted/30">
                     <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0">
-                      <Image src={item.imageUrl || ''} alt={item.name} fill className="object-cover" />
+                      <Image 
+                        src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
+                        alt={item.name} 
+                        fill 
+                        className="object-cover" 
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start">

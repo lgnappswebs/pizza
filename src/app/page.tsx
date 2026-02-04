@@ -17,7 +17,7 @@ export default function Home() {
         <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <Image 
-              src={heroImage?.imageUrl || ''} 
+              src={heroImage?.imageUrl || 'https://placehold.co/1200x600?text=Pizza'} 
               alt="PizzApp Hero" 
               fill 
               className="object-cover brightness-50"
