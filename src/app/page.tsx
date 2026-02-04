@@ -13,7 +13,7 @@ export default function Home() {
     <>
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <section className="relative h-screen flex items-start md:items-center justify-center overflow-hidden pt-12 md:pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
               src={heroImage?.imageUrl || 'https://picsum.photos/seed/pizzapp-hero/1200/600'} 
