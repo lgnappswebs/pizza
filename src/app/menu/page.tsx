@@ -251,13 +251,13 @@ export default function MenuPage() {
                 </div>
               ) : (
                 <Tabs defaultValue={mainNames[0]} className="w-full" onValueChange={() => setSelectedSubId('all')}>
-                  <div className="flex justify-center mb-12">
-                    <TabsList className="bg-muted p-1.5 rounded-[2rem] h-auto flex-wrap justify-center shadow-inner border border-muted-foreground/10">
+                  <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
+                    <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
                       {mainNames.map((name) => (
                         <TabsTrigger 
                           key={name} 
                           value={name}
-                          className="rounded-[1.5rem] px-8 py-4 text-lg font-black tracking-tight data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 flex items-center gap-2 group"
+                          className="rounded-2xl px-6 py-3 md:px-8 md:py-4 text-base md:text-lg font-black tracking-tight border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 flex items-center gap-2 group shadow-sm whitespace-nowrap"
                         >
                           <span className="opacity-70 group-data-[state=active]:opacity-100 transition-opacity">
                             {getCategoryIcon(name)}
@@ -391,6 +391,16 @@ export default function MenuPage() {
           </Link>
         </div>
       )}
+
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 }
