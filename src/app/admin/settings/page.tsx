@@ -589,7 +589,7 @@ export default function AdminSettingsPage() {
               className="w-full h-20 rounded-full text-2xl font-black bg-primary shadow-2xl shadow-primary/40 transform transition hover:scale-[1.02] active:scale-95"
             >
               {loading ? <Loader2 className="h-8 w-8 animate-spin mr-3" /> : <Save className="mr-3 h-8 w-8" />}
-              Salvar Todas as Alterações
+              Salvar Alterações
             </Button>
           </div>
         </div>
