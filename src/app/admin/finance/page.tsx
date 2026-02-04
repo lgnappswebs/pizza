@@ -1,13 +1,12 @@
 
 "use client"
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   TrendingUp, 
   DollarSign, 
   Calendar, 
   ArrowUpRight, 
-  ArrowDownRight,
   Loader2,
   LayoutDashboard,
   Pizza as PizzaIcon,
@@ -19,11 +18,18 @@ import {
   ExternalLink,
   Wallet,
   ChevronLeft,
-  Plus
+  Plus,
+  Share2,
+  FileText,
+  Printer,
+  ChevronDown,
+  ChevronUp,
+  FileJson
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -41,9 +47,7 @@ import {
   XAxis, 
   YAxis, 
   Tooltip, 
-  Cell,
-  LineChart,
-  Line
+  Cell
 } from 'recharts';
 import {
   DropdownMenu,
@@ -52,11 +56,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { format, isSameDay, isSameMonth, isSameYear, startOfToday } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export default function AdminFinancePage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+
+  // Estados do Filtro (Inicia com hoje)
+  const today = new Date();
+  const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
+  const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -76,28 +88,90 @@ export default function AdminFinancePage() {
     router.push('/admin/login');
   };
 
-  // Cálculos Financeiros
-  const deliveredOrders = allOrders?.filter(o => o.status === 'Delivered') || [];
-  const totalRevenue = deliveredOrders.reduce((acc, order) => acc + (order.totalAmount || 0), 0);
-  const pendingRevenue = allOrders?.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled')
-    .reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
-  
-  const averageTicket = deliveredOrders.length > 0 ? totalRevenue / deliveredOrders.length : 0;
+  // Lógica de Filtragem
+  const filteredOrders = useMemo(() => {
+    if (!allOrders) return [];
+    return allOrders.filter(order => {
+      if (!order.createdAt?.seconds) return false;
+      const orderDate = new Date(order.createdAt.seconds * 1000);
+      
+      const matchDay = orderDate.getDate().toString() === selectedDay;
+      const matchMonth = (orderDate.getMonth() + 1).toString() === selectedMonth;
+      const matchYear = orderDate.getFullYear().toString() === selectedYear;
 
-  // Dados fictícios para o gráfico (em um app real, agruparíamos os pedidos por data)
-  const chartData = [
-    { name: 'Seg', total: 400 },
-    { name: 'Ter', total: 300 },
-    { name: 'Qua', total: 600 },
-    { name: 'Qui', total: 800 },
-    { name: 'Sex', total: 1200 },
-    { name: 'Sáb', total: 1800 },
-    { name: 'Dom', total: 1500 },
+      return matchDay && matchMonth && matchYear;
+    });
+  }, [allOrders, selectedDay, selectedMonth, selectedYear]);
+
+  const deliveredInPeriod = filteredOrders.filter(o => o.status === 'Delivered');
+  const revenueInPeriod = deliveredInPeriod.reduce((acc, order) => acc + (order.totalAmount || 0), 0);
+  
+  // Faturamento HOJE (Sempre atualizado para o dia real)
+  const revenueToday = useMemo(() => {
+    if (!allOrders) return 0;
+    const realToday = new Date();
+    return allOrders
+      .filter(o => {
+        if (!o.createdAt?.seconds || o.status !== 'Delivered') return false;
+        const oDate = new Date(o.createdAt.seconds * 1000);
+        return isSameDay(oDate, realToday);
+      })
+      .reduce((acc, o) => acc + (o.totalAmount || 0), 0);
+  }, [allOrders]);
+
+  // Médias e Estatísticas
+  const averageTicket = deliveredInPeriod.length > 0 ? revenueInPeriod / deliveredInPeriod.length : 0;
+
+  // Gerar Relatório de Texto
+  const handleShareText = (period: 'day' | 'month' | 'year') => {
+    if (!allOrders) return;
+    
+    let reportOrders = [];
+    let periodLabel = "";
+    const targetDate = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1, parseInt(selectedDay));
+
+    if (period === 'day') {
+      reportOrders = allOrders.filter(o => o.createdAt?.seconds && isSameDay(new Date(o.createdAt.seconds * 1000), targetDate));
+      periodLabel = format(targetDate, "dd/MM/yyyy");
+    } else if (period === 'month') {
+      reportOrders = allOrders.filter(o => o.createdAt?.seconds && isSameMonth(new Date(o.createdAt.seconds * 1000), targetDate));
+      periodLabel = format(targetDate, "MMMM/yyyy", { locale: ptBR });
+    } else {
+      reportOrders = allOrders.filter(o => o.createdAt?.seconds && isSameYear(new Date(o.createdAt.seconds * 1000), targetDate));
+      periodLabel = selectedYear;
+    }
+
+    const delivered = reportOrders.filter(o => o.status === 'Delivered');
+    const total = delivered.reduce((acc, o) => acc + (o.totalAmount || 0), 0);
+
+    let text = `*RELATÓRIO FINANCEIRO - PIZZAPP*\n`;
+    text += `*Período:* ${periodLabel}\n`;
+    text += `*Total de Pedidos:* ${reportOrders.length}\n`;
+    text += `*Pedidos Entregues:* ${delivered.length}\n`;
+    text += `*Faturamento Total: R$ ${total.toFixed(2)}*\n\n`;
+    text += `_Gerado em: ${format(new Date(), "dd/MM/yyyy HH:mm")}_`;
+
+    const encodedText = encodeURIComponent(text);
+    window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+  };
+
+  const handlePrintPDF = () => {
+    window.print();
+  };
+
+  // Dias, Meses e Anos para os seletores
+  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const months = [
+    { v: "1", l: "Janeiro" }, { v: "2", l: "Fevereiro" }, { v: "3", l: "Março" },
+    { v: "4", l: "Abril" }, { v: "5", l: "Maio" }, { v: "6", l: "Junho" },
+    { v: "7", l: "Julho" }, { v: "8", l: "Agosto" }, { v: "9", l: "Setembro" },
+    { v: "10", l: "Outubro" }, { v: "11", l: "Novembro" }, { v: "12", l: "Dezembro" }
   ];
+  const years = ["2024", "2025", "2026"];
 
   return (
-    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
-      <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white">
+      <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 print:hidden">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
         </div>
@@ -137,13 +211,6 @@ export default function AdminFinancePage() {
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
-          <div className="pt-4 border-t mt-4">
-            <Link href="/menu" target="_blank">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
-                <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
-              </Button>
-            </Link>
-          </div>
         </nav>
         <div className="p-4 border-t">
           <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
@@ -152,121 +219,193 @@ export default function AdminFinancePage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 pb-32 md:pb-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
+        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold">Gestão Financeira</h1>
-          <p className="text-muted-foreground">Acompanhe o faturamento e desempenho da sua pizzaria</p>
-        </div>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold">Gestão Financeira</h1>
+            <p className="text-muted-foreground">Relatórios detalhados de faturamento</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="rounded-3xl border-2 shadow-sm bg-primary text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-4 opacity-20">
-              <DollarSign className="h-20 w-20" />
+          <div className="flex flex-wrap items-center gap-3 print:hidden">
+            <div className="flex items-center gap-2 bg-white p-2 rounded-2xl border-2 shadow-sm">
+              <Select value={selectedDay} onValueChange={setSelectedDay}>
+                <SelectTrigger className="w-16 h-10 border-none font-bold">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <span className="text-muted-foreground">/</span>
+              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                <SelectTrigger className="w-32 h-10 border-none font-bold">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {months.map(m => <SelectItem key={m.v} value={m.v}>{m.l}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <span className="text-muted-foreground">/</span>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
+                <SelectTrigger className="w-24 h-10 border-none font-bold">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
+                </SelectContent>
+              </Select>
             </div>
-            <CardHeader>
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider">Faturamento Confirmado</CardDescription>
-              <CardTitle className="text-4xl font-black">R$ {totalRevenue.toFixed(2)}</CardTitle>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20">
+                  <Share2 className="mr-2 h-5 w-5" /> Exportar
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
+                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer">
+                  Faturamento do Dia
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer">
+                  Faturamento do Mês
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer">
+                  Faturamento do Ano
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 p-4 opacity-20">
+              <DollarSign className="h-16 w-16" />
+            </div>
+            <CardHeader className="pb-2">
+              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[10px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardTitle className="text-3xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm font-medium flex items-center gap-1">
-                <ArrowUpRight className="h-4 w-4" /> Referente a pedidos entregues
-              </p>
+              <p className="text-[10px] font-medium opacity-80">Atualizado em tempo real</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden relative">
-            <CardHeader>
-              <CardDescription className="font-bold uppercase tracking-wider">Em Aberto / Pendente</CardDescription>
-              <CardTitle className="text-4xl font-black text-yellow-600">R$ {pendingRevenue.toFixed(2)}</CardTitle>
+          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+            <CardHeader className="pb-2">
+              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Faturamento Período Selecionado</CardDescription>
+              <CardTitle className="text-3xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground font-medium flex items-center gap-1">
-                <Calendar className="h-4 w-4" /> Pedidos novos e em preparo
-              </p>
+              <p className="text-[10px] text-muted-foreground font-medium">Data: {selectedDay}/{selectedMonth}/{selectedYear}</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden relative">
-            <CardHeader>
-              <CardDescription className="font-bold uppercase tracking-wider">Ticket Médio</CardDescription>
-              <CardTitle className="text-4xl font-black text-blue-600">R$ {averageTicket.toFixed(2)}</CardTitle>
+          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+            <CardHeader className="pb-2">
+              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Pedidos no Período</CardDescription>
+              <CardTitle className="text-3xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground font-medium flex items-center gap-1">
-                <TrendingUp className="h-4 w-4" /> Valor médio por pedido
-              </p>
+              <p className="text-[10px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues com sucesso</p>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+            <CardHeader className="pb-2">
+              <CardDescription className="font-bold uppercase tracking-wider text-[10px] text-muted-foreground">Ticket Médio (Período)</CardDescription>
+              <CardTitle className="text-3xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-[10px] text-muted-foreground font-medium">Média por pedido finalizado</p>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <Card className="rounded-3xl border-2">
-            <CardHeader>
-              <CardTitle>Histórico de Vendas (Últimos 7 dias)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                    <YAxis hide />
-                    <Tooltip 
-                      cursor={{fill: 'transparent'}}
-                      contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}}
-                    />
-                    <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                      {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={index === 5 || index === 6 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.3)'} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+        <div className="grid grid-cols-1 gap-8">
+          <Card className="rounded-3xl border-2 overflow-hidden shadow-sm">
+            <CardHeader className="border-b bg-muted/10">
+              <div className="flex justify-between items-center">
+                <div>
+                  <CardTitle className="text-xl font-bold">Detalhamento de Pedidos</CardTitle>
+                  <CardDescription>Lista completa de vendas no período selecionado</CardDescription>
+                </div>
+                <Badge variant="outline" className="text-xs">{filteredOrders.length} Resultados</Badge>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-2">
-            <CardHeader>
-              <CardTitle>Últimos Recebimentos</CardTitle>
-              <CardDescription>Pedidos entregues recentemente</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {isLoading ? (
-                  <div className="flex justify-center py-8"><Loader2 className="animate-spin text-primary" /></div>
-                ) : (
-                  deliveredOrders.slice(0, 5).map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-green-100 flex items-center justify-center rounded-full">
-                          <DollarSign className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div>
-                          <p className="font-bold truncate max-w-[150px]">{order.customerName}</p>
-                          <p className="text-xs text-muted-foreground">Pedido #{order.id.slice(-4).toUpperCase()}</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-black text-primary">R$ {order.totalAmount.toFixed(2)}</p>
-                        <p className="text-[10px] text-muted-foreground">Confirmado</p>
-                      </div>
-                    </div>
-                  ))
-                )}
-                {deliveredOrders.length === 0 && (
-                  <p className="text-center py-10 text-muted-foreground italic">Nenhum recebimento confirmado ainda.</p>
-                )}
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                  <thead className="bg-muted/30 text-[10px] uppercase font-bold text-muted-foreground border-b">
+                    <tr>
+                      <th className="px-6 py-4">ID / Hora</th>
+                      <th className="px-6 py-4">Cliente</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-right">Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {isLoading ? (
+                      <tr>
+                        <td colSpan={4} className="text-center py-20">
+                          <Loader2 className="animate-spin h-8 w-8 mx-auto text-primary" />
+                        </td>
+                      </tr>
+                    ) : filteredOrders.map((order) => (
+                      <tr key={order.id} className="hover:bg-muted/20 transition-colors group">
+                        <td className="px-6 py-4">
+                          <p className="font-black text-primary text-xs">#{order.id.slice(-4).toUpperCase()}</p>
+                          <p className="text-[10px] text-muted-foreground">
+                            {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="font-bold text-sm">{order.customerName}</p>
+                          <p className="text-[10px] text-muted-foreground truncate max-w-[150px]">{order.customerAddress}</p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant="outline" className={`text-[9px] uppercase font-black ${
+                            order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600' : 
+                            order.status === 'Cancelled' ? 'border-red-500 text-red-600' : 
+                            'border-amber-500 text-amber-600'
+                          }`}>
+                            {order.status === 'New' ? 'Novo' : 
+                             order.status === 'Preparing' ? 'Preparo' : 
+                             order.status === 'Out for Delivery' ? 'Entrega' : 
+                             order.status === 'Delivered' ? 'Entregue' : order.status}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right font-black text-sm">
+                          R$ {order.totalAmount?.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                    {!isLoading && filteredOrders.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="text-center py-20 text-muted-foreground italic">
+                          Nenhum pedido encontrado para a data selecionada.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
         </div>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
+      {/* Navegação Mobile para Admin */}
+      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <LayoutDashboard className="h-5 w-5 text-blue-600" />
           <span className="text-[12px] font-black uppercase">Painel</span>
@@ -317,6 +456,15 @@ export default function AdminFinancePage() {
           </DropdownMenuContent>
         </DropdownMenu>
       </nav>
+
+      <style jsx global>{`
+        @media print {
+          body { font-size: 10pt; }
+          .print-hidden { display: none !important; }
+          main { padding: 0 !important; }
+          .card { border: 1px solid #eee !important; box-shadow: none !important; }
+        }
+      `}</style>
     </div>
   );
 }
