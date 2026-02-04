@@ -512,23 +512,23 @@ export default function AdminSettingsPage() {
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <LayoutDashboard className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Painel</span>
+          <LayoutDashboard className="h-5 w-5 text-blue-600" />
+          <span className="text-[11px] font-bold uppercase">Painel</span>
         </Link>
         <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <Layers className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Categorias</span>
+          <Layers className="h-5 w-5 text-emerald-600" />
+          <span className="text-[11px] font-bold uppercase">Categorias</span>
         </Link>
         <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <PizzaIcon className="h-5 w-5" />
-          <span className="text-[10px] font-bold uppercase">Produtos</span>
+          <PizzaIcon className="h-5 w-5 text-amber-600" />
+          <span className="text-[11px] font-bold uppercase">Produtos</span>
         </Link>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex flex-col items-center gap-1 min-w-[60px] text-primary">
-              <Plus className="h-5 w-5" />
-              <span className="text-[10px] font-black uppercase">Mais</span>
+            <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+              <Plus className="h-5 w-5 text-violet-600" />
+              <span className="text-[11px] font-bold uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
