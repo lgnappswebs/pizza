@@ -230,18 +230,18 @@ export default function AdminBannersPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 pb-32 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Banners Promocionais</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left">
+          <div className="space-y-1">
+            <h1 className="text-3xl sm:text-4xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
-            <Plus className="mr-2 h-5 w-5" /> Novo Banner
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+            <Plus className="mr-2 h-6 w-6" /> Novo Banner
           </Button>
         </div>
 
