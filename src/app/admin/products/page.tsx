@@ -256,7 +256,7 @@ export default function AdminProductsPage() {
             <h1 className="text-3xl font-bold">Gestão de Produtos</h1>
             <p className="text-muted-foreground">Adicione, edite ou remova itens do seu cardápio</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Produto
           </Button>
         </div>

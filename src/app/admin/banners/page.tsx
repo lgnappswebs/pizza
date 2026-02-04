@@ -197,7 +197,7 @@ export default function AdminBannersPage() {
             <h1 className="text-3xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens de destaque do topo</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Banner
           </Button>
         </div>
