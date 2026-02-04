@@ -372,7 +372,7 @@ export default function AdminBannersPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid gap-4">
                 <div className="grid gap-2">
                   <Label className="text-sm font-bold flex items-center gap-2">
                     <AlignLeft className="h-4 w-4 text-primary" /> Posição do Texto
