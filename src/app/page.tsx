@@ -31,14 +31,14 @@ export default function Home() {
               <div className="mb-8 flex flex-col items-center gap-6">
                 <div className="relative w-32 h-32 md:w-48 md:h-48 overflow-hidden rounded-full border-4 border-primary shadow-2xl bg-white/10 backdrop-blur-sm">
                   <Image 
-                    src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                    src={logo?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
                     alt="PizzApp Logo" 
                     fill 
                     className="object-cover"
                     data-ai-hint="pizza logo"
                   />
                 </div>
-                <h2 className="text-6xl md:text-9xl font-black font-headline tracking-tighter text-white drop-shadow-2xl">
+                <h2 className="text-5xl md:text-8xl font-black font-headline tracking-tighter text-white drop-shadow-2xl">
                   PizzApp <span className="text-secondary">Rápido</span>
                 </h2>
               </div>
@@ -103,7 +103,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-6 mb-8">
             <div className="relative w-24 h-24 overflow-hidden rounded-full border-4 border-white/20 shadow-2xl">
               <Image 
-                src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                src={logo?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
                 alt="PizzApp Logo" 
                 fill 
                 className="object-cover"
