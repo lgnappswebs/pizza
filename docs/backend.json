@@ -146,8 +146,19 @@
       "title": "Banner",
       "type": "object",
       "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
         "imageUrl": { "type": "string", "format": "uri" },
-        "isActive": { "type": "boolean" }
+        "isActive": { "type": "boolean" },
+        "textPosition": { 
+          "type": "string", 
+          "enum": ["top-left", "top-center", "center", "bottom-left", "bottom-center"] 
+        },
+        "bannerPosition": { 
+          "type": "string", 
+          "enum": ["top", "middle", "bottom"] 
+        },
+        "linkCategoryId": { "type": "string" }
       }
     },
     "Configuration": {

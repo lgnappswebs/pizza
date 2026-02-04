@@ -17,10 +17,14 @@ import {
   ExternalLink,
   ChevronLeft,
   Wallet,
-  X
+  X,
+  Type,
+  AlignLeft,
+  Layout,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -32,6 +36,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -67,12 +72,20 @@ export default function AdminBannersPage() {
   }, [user, isUserLoading, router]);
 
   const [formData, setFormData] = useState({
+    title: '',
+    description: '',
     imageUrl: '',
-    isActive: true
+    isActive: true,
+    textPosition: 'center',
+    bannerPosition: 'top',
+    linkCategoryId: 'none'
   });
 
   const bannersQuery = useMemoFirebase(() => collection(firestore, 'banners'), [firestore]);
+  const categoriesQuery = useMemoFirebase(() => collection(firestore, 'categorias'), [firestore]);
+  
   const { data: banners, isLoading } = useCollection(bannersQuery);
+  const { data: categories } = useCollection(categoriesQuery);
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -87,14 +100,24 @@ export default function AdminBannersPage() {
     if (banner) {
       setEditingBanner(banner);
       setFormData({
+        title: banner.title || '',
+        description: banner.description || '',
         imageUrl: banner.imageUrl,
-        isActive: banner.isActive
+        isActive: banner.isActive,
+        textPosition: banner.textPosition || 'center',
+        bannerPosition: banner.bannerPosition || 'top',
+        linkCategoryId: banner.linkCategoryId || 'none'
       });
     } else {
       setEditingBanner(null);
       setFormData({
+        title: '',
+        description: '',
         imageUrl: '',
-        isActive: true
+        isActive: true,
+        textPosition: 'center',
+        bannerPosition: 'top',
+        linkCategoryId: 'none'
       });
     }
     setIsDialogOpen(true);
@@ -127,6 +150,26 @@ export default function AdminBannersPage() {
         setFormData({ ...formData, imageUrl: reader.result as string });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const getTextPositionLabel = (pos: string) => {
+    switch(pos) {
+      case 'top-left': return 'Sup. Esquerdo';
+      case 'top-center': return 'Sup. Central';
+      case 'center': return 'Centralizado';
+      case 'bottom-left': return 'Inf. Esquerdo';
+      case 'bottom-center': return 'Inf. Central';
+      default: return pos;
+    }
+  };
+
+  const getBannerPositionLabel = (pos: string) => {
+    switch(pos) {
+      case 'top': return 'Topo';
+      case 'middle': return 'Meio';
+      case 'bottom': return 'Fim';
+      default: return pos;
     }
   };
 
@@ -195,7 +238,7 @@ export default function AdminBannersPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Banners Promocionais</h1>
-            <p className="text-muted-foreground">Gerencie as imagens de destaque do topo</p>
+            <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Banner
@@ -212,18 +255,34 @@ export default function AdminBannersPage() {
               <Card key={banner.id} className="rounded-2xl border-2 overflow-hidden group">
                 <div className="aspect-video relative overflow-hidden bg-muted">
                   <img src={banner.imageUrl} alt="Banner" className="object-cover w-full h-full" />
-                  <div className="absolute top-4 right-4">
-                    <Badge variant={banner.isActive ? 'default' : 'destructive'} className="shadow-lg">
-                      {banner.isActive ? 'Ativo' : 'Inativo'}
-                    </Badge>
+                  <div className="absolute inset-0 bg-black/20 flex flex-col p-4">
+                    <div className="flex justify-between items-start">
+                       <Badge variant={banner.isActive ? 'default' : 'destructive'} className="shadow-lg">
+                        {banner.isActive ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                      <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm">
+                        {getBannerPositionLabel(banner.bannerPosition)}
+                      </Badge>
+                    </div>
+                    <div className="mt-auto">
+                      {banner.title && <p className="text-white font-bold text-sm truncate">{banner.title}</p>}
+                      {banner.linkCategoryId !== 'none' && (
+                        <p className="text-white/80 text-[10px] flex items-center gap-1 mt-1">
+                          <LinkIcon className="h-2 w-2" /> Vinculado à categoria
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <CardContent className="p-4 flex justify-between items-center">
+                <CardContent className="p-4 flex justify-between items-center bg-white">
+                  <div className="text-xs text-muted-foreground font-medium">
+                    Texto: {getTextPositionLabel(banner.textPosition)}
+                  </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl">
+                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8">
                       <Edit2 className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl text-destructive hover:bg-destructive/10">
+                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive hover:bg-destructive/10">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -293,15 +352,82 @@ export default function AdminBannersPage() {
         </nav>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[425px] rounded-3xl">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[95vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold">
+              <DialogTitle className="text-2xl font-black text-primary">
                 {editingBanner ? 'Editar Banner' : 'Novo Banner'}
               </DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid gap-6 py-4">
+              <div className="space-y-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="title" className="text-sm font-bold flex items-center gap-2">
+                    <Type className="h-4 w-4 text-primary" /> Título do Banner
+                  </Label>
+                  <Input id="title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2" placeholder="Ex: Promoção de Terça" />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="desc" className="text-sm font-bold">Descrição</Label>
+                  <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2" placeholder="Ex: Ganhe um refri grátis" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label className="text-sm font-bold flex items-center gap-2">
+                    <AlignLeft className="h-4 w-4 text-primary" /> Posição do Texto
+                  </Label>
+                  <Select value={formData.textPosition} onValueChange={(v) => setFormData({...formData, textPosition: v})}>
+                    <SelectTrigger className="rounded-xl border-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="top-left">Sup. Esquerdo</SelectItem>
+                      <SelectItem value="top-center">Sup. Central</SelectItem>
+                      <SelectItem value="center">Centralizado</SelectItem>
+                      <SelectItem value="bottom-left">Inf. Esquerdo</SelectItem>
+                      <SelectItem value="bottom-center">Inf. Central</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label className="text-sm font-bold flex items-center gap-2">
+                    <Layout className="h-4 w-4 text-primary" /> Posição no Menu
+                  </Label>
+                  <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
+                    <SelectTrigger className="rounded-xl border-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="top">Topo do Cardápio</SelectItem>
+                      <SelectItem value="middle">Meio do Cardápio</SelectItem>
+                      <SelectItem value="bottom">Fim do Cardápio</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
               <div className="grid gap-2">
-                <Label htmlFor="image" className="text-lg font-bold">Imagem do Banner (URL ou Galeria)</Label>
+                <Label className="text-sm font-bold flex items-center gap-2">
+                  <LinkIcon className="h-4 w-4 text-primary" /> Vincular à Categoria
+                </Label>
+                <Select value={formData.linkCategoryId} onValueChange={(v) => setFormData({...formData, linkCategoryId: v})}>
+                  <SelectTrigger className="rounded-xl border-2">
+                    <SelectValue placeholder="Selecione uma categoria (opcional)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nenhuma (Apenas Imagem)</SelectItem>
+                    {categories?.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="image" className="text-sm font-bold flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4 text-primary" /> Imagem do Banner
+                </Label>
                 
                 {formData.imageUrl && (
                   <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
@@ -319,7 +445,7 @@ export default function AdminBannersPage() {
                 )}
 
                 <div className="flex gap-2">
-                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2" placeholder="https://..." />
+                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2" placeholder="Cole a URL ou use a galeria" />
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -331,19 +457,18 @@ export default function AdminBannersPage() {
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
               </div>
-              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2">
+
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2 border-dashed">
                 <div className="space-y-0.5">
                   <Label>Exibir no App</Label>
-                  <p className="text-xs text-muted-foreground">O banner aparecerá na página inicial</p>
+                  <p className="text-[10px] text-muted-foreground">O banner aparecerá no cardápio</p>
                 </div>
-                <span className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                  <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} />
-                </span>
+                <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-12 rounded-full font-bold bg-primary">
-                Salvar Banner
+              <Button onClick={handleSave} className="w-full h-14 rounded-full font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95">
+                {editingBanner ? 'Salvar Alterações' : 'Criar Novo Banner'}
               </Button>
             </DialogFooter>
           </DialogContent>
