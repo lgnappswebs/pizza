@@ -193,12 +193,12 @@ export default function AdminBannersPage() {
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens de destaque do topo</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="rounded-full h-12 px-6 font-bold bg-primary">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Banner
           </Button>
         </div>
@@ -257,7 +257,7 @@ export default function AdminBannersPage() {
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex flex-col items-center gap-1 min-w-[60px] text-primary">
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
                 <Plus className="h-5 w-5 text-violet-600" />
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>

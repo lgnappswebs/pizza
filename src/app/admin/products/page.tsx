@@ -250,12 +250,12 @@ export default function AdminProductsPage() {
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Gestão de Produtos</h1>
             <p className="text-muted-foreground">Adicione, edite ou remova itens do seu cardápio</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="rounded-full h-12 px-6 font-bold bg-primary">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Produto
           </Button>
         </div>
