@@ -2,7 +2,7 @@
 "use client"
 
 import Image from 'next/image';
-import { Plus, Info } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -71,7 +71,10 @@ export function ProductCard({
 
   return (
     <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20">
-      <CardHeader className="p-0 relative aspect-[4/3] overflow-hidden">
+      <CardHeader 
+        className="p-0 relative aspect-[4/3] overflow-hidden cursor-pointer"
+        onClick={() => setOpen(true)}
+      >
         <Image 
           src={imageUrl} 
           alt={name} 
@@ -85,7 +88,10 @@ export function ProductCard({
           </Badge>
         )}
       </CardHeader>
-      <CardContent className="p-4 space-y-2">
+      <CardContent 
+        className="p-4 space-y-2 cursor-pointer"
+        onClick={() => setOpen(true)}
+      >
         <div className="flex justify-between items-start">
           <h3 className="text-xl font-bold font-headline leading-tight">{name}</h3>
           <span className="text-xl font-bold text-primary">R$ {getPrice().toFixed(2)}</span>
