@@ -13,12 +13,23 @@ import {
   LayoutDashboard,
   Pizza as PizzaIcon,
   Package,
-  Plus
+  Plus,
+  Image as ImageIcon,
+  Clock,
+  Instagram,
+  Facebook,
+  Music2,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Eye
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -51,18 +62,56 @@ export default function AdminSettingsPage() {
 
   const [form, setForm] = useState({
     restaurantName: '',
+    showLogoIcon: true,
+    logoIconName: '',
+    logoImageUrl: '',
     whatsappNumber: '',
-    deliveryFee: '',
-    primaryColor: '#FF4136'
+    deliveryFee: '0',
+    isStoreOpen: true,
+    openingHoursText: '',
+    closedMessage: '',
+    menuTitle: '',
+    menuSubtitle: '',
+    heroBannerText: '',
+    heroBannerImageUrl: '',
+    primaryColor: '#FF4136',
+    backgroundColor: '#FFFFFF',
+    appBackgroundImageUrl: '',
+    address: '',
+    contactPhone: '',
+    whatsappAutoMessage: '',
+    contactEmail: '',
+    instagramUrl: '',
+    facebookUrl: '',
+    tiktokUrl: ''
   });
 
   useEffect(() => {
     if (config) {
       setForm({
         restaurantName: config.restaurantName || '',
+        showLogoIcon: config.showLogoIcon ?? true,
+        logoIconName: config.logoIconName || '',
+        logoImageUrl: config.logoImageUrl || '',
         whatsappNumber: config.whatsappNumber || '',
         deliveryFee: config.deliveryFee?.toString() || '0',
-        primaryColor: config.primaryColor || '#FF4136'
+        isStoreOpen: config.isStoreOpen ?? true,
+        openingHoursText: config.openingHoursText || '',
+        closedMessage: config.closedMessage || '',
+        menuTitle: config.menuTitle || '',
+        menuSubtitle: config.menuSubtitle || '',
+        heroBannerText: config.heroBannerText || '',
+        heroBannerImageUrl: config.heroBannerImageUrl || '',
+        primaryColor: config.primaryColor || '#FF4136',
+        backgroundColor: config.backgroundColor || '#FFFFFF',
+        appBackgroundImageUrl: config.appBackgroundImageUrl || '',
+        address: config.address || '',
+        contactPhone: config.contactPhone || '',
+        whatsappAutoMessage: config.whatsappAutoMessage || '',
+        contactEmail: config.contactEmail || '',
+        instagramUrl: config.instagramUrl || '',
+        facebookUrl: config.facebookUrl || '',
+        tiktokUrl: config.tiktokUrl || ''
       });
     }
   }, [config]);
@@ -95,7 +144,7 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="min-h-screen bg-muted/30 flex">
-      <aside className="w-64 bg-white border-r hidden md:flex flex-col">
+      <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
         </div>
@@ -117,105 +166,303 @@ export default function AdminSettingsPage() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
-              <Plus className="mr-3 h-5 w-5" /> Ajustes
+              <Settings className="mr-3 h-5 w-5" /> Ajustes
             </Button>
           </Link>
         </nav>
       </aside>
 
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 overflow-y-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">Ajustes do Aplicativo</h1>
-          <p className="text-muted-foreground">Personalize a identidade e regras da sua pizzaria</p>
+          <h1 className="text-4xl font-black">Ajustes do Aplicativo</h1>
+          <p className="text-muted-foreground text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
-        <div className="max-w-2xl space-y-6">
-          <Card className="rounded-3xl border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Store className="h-5 w-5 text-primary" /> Identidade da Loja
+        <div className="max-w-4xl space-y-8 pb-20">
+          {/* Configurações Gerais */}
+          <Card className="rounded-3xl border-2 shadow-sm">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black">
+                <Store className="h-7 w-7 text-primary" /> Configurações Gerais
               </CardTitle>
-              <CardDescription>Nome e contatos principais</CardDescription>
+              <CardDescription className="text-base">Altere as informações principais e a aparência do seu aplicativo.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Nome da Pizzaria</Label>
-                <Input 
-                  id="name" 
-                  value={form.restaurantName} 
-                  onChange={(e) => setForm({...form, restaurantName: e.target.value})}
-                  className="rounded-xl h-12"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="whatsapp">WhatsApp de Recebimento (com DDD)</Label>
-                <Input 
-                  id="whatsapp" 
-                  placeholder="5511999999999"
-                  value={form.whatsappNumber} 
-                  onChange={(e) => setForm({...form, whatsappNumber: e.target.value})}
-                  className="rounded-xl h-12"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Truck className="h-5 w-5 text-primary" /> Regras de Delivery
-              </CardTitle>
-              <CardDescription>Taxas e logística</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2">
-                <Label htmlFor="fee">Taxa de Entrega Padrão (R$)</Label>
-                <Input 
-                  id="fee" 
-                  type="number" 
-                  step="0.01"
-                  value={form.deliveryFee} 
-                  onChange={(e) => setForm({...form, deliveryFee: e.target.value})}
-                  className="rounded-xl h-12"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-2">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5 text-primary" /> Visual
-              </CardTitle>
-              <CardDescription>Cores do aplicativo</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2">
-                <Label htmlFor="color">Cor Principal (Hexadecimal)</Label>
-                <div className="flex gap-4">
+            <CardContent className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="restaurantName">Nome da Pizzaria</Label>
                   <Input 
-                    id="color" 
-                    value={form.primaryColor} 
-                    onChange={(e) => setForm({...form, primaryColor: e.target.value})}
-                    className="rounded-xl h-12 font-mono"
+                    id="restaurantName" 
+                    value={form.restaurantName} 
+                    onChange={(e) => setForm({...form, restaurantName: e.target.value})}
+                    className="rounded-xl h-12"
                   />
-                  <div 
-                    className="w-12 h-12 rounded-xl border-2" 
-                    style={{ backgroundColor: form.primaryColor }}
-                  ></div>
+                </div>
+                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
+                  <div className="space-y-0.5">
+                    <Label className="text-base">Exibir Ícone no Logo</Label>
+                    <p className="text-xs text-muted-foreground">Define se um ícone aparece ao lado do nome.</p>
+                  </div>
+                  <Switch checked={form.showLogoIcon} onCheckedChange={(v) => setForm({...form, showLogoIcon: v})} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="logoIconName" className="flex items-center gap-1">
+                    Ícone do Logo (Opcional) <span className="text-xs text-muted-foreground font-normal">(Lucide Icon Name)</span>
+                  </Label>
+                  <Input 
+                    id="logoIconName" 
+                    placeholder="Ex: Pizza, Flame, Utensils"
+                    value={form.logoIconName} 
+                    onChange={(e) => setForm({...form, logoIconName: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="logoImageUrl">Logotipo da Pizzaria (Imagem URL)</Label>
+                  <div className="flex gap-2">
+                    <Input 
+                      id="logoImageUrl" 
+                      placeholder="https://suaimagem.com/logo.png"
+                      value={form.logoImageUrl} 
+                      onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
+                      className="rounded-xl h-12"
+                    />
+                    <Button variant="outline" className="h-12 rounded-xl" title="Visualizar">
+                      <Eye className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="whatsapp">Número do WhatsApp para Pedidos</Label>
+                  <Input 
+                    id="whatsapp" 
+                    placeholder="5511999999999"
+                    value={form.whatsappNumber} 
+                    onChange={(e) => setForm({...form, whatsappNumber: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="fee">Taxa de Entrega (R$)</Label>
+                  <Input 
+                    id="fee" 
+                    type="number" 
+                    step="0.01"
+                    value={form.deliveryFee} 
+                    onChange={(e) => setForm({...form, deliveryFee: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Button 
-            onClick={handleSave} 
-            disabled={loading}
-            className="w-full h-16 rounded-full text-xl font-bold bg-primary shadow-xl shadow-primary/20"
-          >
-            {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <Save className="mr-2 h-6 w-6" />}
-            Salvar Todas as Configurações
-          </Button>
+          {/* Status da Loja */}
+          <Card className="rounded-3xl border-2 shadow-sm">
+            <CardHeader className="bg-yellow-500/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black">
+                <Clock className="h-7 w-7 text-yellow-600" /> Status da Loja
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="flex items-center justify-between p-6 bg-yellow-50 rounded-2xl border-2 border-yellow-200">
+                <div className="space-y-1">
+                  <Label className="text-xl font-black text-yellow-800">Loja Aberta?</Label>
+                  <p className="text-sm text-yellow-700">Marque para permitir que os clientes façam pedidos.</p>
+                </div>
+                <Switch 
+                  className="scale-150 data-[state=checked]:bg-green-500"
+                  checked={form.isStoreOpen} 
+                  onCheckedChange={(v) => setForm({...form, isStoreOpen: v})} 
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="hours">Horário de Funcionamento (Texto)</Label>
+                <Input 
+                  id="hours" 
+                  placeholder="Ex: Aberto das 18h às 23h30"
+                  value={form.openingHoursText} 
+                  onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
+                  className="rounded-xl h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="closedMessage">Mensagem de "Fechado no Momento"</Label>
+                <Textarea 
+                  id="closedMessage" 
+                  placeholder="Esta mensagem aparecerá no topo do cardápio quando a loja estiver fechada."
+                  value={form.closedMessage} 
+                  onChange={(e) => setForm({...form, closedMessage: e.target.value})}
+                  className="rounded-2xl min-h-[100px]"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Aparência */}
+          <Card className="rounded-3xl border-2 shadow-sm">
+            <CardHeader className="bg-blue-500/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black">
+                <Palette className="h-7 w-7 text-blue-600" /> Aparência
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="menuTitle">Título do Cardápio</Label>
+                  <Input 
+                    id="menuTitle" 
+                    value={form.menuTitle} 
+                    onChange={(e) => setForm({...form, menuTitle: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="menuSubtitle">Subtítulo do Cardápio</Label>
+                  <Input 
+                    id="menuSubtitle" 
+                    value={form.menuSubtitle} 
+                    onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="bannerText">Texto do Banner Principal</Label>
+                  <Input 
+                    id="bannerText" 
+                    value={form.heroBannerText} 
+                    onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bannerImage">Imagem do Banner Principal (URL)</Label>
+                  <Input 
+                    id="bannerImage" 
+                    value={form.heroBannerImageUrl} 
+                    onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="pColor">Cor Principal</Label>
+                  <div className="flex gap-2">
+                    <Input id="pColor" value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="rounded-xl h-12 font-mono" />
+                    <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.primaryColor }}></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bgColor">Cor de Fundo</Label>
+                  <div className="flex gap-2">
+                    <Input id="bgColor" value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="rounded-xl h-12 font-mono" />
+                    <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.backgroundColor }}></div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bgPattern">Plano de Fundo do App (URL)</Label>
+                  <Input 
+                    id="bgPattern" 
+                    placeholder="URL de padrão ou imagem"
+                    value={form.appBackgroundImageUrl} 
+                    onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Redes Sociais e Contato */}
+          <Card className="rounded-3xl border-2 shadow-sm">
+            <CardHeader className="bg-green-500/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black">
+                <MessageSquare className="h-7 w-7 text-green-600" /> Contato e Redes Sociais
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="addressFooter">Endereço Físico (Rodapé)</Label>
+                <Input 
+                  id="addressFooter" 
+                  value={form.address} 
+                  onChange={(e) => setForm({...form, address: e.target.value})}
+                  className="rounded-xl h-12"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="contactPhone">Telefone de Contato (Rodapé)</Label>
+                  <Input 
+                    id="contactPhone" 
+                    value={form.contactPhone} 
+                    onChange={(e) => setForm({...form, contactPhone: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contactEmail">E-mail de Contato</Label>
+                  <Input 
+                    id="contactEmail" 
+                    value={form.contactEmail} 
+                    onChange={(e) => setForm({...form, contactEmail: e.target.value})}
+                    className="rounded-xl h-12"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="waAuto">Mensagem Automática do WhatsApp (Rodapé)</Label>
+                <Input 
+                  id="waAuto" 
+                  placeholder="Ex: Olá, gostaria de tirar uma dúvida!"
+                  value={form.whatsappAutoMessage} 
+                  onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
+                  className="rounded-xl h-12"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-1"><Instagram className="h-4 w-4" /> Instagram URL</Label>
+                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-12" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-1"><Facebook className="h-4 w-4" /> Facebook URL</Label>
+                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-12" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-1"><Music2 className="h-4 w-4" /> TikTok URL</Label>
+                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-12" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="sticky bottom-8 z-30">
+            <Button 
+              onClick={handleSave} 
+              disabled={loading}
+              className="w-full h-20 rounded-full text-2xl font-black bg-primary shadow-2xl shadow-primary/40 transform transition hover:scale-[1.02] active:scale-95"
+            >
+              {loading ? <Loader2 className="h-8 w-8 animate-spin mr-3" /> : <Save className="mr-3 h-8 w-8" />}
+              Salvar Todas as Alterações
+            </Button>
+          </div>
         </div>
       </main>
     </div>

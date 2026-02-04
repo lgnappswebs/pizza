@@ -140,9 +140,28 @@
       "type": "object",
       "properties": {
         "restaurantName": { "type": "string" },
+        "showLogoIcon": { "type": "boolean" },
+        "logoIconName": { "type": "string" },
+        "logoImageUrl": { "type": "string" },
         "whatsappNumber": { "type": "string" },
+        "deliveryFee": { "type": "number" },
+        "isStoreOpen": { "type": "boolean" },
+        "openingHoursText": { "type": "string" },
+        "closedMessage": { "type": "string" },
+        "menuTitle": { "type": "string" },
+        "menuSubtitle": { "type": "string" },
+        "heroBannerText": { "type": "string" },
+        "heroBannerImageUrl": { "type": "string" },
         "primaryColor": { "type": "string" },
-        "deliveryFee": { "type": "number" }
+        "backgroundColor": { "type": "string" },
+        "appBackgroundImageUrl": { "type": "string" },
+        "address": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "whatsappAutoMessage": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "facebookUrl": { "type": "string" },
+        "tiktokUrl": { "type": "string" }
       }
     }
   },
