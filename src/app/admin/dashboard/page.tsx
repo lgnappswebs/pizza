@@ -32,15 +32,6 @@ import {
 import { collection, query, orderBy, limit } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
-import { 
-  Bar, 
-  BarChart, 
-  ResponsiveContainer, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  Cell 
-} from 'recharts';
 import { useEffect } from 'react';
 import {
   DropdownMenu,
@@ -85,16 +76,6 @@ export default function AdminDashboard() {
     const today = new Date();
     return orderDate.toDateString() === today.toDateString();
   }).length || 0;
-
-  const chartData = [
-    { name: 'Seg', total: 1200 },
-    { name: 'Ter', total: 900 },
-    { name: 'Qua', total: 1500 },
-    { name: 'Qui', total: 1100 },
-    { name: 'Sex', total: 2400 },
-    { name: 'Sáb', total: 3200 },
-    { name: 'Dom', total: 2800 },
-  ];
 
   const stats = [
     { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600', href: '/admin/orders' },
@@ -199,47 +180,7 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <Card className="lg:col-span-2 rounded-2xl border-2">
-              <CardHeader className="flex flex-row items-center justify-between pb-8">
-                <div>
-                  <CardTitle className="text-xl font-bold">Resumo de Vendas</CardTitle>
-                  <CardDescription>Desempenho da última semana</CardDescription>
-                </div>
-                <Badge variant="outline" className="flex items-center gap-1 rounded-full px-4 py-1">
-                  <Calendar className="h-4 w-4" /> últimos 7 dias
-                </Badge>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData}>
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#888', fontSize: 12}} dy={10} />
-                      <YAxis hide />
-                      <Tooltip 
-                        cursor={{fill: 'transparent'}}
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            return (
-                              <div className="bg-white border-2 border-primary/20 p-3 rounded-xl shadow-xl">
-                                <p className="font-bold text-primary">{`R$ ${payload[0].value}`}</p>
-                              </div>
-                            );
-                          }
-                          return null;
-                        }}
-                      />
-                      <Bar dataKey="total" radius={[8, 8, 0, 0]}>
-                        {chartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={index === 5 || index === 6 ? 'hsl(var(--primary))' : 'hsl(var(--primary) / 0.3)'} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </CardContent>
-            </Card>
-
+          <div className="grid grid-cols-1 gap-8">
             <Card className="rounded-2xl border-2 flex flex-col">
               <CardHeader>
                 <CardTitle className="text-xl font-bold">Pedidos Recentes</CardTitle>
