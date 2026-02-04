@@ -6,7 +6,21 @@ import { Header } from '@/components/pizzeria/Header';
 import { Footer } from '@/components/pizzeria/Footer';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck, Clock, X, Filter } from 'lucide-react';
+import { 
+  ShoppingBasket, 
+  Pizza as PizzaIcon, 
+  Loader2, 
+  Search, 
+  Clock, 
+  X, 
+  Filter,
+  Beer,
+  Package,
+  IceCream,
+  Utensils,
+  Salad,
+  LayoutGrid
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -60,6 +74,18 @@ export default function MenuPage() {
     });
   }, [groupedCategories, categories]);
 
+  // Helper para ícones baseados no nome
+  const getCategoryIcon = (name: string) => {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('pizza')) return <PizzaIcon className="h-5 w-5" />;
+    if (lowerName.includes('bebida')) return <Beer className="h-5 w-5" />;
+    if (lowerName.includes('combo')) return <Package className="h-5 w-5" />;
+    if (lowerName.includes('sobremesa')) return <IceCream className="h-5 w-5" />;
+    if (lowerName.includes('porç') || lowerName.includes('entrada')) return <Utensils className="h-5 w-5" />;
+    if (lowerName.includes('acompanhamento')) return <Salad className="h-5 w-5" />;
+    return <LayoutGrid className="h-5 w-5" />;
+  };
+
   // Busca aprimorada
   const filteredProducts = useMemo(() => {
     if (!products) return [];
@@ -106,39 +132,50 @@ export default function MenuPage() {
           
           {/* Alerta de Loja Fechada */}
           {config && !config.isStoreOpen && (
-            <Alert variant="destructive" className="mb-8 rounded-2xl border-2 bg-red-50 text-red-900 border-red-200 shadow-lg">
-              <Clock className="h-6 w-6 text-red-600" />
-              <AlertTitle className="text-xl font-black mb-2">Pizzaria Fechada no Momento</AlertTitle>
-              <AlertDescription className="text-lg">
-                <p className="font-bold">{config.closedMessage || "Estamos fechados agora. Volte em breve!"}</p>
-                {config.openingHoursText && (
-                  <p className="mt-2 text-sm opacity-80">Horário: {config.openingHoursText}</p>
-                )}
-              </AlertDescription>
+            <Alert variant="destructive" className="mb-8 rounded-3xl border-2 bg-red-50 text-red-900 border-red-200 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex gap-4">
+                <div className="bg-red-600 p-3 rounded-2xl shrink-0 h-fit">
+                  <Clock className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <AlertTitle className="text-2xl font-black mb-1">Pizzaria Fechada</AlertTitle>
+                  <AlertDescription className="text-lg">
+                    <p className="font-semibold opacity-90">{config.closedMessage || "Estamos fechados agora. Volte em breve!"}</p>
+                    {config.openingHoursText && (
+                      <div className="mt-2 inline-flex items-center gap-2 bg-red-900/10 px-3 py-1 rounded-full text-sm font-bold">
+                        <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+                        {config.openingHoursText}
+                      </div>
+                    )}
+                  </AlertDescription>
+                </div>
+              </div>
             </Alert>
           )}
 
-          <div className="mb-8 text-center space-y-2">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">
+          <div className="mb-10 text-center space-y-3">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
               {config?.menuTitle || "Nosso Cardápio"}
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
               {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
             </p>
           </div>
 
-          <div className="max-w-md mx-auto mb-10 relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <div className="max-w-xl mx-auto mb-12 relative group">
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors flex items-center justify-center">
+              <Search className="h-6 w-6" />
+            </div>
             <Input 
-              placeholder="O que você quer comer hoje?" 
-              className="h-16 pl-12 pr-12 rounded-2xl border-2 focus:ring-primary shadow-sm text-lg"
+              placeholder="O que você quer saborear hoje?" 
+              className="h-16 pl-14 pr-12 rounded-full border-2 border-muted-foreground/20 focus:border-primary focus:ring-0 shadow-lg text-lg font-medium transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
               <button 
                 onClick={() => setSearchTerm('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-muted transition-all"
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-muted transition-all"
                 title="Limpar busca"
               >
                 <X className="h-6 w-6" />
@@ -148,28 +185,28 @@ export default function MenuPage() {
 
           {searchTerm.trim() ? (
             <div className="animate-in fade-in slide-in-from-top-4 duration-500 space-y-8">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b-2 border-dashed pb-6">
-                <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Search className="h-6 w-6 text-primary" />
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-primary/5 p-6 rounded-3xl border-2 border-dashed border-primary/20">
+                <div className="flex items-center gap-4">
+                  <div className="h-14 w-14 bg-white rounded-2xl flex items-center justify-center shadow-md">
+                    <Search className="h-7 w-7 text-primary" />
                   </div>
                   <div>
                     <h2 className="text-2xl font-black">Resultados da Busca</h2>
-                    <p className="text-muted-foreground">Mostrando itens para "{searchTerm}"</p>
+                    <p className="text-muted-foreground font-medium">Mostrando itens para "{searchTerm}"</p>
                   </div>
                 </div>
                 <Button 
                   onClick={() => setSearchTerm('')} 
                   variant="outline" 
-                  className="rounded-full border-2 font-bold px-6 h-12 hover:bg-primary hover:text-white transition-all"
+                  className="rounded-full border-2 font-bold px-8 h-12 hover:bg-primary hover:text-white transition-all shadow-sm"
                 >
                   <X className="mr-2 h-4 w-4" />
-                  Fechar Resultados
+                  Voltar ao Cardápio
                 </Button>
               </div>
 
               {filteredProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredProducts.map((product) => (
                     <ProductCard 
                       key={product.id}
@@ -188,16 +225,16 @@ export default function MenuPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-24 bg-muted/20 rounded-3xl border-2 border-dashed">
-                  <Search className="h-16 w-16 text-muted-foreground/30 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold">Nenhum item encontrado</h3>
-                  <p className="text-muted-foreground max-w-xs mx-auto mt-2">
-                    Não encontramos nada com esse nome. Tente pesquisar por sabores, tipos de bebida ou categorias.
+                <div className="text-center py-24 bg-muted/20 rounded-[3rem] border-2 border-dashed">
+                  <Search className="h-20 w-20 text-muted-foreground/20 mx-auto mb-6" />
+                  <h3 className="text-3xl font-black opacity-80">Nenhum item encontrado</h3>
+                  <p className="text-muted-foreground max-w-xs mx-auto mt-2 text-lg font-medium">
+                    Tente usar outras palavras ou procure por categorias.
                   </p>
                   <Button 
                     onClick={() => setSearchTerm('')} 
                     variant="link" 
-                    className="mt-4 text-primary font-bold text-lg"
+                    className="mt-6 text-primary font-black text-xl hover:scale-105 transition-transform"
                   >
                     Ver todo o cardápio
                   </Button>
@@ -207,21 +244,24 @@ export default function MenuPage() {
           ) : (
             <>
               {!mainNames || mainNames.length === 0 ? (
-                <div className="text-center py-20">
-                  <PizzaIcon className="h-16 w-16 text-muted mx-auto mb-4" />
-                  <h2 className="text-2xl font-bold">Nenhuma categoria encontrada</h2>
-                  <p className="text-muted-foreground">O cardápio está sendo preparado!</p>
+                <div className="text-center py-24 bg-white rounded-[3rem] shadow-xl border-2">
+                  <PizzaIcon className="h-20 w-20 text-muted mx-auto mb-6 opacity-30 animate-pulse" />
+                  <h2 className="text-3xl font-black">Cardápio em Construção</h2>
+                  <p className="text-muted-foreground text-lg font-medium">Em breve, muitas delícias para você!</p>
                 </div>
               ) : (
                 <Tabs defaultValue={mainNames[0]} className="w-full" onValueChange={() => setSelectedSubId('all')}>
-                  <div className="flex justify-center mb-8">
-                    <TabsList className="bg-muted p-1 rounded-2xl h-auto flex-wrap justify-center overflow-x-auto">
+                  <div className="flex justify-center mb-12">
+                    <TabsList className="bg-muted p-1.5 rounded-[2rem] h-auto flex-wrap justify-center shadow-inner border border-muted-foreground/10">
                       {mainNames.map((name) => (
                         <TabsTrigger 
                           key={name} 
                           value={name}
-                          className="rounded-xl px-8 py-4 text-xl font-black data-[state=active]:bg-primary data-[state=active]:text-white transition-all shadow-sm"
+                          className="rounded-[1.5rem] px-8 py-4 text-lg font-black tracking-tight data-[state=active]:bg-primary data-[state=active]:text-white transition-all duration-300 flex items-center gap-2 group"
                         >
+                          <span className="opacity-70 group-data-[state=active]:opacity-100 transition-opacity">
+                            {getCategoryIcon(name)}
+                          </span>
                           {name}
                         </TabsTrigger>
                       ))}
@@ -233,25 +273,27 @@ export default function MenuPage() {
                     const hasSubCategories = group.some(c => c.subName) || group.length > 1;
                     
                     return (
-                      <TabsContent key={name} value={name} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none space-y-8">
+                      <TabsContent key={name} value={name} className="animate-in fade-in slide-in-from-bottom-4 duration-500 outline-none space-y-10">
                         
                         {/* Subcategorias (Filtros de Sabores/Tipos) */}
                         {hasSubCategories && (
-                          <div className="flex flex-col items-center gap-4">
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                              <Filter className="h-4 w-4" />
-                              <span className="text-xs font-bold uppercase tracking-wider">Filtrar por:</span>
+                          <div className="flex flex-col items-center gap-5">
+                            <div className="flex items-center gap-2 px-4 py-1.5 bg-muted/50 rounded-full border border-muted-foreground/10">
+                              <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Especialidade</span>
                             </div>
-                            <div className="flex flex-wrap justify-center gap-2 max-w-2xl">
+                            <div className="flex flex-wrap justify-center gap-3 max-w-3xl">
                               <Button 
                                 variant={selectedSubId === 'all' ? 'default' : 'outline'}
                                 onClick={() => setSelectedSubId('all')}
                                 className={cn(
-                                  "rounded-full h-10 px-6 font-bold transition-all",
-                                  selectedSubId === 'all' && "shadow-md bg-primary hover:bg-primary/90"
+                                  "rounded-2xl h-12 px-8 font-black transition-all border-2",
+                                  selectedSubId === 'all' 
+                                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105" 
+                                    : "bg-white hover:bg-primary/5 hover:border-primary/50"
                                 )}
                               >
-                                Todos
+                                Tudo
                               </Button>
                               {group.map((sub) => (
                                 <Button 
@@ -259,8 +301,10 @@ export default function MenuPage() {
                                   variant={selectedSubId === sub.id ? 'default' : 'outline'}
                                   onClick={() => setSelectedSubId(sub.id)}
                                   className={cn(
-                                    "rounded-full h-10 px-6 font-bold transition-all",
-                                    selectedSubId === sub.id && "shadow-md bg-primary hover:bg-primary/90"
+                                    "rounded-2xl h-12 px-8 font-black transition-all border-2",
+                                    selectedSubId === sub.id 
+                                      ? "bg-primary text-white border-primary shadow-lg shadow-primary/20 scale-105" 
+                                      : "bg-white hover:bg-primary/5 hover:border-primary/50"
                                   )}
                                 >
                                   {sub.subName || 'Geral'}
@@ -271,17 +315,12 @@ export default function MenuPage() {
                         )}
 
                         {/* Lista de Produtos */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                           {products?.filter(p => {
                             const pCat = categories?.find(c => c.id === p.categoryId);
                             if (!pCat) return false;
-                            
-                            // Filtrar primeiro pelo nome da categoria principal
                             if (pCat.name !== name) return false;
-                            
-                            // Depois filtrar pela subcategoria selecionada
                             if (selectedSubId !== 'all' && p.categoryId !== selectedSubId) return false;
-                            
                             return true;
                           }).map((product) => (
                             <ProductCard 
@@ -305,8 +344,8 @@ export default function MenuPage() {
                           const pCat = categories?.find(c => c.id === p.categoryId);
                           return pCat && pCat.name === name && (selectedSubId === 'all' || p.categoryId === selectedSubId);
                         }).length === 0 && (
-                          <div className="text-center py-16 bg-muted/20 rounded-3xl border-2 border-dashed">
-                             <p className="text-muted-foreground text-lg">Nenhum produto encontrado nesta seleção.</p>
+                          <div className="text-center py-20 bg-muted/10 rounded-[3rem] border-2 border-dashed border-muted-foreground/20">
+                             <p className="text-muted-foreground text-xl font-bold italic opacity-60">Nenhum item disponível nesta seleção.</p>
                           </div>
                         )}
                       </TabsContent>
@@ -322,26 +361,32 @@ export default function MenuPage() {
       <Footer />
 
       {cartItems.length > 0 && config?.isStoreOpen && (
-        <div className="fixed bottom-6 left-4 md:left-8 z-40">
-          <Link href="/checkout">
-            <Button className="h-16 px-8 rounded-full bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl font-black shadow-2xl flex items-center justify-between gap-8 transform hover:scale-105 active:scale-95 transition-all">
-              <div className="flex items-center gap-3">
-                <div className="bg-white/30 rounded-full p-2">
-                  <ShoppingBasket className="h-6 w-6" />
+        <div className="fixed bottom-8 left-4 right-4 md:left-auto md:right-12 z-40 flex justify-center md:justify-end">
+          <Link href="/checkout" className="w-full max-w-md md:w-auto">
+            <Button className="h-20 w-full px-10 rounded-[2.5rem] bg-secondary hover:bg-secondary/90 text-secondary-foreground text-2xl font-black shadow-2xl flex items-center justify-between gap-10 transform hover:scale-105 active:scale-95 transition-all border-4 border-white/20">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/40 rounded-full p-3 shadow-sm">
+                  <ShoppingBasket className="h-8 w-8" />
                 </div>
-                <span>Finalizar Pedido</span>
+                <div className="text-left leading-none">
+                  <span className="block text-[10px] uppercase font-black opacity-70 mb-1">Seu Carrinho</span>
+                  <span>Ver Pedido</span>
+                </div>
               </div>
-              <span className="bg-black/10 px-4 py-1 rounded-full">R$ {total.toFixed(2)}</span>
+              <div className="flex items-center gap-2 bg-black/10 px-5 py-2 rounded-2xl">
+                <span className="text-sm opacity-70">Total:</span>
+                <span className="text-2xl">R$ {total.toFixed(2)}</span>
+              </div>
             </Button>
           </Link>
         </div>
       )}
 
       {isAdmin && (
-        <div className="fixed bottom-6 right-4 md:right-8 z-40">
+        <div className="fixed top-24 right-4 md:right-8 z-40">
           <Link href="/admin/dashboard">
-            <Button size="icon" className="h-16 w-16 rounded-full bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all">
-              <ShieldCheck className="h-8 w-8" />
+            <Button size="icon" className="h-14 w-14 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all border-4 border-white">
+              <LayoutGrid className="h-7 w-7" />
             </Button>
           </Link>
         </div>
