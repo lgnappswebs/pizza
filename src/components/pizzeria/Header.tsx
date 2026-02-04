@@ -56,36 +56,35 @@ export function Header() {
     ? (LucideIcons as any)[config.logoIconName] 
     : LucideIcons.Pizza;
 
+  // Não renderiza o conteúdo do cabeçalho enquanto as configurações carregam
+  if (loadingConfigs) return <header className="h-20 w-full border-b bg-background/95"></header>;
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 flex h-20 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white">
-              {!loadingConfigs && configs ? (
-                config?.logoImageUrl ? (
-                  <Image 
-                    src={config.logoImageUrl} 
-                    alt={config.restaurantName || "Logo"} 
-                    fill 
-                    className="object-cover"
-                  />
-                ) : config?.showLogoIcon ? (
-                  <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
-                ) : (
-                  <Image 
-                    src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
-                    alt="Logo" 
-                    fill 
-                    className="object-cover"
-                  />
-                )
-              ) : null}
+              {config?.logoImageUrl ? (
+                <Image 
+                  src={config.logoImageUrl} 
+                  alt={config.restaurantName || "Logo"} 
+                  fill 
+                  className="object-cover"
+                />
+              ) : config?.showLogoIcon ? (
+                <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+              ) : (
+                <Image 
+                  src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                  alt="Logo" 
+                  fill 
+                  className="object-cover"
+                />
+              )}
             </div>
             <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap min-w-[50px]">
-              {!loadingConfigs && configs ? (
-                config?.restaurantName || "PizzApp Rápido"
-              ) : null}
+              {config?.restaurantName}
             </span>
           </Link>
         </div>

@@ -74,11 +74,20 @@ export default function MenuPage() {
 
   const mainNames = useMemo(() => {
     if (!categories) return [];
-    return Object.keys(groupedCategories).sort((a, b) => {
+    const names = Object.keys(groupedCategories).sort((a, b) => {
       const minA = Math.min(...groupedCategories[a].map(c => c.order));
       const minB = Math.min(...groupedCategories[b].map(c => c.order));
       return minA - minB;
     });
+
+    // PRIORIDADE: Garante que "Pizzas" sempre apareça primeiro se existir
+    const pizzaIndex = names.findIndex(n => n.toLowerCase() === 'pizzas');
+    if (pizzaIndex > 0) {
+      const pizzaName = names.splice(pizzaIndex, 1)[0];
+      names.unshift(pizzaName);
+    }
+
+    return names;
   }, [groupedCategories, categories]);
 
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
@@ -89,7 +98,9 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (mainNames.length > 0 && !activeCategory) {
-      setActiveCategory(mainNames[0]);
+      // Tenta selecionar "Pizzas" por padrão se disponível, senão a primeira da lista
+      const pizzaName = mainNames.find(n => n.toLowerCase() === 'pizzas');
+      setActiveCategory(pizzaName || mainNames[0]);
     }
   }, [mainNames, activeCategory]);
 
