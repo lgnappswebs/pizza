@@ -15,10 +15,9 @@ import {
   LogOut,
   Layers,
   ExternalLink,
-  Eye,
-  EyeOff,
   ChevronLeft,
-  Wallet
+  Wallet,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -198,7 +197,7 @@ export default function AdminBannersPage() {
             <h1 className="text-3xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens de destaque do topo</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Novo Banner
           </Button>
         </div>
@@ -302,7 +301,23 @@ export default function AdminBannersPage() {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="image">Imagem do Banner (URL ou Galeria)</Label>
+                <Label htmlFor="image" className="text-lg font-bold">Imagem do Banner (URL ou Galeria)</Label>
+                
+                {formData.imageUrl && (
+                  <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
+                    <img src={formData.imageUrl} alt="Preview" className="object-cover w-full h-full" />
+                    <Button 
+                      type="button"
+                      variant="destructive" 
+                      size="icon" 
+                      className="absolute top-2 right-2 rounded-full h-8 w-8 shadow-lg"
+                      onClick={() => setFormData({...formData, imageUrl: ''})}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+
                 <div className="flex gap-2">
                   <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2" placeholder="https://..." />
                   <Button 

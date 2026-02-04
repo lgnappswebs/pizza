@@ -26,7 +26,8 @@ import {
   ExternalLink,
   Wallet,
   ChevronLeft,
-  Plus
+  Plus,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -280,6 +281,22 @@ export default function AdminSettingsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="logoImageUrl">Logotipo da Pizzaria (URL ou Galeria)</Label>
+                  
+                  {form.logoImageUrl && (
+                    <div className="relative h-20 w-20 rounded-xl overflow-hidden border-2 mb-2 bg-muted">
+                      <img src={form.logoImageUrl} alt="Preview" className="object-cover w-full h-full" />
+                      <Button 
+                        type="button"
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-1 right-1 rounded-full h-6 w-6"
+                        onClick={() => setForm({...form, logoImageUrl: ''})}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
@@ -409,6 +426,22 @@ export default function AdminSettingsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bannerImage">Banner Principal (URL ou Galeria)</Label>
+                  
+                  {form.heroBannerImageUrl && (
+                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
+                      <img src={form.heroBannerImageUrl} alt="Preview" className="object-cover w-full h-full" />
+                      <Button 
+                        type="button"
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-2 right-2 rounded-full h-8 w-8"
+                        onClick={() => setForm({...form, heroBannerImageUrl: ''})}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Input 
                       id="bannerImage" 
@@ -445,6 +478,22 @@ export default function AdminSettingsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bgPattern">Plano de Fundo (URL ou Galeria)</Label>
+                  
+                  {form.appBackgroundImageUrl && (
+                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
+                      <img src={form.appBackgroundImageUrl} alt="Preview" className="object-cover w-full h-full" />
+                      <Button 
+                        type="button"
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-2 right-2 rounded-full h-8 w-8"
+                        onClick={() => setForm({...form, appBackgroundImageUrl: ''})}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <Input 
                       id="bgPattern" 
