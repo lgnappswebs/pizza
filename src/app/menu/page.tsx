@@ -5,6 +5,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { Footer } from '@/components/pizzeria/Footer';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
+import { MenuBanner } from '@/components/pizzeria/MenuBanner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   ShoppingBasket, 
@@ -51,10 +52,14 @@ export default function MenuPage() {
   }, [firestore]);
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  
+  const bannersQuery = useMemoFirebase(() => collection(firestore, 'banners'), [firestore]);
 
   const { data: categories, isLoading: loadingCats } = useCollection(categoriesQuery);
   const { data: products, isLoading: loadingProds } = useCollection(productsQuery);
   const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
+  const { data: banners, isLoading: loadingBanners } = useCollection(bannersQuery);
+  
   const config = configs?.[0];
 
   const groupedCategories = useMemo(() => {
@@ -75,6 +80,12 @@ export default function MenuPage() {
       return minA - minB;
     });
   }, [groupedCategories, categories]);
+
+  const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
+  
+  const topBanners = activeBanners.filter(b => b.bannerPosition === 'top');
+  const middleBanners = activeBanners.filter(b => b.bannerPosition === 'middle');
+  const bottomBanners = activeBanners.filter(b => b.bannerPosition === 'bottom');
 
   useEffect(() => {
     if (mainNames.length > 0 && !activeCategory) {
@@ -132,7 +143,18 @@ export default function MenuPage() {
     }
   };
 
-  if (loadingCats || loadingProds || loadingConfigs) {
+  const handleBannerClick = (linkCategoryId: string) => {
+    if (!linkCategoryId || linkCategoryId === 'none') return;
+    const targetCat = categories?.find(c => c.id === linkCategoryId);
+    if (targetCat) {
+      setActiveCategory(targetCat.name);
+      setSelectedSubId(targetCat.id);
+      setShowSpecialties(true);
+      document.getElementById('menu-navigation')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  if (loadingCats || loadingProds || loadingConfigs || loadingBanners) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-12 w-12 text-primary animate-spin" />
@@ -197,6 +219,15 @@ export default function MenuPage() {
               </button>
             )}
           </div>
+
+          {/* Banners Superiores */}
+          {topBanners.length > 0 && !searchTerm && (
+            <div className="mb-12 animate-in fade-in duration-700">
+              {topBanners.map(banner => (
+                <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
+              ))}
+            </div>
+          )}
 
           {searchTerm.trim() ? (
             <div className="animate-in fade-in slide-in-from-top-4 duration-500 space-y-8">
@@ -270,7 +301,7 @@ export default function MenuPage() {
                   className="w-full" 
                   onValueChange={setActiveCategory}
                 >
-                  <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
+                  <div id="menu-navigation" className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
                     <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
                       {mainNames.map((name) => (
                         <TabsTrigger 
@@ -344,6 +375,15 @@ export default function MenuPage() {
                           </div>
                         )}
 
+                        {/* Banners Intermediários */}
+                        {middleBanners.length > 0 && activeCategory === name && (
+                          <div className="animate-in fade-in duration-700">
+                            {middleBanners.map(banner => (
+                              <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
+                            ))}
+                          </div>
+                        )}
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
                           {products?.filter(p => {
                             const pCat = categories?.find(c => c.id === p.categoryId);
@@ -383,6 +423,15 @@ export default function MenuPage() {
                 </Tabs>
               )}
             </>
+          )}
+
+          {/* Banners Inferiores */}
+          {bottomBanners.length > 0 && !searchTerm && (
+            <div className="mt-16 animate-in fade-in duration-700">
+              {bottomBanners.map(banner => (
+                <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
+              ))}
+            </div>
           )}
         </div>
       </main>
