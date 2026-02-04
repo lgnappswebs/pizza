@@ -56,7 +56,6 @@ export function Header() {
     ? (LucideIcons as any)[config.logoIconName] 
     : LucideIcons.Pizza;
 
-  // Não renderiza o conteúdo do cabeçalho enquanto as configurações carregam
   if (loadingConfigs) return <header className="h-20 w-full border-b bg-background/95"></header>;
 
   return (
@@ -68,7 +67,7 @@ export function Header() {
               {config?.logoImageUrl ? (
                 <Image 
                   src={config.logoImageUrl} 
-                  alt={config.restaurantName || "Logo"} 
+                  alt="Logo" 
                   fill 
                   className="object-cover"
                 />
@@ -76,7 +75,7 @@ export function Header() {
                 <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
               ) : (
                 <Image 
-                  src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                  src={logoPlaceholder?.imageUrl || ''} 
                   alt="Logo" 
                   fill 
                   className="object-cover"
@@ -84,7 +83,7 @@ export function Header() {
               )}
             </div>
             <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap min-w-[50px]">
-              {config?.restaurantName}
+              {config?.restaurantName || ""}
             </span>
           </Link>
         </div>

@@ -75,17 +75,18 @@ export default function MenuPage() {
   const mainNames = useMemo(() => {
     if (!categories) return [];
     const names = Object.keys(groupedCategories).sort((a, b) => {
+      // PRIORIDADE ABSOLUTA: "Pizzas" sempre em primeiro
+      const isAPizza = a.toLowerCase() === 'pizzas';
+      const isBPizza = b.toLowerCase() === 'pizzas';
+      
+      if (isAPizza && !isBPizza) return -1;
+      if (!isAPizza && isBPizza) return 1;
+      
+      // Caso contrário, usa a ordem do banco
       const minA = Math.min(...groupedCategories[a].map(c => c.order));
       const minB = Math.min(...groupedCategories[b].map(c => c.order));
       return minA - minB;
     });
-
-    // PRIORIDADE: Garante que "Pizzas" sempre apareça primeiro se existir
-    const pizzaIndex = names.findIndex(n => n.toLowerCase() === 'pizzas');
-    if (pizzaIndex > 0) {
-      const pizzaName = names.splice(pizzaIndex, 1)[0];
-      names.unshift(pizzaName);
-    }
 
     return names;
   }, [groupedCategories, categories]);
@@ -98,7 +99,7 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (mainNames.length > 0 && !activeCategory) {
-      // Tenta selecionar "Pizzas" por padrão se disponível, senão a primeira da lista
+      // Garante que Pizzas esteja selecionada por padrão
       const pizzaName = mainNames.find(n => n.toLowerCase() === 'pizzas');
       setActiveCategory(pizzaName || mainNames[0]);
     }
@@ -188,7 +189,7 @@ export default function MenuPage() {
                 <div>
                   <AlertTitle className="text-2xl font-black mb-1">Pizzaria Fechada</AlertTitle>
                   <AlertDescription className="text-lg">
-                    <p className="font-semibold opacity-90">{config.closedMessage || "Estamos fechados agora. Volte em breve!"}</p>
+                    <p className="font-semibold opacity-90">{config.closedMessage || ""}</p>
                     {config.openingHoursText && (
                       <div className="mt-2 inline-flex items-center gap-2 bg-red-900/10 px-3 py-1 rounded-full text-sm font-bold">
                         <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
@@ -203,10 +204,10 @@ export default function MenuPage() {
 
           <div className="mb-10 text-center space-y-3 min-h-[120px]">
             <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-              {config?.menuTitle || "Nosso Cardápio"}
+              {config?.menuTitle || ""}
             </h1>
             <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-              {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+              {config?.menuSubtitle || ""}
             </p>
           </div>
 
@@ -350,7 +351,7 @@ export default function MenuPage() {
                                 onClick={() => setShowSpecialties(false)}
                                 className="h-8 rounded-full px-3 text-[10px] font-black uppercase tracking-wider text-muted-foreground hover:bg-destructive/10 hover:text-destructive flex items-center gap-1"
                               >
-                                <ChevronUp className="h-3 w-3" />
+                                <X className="h-3 w-3" />
                                 Ocultar Filtros
                               </Button>
                             </div>

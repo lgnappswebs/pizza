@@ -37,8 +37,8 @@ export default function Home() {
         <section className="relative h-screen flex items-start md:items-center justify-center overflow-hidden pt-12 md:pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
-              src={config?.heroBannerImageUrl || heroPlaceholder?.imageUrl || 'https://images.unsplash.com/photo-1693609930470-2eb935294945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkZWxpY2lvdXMlMjBwaXp6YXxlbnwwfHx8fDE3NzAyMTA0Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080'} 
-              alt="PizzApp Hero" 
+              src={config?.heroBannerImageUrl || heroPlaceholder?.imageUrl || ''} 
+              alt="Hero" 
               fill 
               className="object-cover brightness-50"
               priority
@@ -61,7 +61,7 @@ export default function Home() {
                     <LogoIcon className="h-16 w-16 md:h-24 md:w-24 text-primary" />
                   ) : (
                     <Image 
-                      src={logoPlaceholder?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
+                      src={logoPlaceholder?.imageUrl || ''} 
                       alt="Logo" 
                       fill 
                       className="object-cover"
@@ -69,16 +69,16 @@ export default function Home() {
                   )}
                 </div>
                 <h2 className="text-5xl md:text-8xl font-black font-headline tracking-tighter text-white drop-shadow-2xl min-h-[1.2em]">
-                  {config?.restaurantName || "PizzApp Rápido"}
+                  {config?.restaurantName || ""}
                 </h2>
               </div>
 
               <div className="min-h-[100px] flex flex-col items-center">
                 <h1 className="text-3xl md:text-5xl font-bold text-white/90 font-headline leading-tight drop-shadow-lg max-w-3xl">
-                  {config?.heroBannerText || "Pizza quentinha, sabor inesquecível 🍕🔥"}
+                  {config?.heroBannerText || ""}
                 </h1>
                 <p className="text-lg md:text-2xl text-white/80 font-medium mt-4 drop-shadow-md">
-                  {config?.openingHoursText || "A melhor pizzaria da cidade na palma da sua mão."}
+                  {config?.openingHoursText || ""}
                 </p>
               </div>
             </div>
