@@ -3,10 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { 
-  TrendingUp, 
   DollarSign, 
-  Calendar, 
-  ArrowUpRight, 
   Loader2,
   LayoutDashboard,
   Pizza as PizzaIcon,
@@ -20,11 +17,7 @@ import {
   ChevronLeft,
   Plus,
   Share2,
-  FileText,
-  Printer,
-  ChevronDown,
-  ChevronUp,
-  FileJson
+  Printer
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -40,15 +33,6 @@ import {
 import { collection, query, orderBy } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
-import { 
-  Bar, 
-  BarChart, 
-  ResponsiveContainer, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  Cell
-} from 'recharts';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,7 +41,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
-import { format, isSameDay, isSameMonth, isSameYear, startOfToday } from 'date-fns';
+import { format, isSameDay, isSameMonth, isSameYear } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function AdminFinancePage() {
@@ -66,7 +50,7 @@ export default function AdminFinancePage() {
   const { user, isUserLoading } = useUser();
 
   // Estados do Filtro (Inicia com hoje)
-  const today = new Date();
+  const today = useMemo(() => new Date(), []);
   const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
   const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
@@ -77,12 +61,6 @@ export default function AdminFinancePage() {
   const { data: allOrders, isLoading } = useCollection(allOrdersQuery);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
-
-  useEffect(() => {
-    if (!isUserLoading && !user) {
-      router.push('/admin/login');
-    }
-  }, [user, isUserLoading, router]);
 
   // Lógica de Filtragem
   const filteredOrders = useMemo(() => {
@@ -118,9 +96,11 @@ export default function AdminFinancePage() {
   // Médias e Estatísticas
   const averageTicket = useMemo(() => deliveredInPeriod.length > 0 ? revenueInPeriod / deliveredInPeriod.length : 0, [deliveredInPeriod.length, revenueInPeriod]);
 
-  if (isUserLoading || !user) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
-  }
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router]);
 
   const handleLogout = async () => {
     await signOut(getAuth());
@@ -173,6 +153,10 @@ export default function AdminFinancePage() {
     { v: "10", l: "Outubro" }, { v: "11", l: "Novembro" }, { v: "12", l: "Dezembro" }
   ];
   const years = ["2024", "2025", "2026"];
+
+  if (isUserLoading || !user) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
 
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white">
@@ -238,9 +222,9 @@ export default function AdminFinancePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:flex-1 lg:max-w-md">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="flex-1 h-9 border-none font-bold px-1 focus:ring-0">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -249,7 +233,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="flex-[2] h-9 border-none font-bold px-1 focus:ring-0">
+                <SelectTrigger className="flex-[2] h-10 border-none font-bold px-2 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -258,7 +242,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="flex-1 h-9 border-none font-bold px-1 focus:ring-0">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -325,6 +309,7 @@ export default function AdminFinancePage() {
             <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
+          </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
@@ -410,7 +395,6 @@ export default function AdminFinancePage() {
         </div>
       </main>
 
-      {/* Navegação Mobile para Admin */}
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <LayoutDashboard className="h-5 w-5 text-blue-600" />
