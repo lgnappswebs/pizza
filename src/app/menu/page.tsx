@@ -189,7 +189,7 @@ export default function MenuPage() {
                 <div>
                   <AlertTitle className="text-2xl font-black mb-1">Pizzaria Fechada</AlertTitle>
                   <AlertDescription className="text-lg">
-                    <p className="font-semibold opacity-90">{config.closedMessage || ""}</p>
+                    <p className="font-semibold opacity-90">{config.closedMessage || "Estamos fechados no momento."}</p>
                     {config.openingHoursText && (
                       <div className="mt-2 inline-flex items-center gap-2 bg-red-900/10 px-3 py-1 rounded-full text-sm font-bold">
                         <span className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
@@ -203,12 +203,16 @@ export default function MenuPage() {
           )}
 
           <div className="mb-10 text-center space-y-3 min-h-[120px]">
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-              {config?.menuTitle || ""}
-            </h1>
-            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-              {config?.menuSubtitle || ""}
-            </p>
+            {!loadingConfigs && (
+              <>
+                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
+                  {config?.menuTitle || "Nosso Cardápio"}
+                </h1>
+                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
+                  {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+                </p>
+              </>
+            )}
           </div>
 
           <div className="max-w-xl mx-auto mb-12 relative group">
