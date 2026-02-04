@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Settings, 
+  Settings as SettingsIcon, 
   Save, 
   Store, 
   Phone, 
@@ -183,7 +183,7 @@ export default function AdminSettingsPage() {
           </Link>
           <Link href="/admin/settings">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
-              <Settings className="mr-3 h-5 w-5" /> Ajustes
+              <SettingsIcon className="mr-3 h-5 w-5" /> Ajustes
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
@@ -208,7 +208,6 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="max-w-4xl space-y-8 pb-20">
-          {/* Configurações Gerais */}
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
@@ -292,7 +291,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Status da Loja */}
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-yellow-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
@@ -336,7 +334,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Aparência */}
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-blue-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
@@ -415,7 +412,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Redes Sociais e Contato */}
           <Card className="rounded-3xl border-2 shadow-sm">
             <CardHeader className="bg-green-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
