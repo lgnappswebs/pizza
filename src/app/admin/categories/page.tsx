@@ -21,7 +21,8 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
-  Tags
+  Tags,
+  FolderTree
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -279,7 +280,7 @@ export default function AdminCategoriesPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
-            <p className="text-sm md:text-base text-muted-foreground">Gerencie as divisões do seu cardápio</p>
+            <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Nova Categoria
@@ -301,13 +302,17 @@ export default function AdminCategoriesPage() {
                         {category.order}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                          <p className="font-bold text-base md:text-lg truncate">{category.name}</p>
-                          {category.subName && (
-                            <Badge variant="outline" className="text-[10px] md:text-xs font-normal truncate max-w-[100px]">
-                              {category.subName}
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-x-3 gap-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-black text-muted-foreground/60 hidden sm:inline">Grupo:</span>
+                            <p className="font-black text-base md:text-lg truncate text-primary">{category.name}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-black text-muted-foreground/60 hidden sm:inline">Sub:</span>
+                            <Badge variant="secondary" className="text-[10px] md:text-xs font-bold truncate max-w-[150px] bg-muted">
+                              {category.subName || 'Geral'}
                             </Badge>
-                          )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -347,8 +352,9 @@ export default function AdminCategoriesPage() {
             <div className="grid gap-6 py-6">
               <div className="grid gap-3">
                 <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2">
-                  <Tags className="h-5 w-5 text-primary" /> Nome da Categoria
+                  <FolderTree className="h-5 w-5 text-primary" /> Grupo Principal
                 </Label>
+                <p className="text-xs text-muted-foreground -mt-2">Define o grupo no cardápio (ex: Pizzas, Bebidas, Sobremesas)</p>
                 <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas" />
                 
                 <div className="space-y-2 mt-1">
@@ -356,7 +362,7 @@ export default function AdminCategoriesPage() {
                     <CollapsibleTrigger asChild>
                       <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10 px-1">
                         <Sparkles className="h-4 w-4" />
-                        {isMainSuggestionsOpen ? 'Esconder Sugestões' : 'Ver Sugestões Rápidas'}
+                        {isMainSuggestionsOpen ? 'Esconder Grupos' : 'Ver Grupos Sugeridos'}
                         {isMainSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                       </Button>
                     </CollapsibleTrigger>
@@ -379,14 +385,17 @@ export default function AdminCategoriesPage() {
               </div>
               
               <div className="grid gap-2 border-t pt-4">
-                <Label htmlFor="subName" className="text-lg font-bold">Subcategoria <span className="text-sm font-normal text-muted-foreground">(Opcional)</span></Label>
+                <Label htmlFor="subName" className="text-lg font-bold flex items-center gap-2">
+                  <Tags className="h-5 w-5 text-primary" /> Subcategoria / Variação
+                </Label>
+                <p className="text-xs text-muted-foreground -mt-1">Diferencia os tipos dentro do grupo (ex: Salgadas, Doces, Sucos)</p>
                 <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Salgadas" />
                 
                 <Collapsible open={isSuggestionsOpen} onOpenChange={setIsSuggestionsOpen} className="w-full mt-2">
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10">
                       <Sparkles className="h-4 w-4" />
-                      {isSuggestionsOpen ? 'Esconder Ideias de Sabores' : 'Ver Ideias de Sabores'}
+                      {isSuggestionsOpen ? 'Esconder Ideias' : 'Ver Ideias de Subcategorias'}
                       {isSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                     </Button>
                   </CollapsibleTrigger>
@@ -437,7 +446,7 @@ export default function AdminCategoriesPage() {
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
               <AlertDialogDescription className="text-lg">
-                Tem certeza que deseja excluir a categoria <strong>"{categoryToDelete?.name}"</strong>? 
+                Tem certeza que deseja excluir a categoria <strong>"{categoryToDelete?.name} - {categoryToDelete?.subName || 'Geral'}"</strong>? 
                 Esta ação não pode ser desfeita e pode afetar a exibição de produtos vinculados.
               </AlertDialogDescription>
             </AlertDialogHeader>
