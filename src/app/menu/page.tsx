@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { Footer } from '@/components/pizzeria/Footer';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
@@ -38,6 +38,7 @@ export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showSpecialties, setShowSpecialties] = useState(false);
   
+  const scrollRef = useRef<HTMLDivElement>(null);
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
@@ -66,47 +67,55 @@ export default function MenuPage() {
     if (!categories) return {};
     const groups: Record<string, any[]> = {};
     categories.forEach(cat => {
-      if (!groups[cat.name]) groups[cat.name] = [];
-      groups[cat.name].push(cat);
+      const name = cat.name || 'Outros';
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(cat);
     });
     return groups;
   }, [categories]);
 
   const mainNames = useMemo(() => {
-    if (!categories) return [];
     const names = Object.keys(groupedCategories).sort((a, b) => {
-      const aLow = a.toLowerCase();
-      const bLow = b.toLowerCase();
+      const aLow = a.trim().toLowerCase();
+      const bLow = b.trim().toLowerCase();
       
-      // PRIORIDADE ABSOLUTA: "Pizzas" ou "Pizza" sempre em primeiro
+      // PRIORIDADE ABSOLUTA: "Pizzas" ou "Pizza" sempre em primeiro lugar
       const isAPizza = aLow === 'pizzas' || aLow === 'pizza';
       const isBPizza = bLow === 'pizzas' || bLow === 'pizza';
       
       if (isAPizza && !isBPizza) return -1;
       if (!isAPizza && isBPizza) return 1;
       
-      // Caso contrário, usa a ordem do banco baseada no menor order das subcategorias
-      const minA = Math.min(...groupedCategories[a].map(c => c.order));
-      const minB = Math.min(...groupedCategories[b].map(c => c.order));
+      // Caso contrário, usa a ordem do banco
+      const minA = Math.min(...groupedCategories[a].map(c => c.order || 0));
+      const minB = Math.min(...groupedCategories[b].map(c => c.order || 0));
       return minA - minB;
     });
 
     return names;
-  }, [groupedCategories, categories]);
+  }, [groupedCategories]);
+
+  // Garantir que a aba de Pizzas seja selecionada e a rolagem esteja no início
+  useEffect(() => {
+    if (mainNames.length > 0 && !activeCategory) {
+      const pizzaName = mainNames.find(n => {
+        const low = n.trim().toLowerCase();
+        return low === 'pizzas' || low === 'pizza';
+      });
+      setActiveCategory(pizzaName || mainNames[0]);
+    }
+    
+    // Forçar scroll para o início (esquerda) quando as categorias carregarem
+    if (mainNames.length > 0 && scrollRef.current) {
+      scrollRef.current.scrollLeft = 0;
+    }
+  }, [mainNames, activeCategory]);
 
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
   
   const topBanners = activeBanners.filter(b => b.bannerPosition === 'top');
   const middleBanners = activeBanners.filter(b => b.bannerPosition === 'middle');
   const bottomBanners = activeBanners.filter(b => b.bannerPosition === 'bottom');
-
-  useEffect(() => {
-    if (mainNames.length > 0 && !activeCategory) {
-      // Garante que Pizzas esteja selecionada por padrão
-      const pizzaName = mainNames.find(n => n.toLowerCase() === 'pizzas' || n.toLowerCase() === 'pizza');
-      setActiveCategory(pizzaName || mainNames[0]);
-    }
-  }, [mainNames, activeCategory]);
 
   const getCategoryIcon = (name: string) => {
     const lowerName = name.toLowerCase();
@@ -205,17 +214,13 @@ export default function MenuPage() {
             </Alert>
           )}
 
-          <div className="mb-10 text-center space-y-3 min-h-[120px]">
-            {config && (
-              <>
-                <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
-                  {config.menuTitle || "Nosso Cardápio"}
-                </h1>
-                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
-                  {config.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
-                </p>
-              </>
-            )}
+          <div className="mb-10 text-center space-y-3 min-h-[120px] animate-in fade-in duration-700">
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-primary">
+              {config?.menuTitle || "Nosso Cardápio"}
+            </h1>
+            <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto font-medium">
+              {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+            </p>
           </div>
 
           <div className="max-w-xl mx-auto mb-12 relative group">
@@ -320,8 +325,12 @@ export default function MenuPage() {
                   className="w-full" 
                   onValueChange={setActiveCategory}
                 >
-                  <div id="menu-navigation" className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
-                    <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 justify-start md:justify-center border-none shadow-none">
+                  <div 
+                    id="menu-navigation" 
+                    ref={scrollRef}
+                    className="flex justify-start md:justify-center mb-12 overflow-x-auto pb-4 no-scrollbar scroll-smooth"
+                  >
+                    <TabsList className="bg-transparent h-auto flex flex-nowrap md:flex-wrap gap-3 md:gap-4 p-1 border-none shadow-none">
                       {mainNames.map((name) => (
                         <TabsTrigger 
                           key={name} 
