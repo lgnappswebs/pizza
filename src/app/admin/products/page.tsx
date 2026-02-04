@@ -86,9 +86,12 @@ export default function AdminProductsPage() {
 
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
 
   const { data: categories } = useCollection(categoriesQuery);
   const { data: products, isLoading } = useCollection(productsQuery);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -193,7 +196,9 @@ export default function AdminProductsPage() {
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
+          <h2 className="text-2xl font-black text-primary truncate">
+            {config?.restaurantName || "PizzApp"} Admin
+          </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">

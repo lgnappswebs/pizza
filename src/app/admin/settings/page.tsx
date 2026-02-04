@@ -203,7 +203,9 @@ export default function AdminSettingsPage() {
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
+          <h2 className="text-2xl font-black text-primary truncate">
+            {config?.restaurantName || "PizzApp"} Admin
+          </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
@@ -388,7 +390,7 @@ export default function AdminSettingsPage() {
                 <Switch 
                   className="scale-150 data-[state=checked]:bg-green-500"
                   checked={form.isStoreOpen} 
-                  onCheckedChange={(v) => setForm({...form, iIsStoreOpen: v})} 
+                  onCheckedChange={(v) => setForm({...form, isStoreOpen: v})} 
                 />
               </div>
 

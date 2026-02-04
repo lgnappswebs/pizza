@@ -55,10 +55,13 @@ export default function AdminDashboard() {
   const ordersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc'), limit(5)), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
   const allOrdersQuery = useMemoFirebase(() => collection(firestore, 'pedidos'), [firestore]);
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
 
   const { data: recentOrders, isLoading: loadingOrders } = useCollection(ordersQuery);
   const { data: allProducts } = useCollection(productsQuery);
   const { data: allOrders } = useCollection(allOrdersQuery);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -88,7 +91,9 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
+          <h2 className="text-2xl font-black text-primary truncate">
+            {config?.restaurantName || "PizzApp"} Admin
+          </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">

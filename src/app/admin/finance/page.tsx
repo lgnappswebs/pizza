@@ -71,14 +71,18 @@ export default function AdminFinancePage() {
   const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
 
+  const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  
+  const { data: allOrders, isLoading } = useCollection(allOrdersQuery);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
+
   useEffect(() => {
     if (!isUserLoading && !user) {
       router.push('/admin/login');
     }
   }, [user, isUserLoading, router]);
-
-  const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
-  const { data: allOrders, isLoading } = useCollection(allOrdersQuery);
 
   // Lógica de Filtragem
   const filteredOrders = useMemo(() => {
@@ -145,7 +149,7 @@ export default function AdminFinancePage() {
     const delivered = reportOrders.filter(o => o.status === 'Delivered');
     const total = delivered.reduce((acc, o) => acc + (o.totalAmount || 0), 0);
 
-    let text = `*RELATÓRIO FINANCEIRO - PIZZAPP*\n`;
+    let text = `*RELATÓRIO FINANCEIRO - ${config?.restaurantName?.toUpperCase() || 'PIZZAPP'}*\n`;
     text += `*Período:* ${periodLabel}\n`;
     text += `*Total de Pedidos:* ${reportOrders.length}\n`;
     text += `*Pedidos Entregues:* ${delivered.length}\n`;
@@ -174,7 +178,9 @@ export default function AdminFinancePage() {
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 print:hidden">
         <div className="p-6 border-b">
-          <h2 className="text-2xl font-black text-primary">PizzApp Admin</h2>
+          <h2 className="text-2xl font-black text-primary truncate">
+            {config?.restaurantName || "PizzApp"} Admin
+          </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
@@ -319,7 +325,6 @@ export default function AdminFinancePage() {
             <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
-          </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
