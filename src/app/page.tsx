@@ -16,7 +16,7 @@ export default function Home() {
         <section className="relative h-screen flex items-start md:items-center justify-center overflow-hidden pt-12 md:pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
-              src={heroImage?.imageUrl || 'https://picsum.photos/seed/pizzapp-hero/1200/600'} 
+              src={heroImage?.imageUrl || 'https://images.unsplash.com/photo-1693609930470-2eb935294945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkZWxpY2lvdXMlMjBwaXp6YXxlbnwwfHx8fDE3NzAyMTA0Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080'} 
               alt="PizzApp Hero" 
               fill 
               className="object-cover brightness-50"
@@ -97,37 +97,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <footer className="py-16 bg-primary text-white text-center">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center gap-6 mb-8">
-            <div className="relative w-24 h-24 overflow-hidden rounded-full border-4 border-white/20 shadow-2xl">
-              <Image 
-                src={logo?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
-                alt="PizzApp Logo" 
-                fill 
-                className="object-cover"
-                data-ai-hint="pizza logo"
-              />
-            </div>
-            <h2 className="text-4xl font-black font-headline tracking-tight">
-              PizzApp <span className="text-secondary">Rápido</span>
-            </h2>
-          </div>
-          
-          <nav className="flex justify-center gap-8 mb-10">
-            <Link href="/menu" className="text-lg font-bold hover:text-secondary transition-colors underline-offset-4 hover:underline">Cardápio</Link>
-            <Link href="/checkout" className="text-lg font-bold hover:text-secondary transition-colors underline-offset-4 hover:underline">Pedido</Link>
-            <Link href="/admin/login" className="text-lg font-bold hover:text-secondary transition-colors underline-offset-4 hover:underline">Admin</Link>
-          </nav>
-
-          <p className="opacity-80 text-sm">© 2024 - Todos os direitos reservados</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <div className="px-5 py-2 bg-white/10 rounded-full text-sm font-medium">Aberto das 18:00 às 23:30</div>
-            <div className="px-5 py-2 bg-white/10 rounded-full text-sm font-medium">Segunda a Domingo</div>
-          </div>
-        </div>
-      </footer>
     </>
   );
 }
