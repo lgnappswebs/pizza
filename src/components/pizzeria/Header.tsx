@@ -43,7 +43,7 @@ export function Header() {
                 data-ai-hint="pizza logo"
               />
             </div>
-            <span className="text-lg md:text-2xl font-black font-headline text-primary whitespace-nowrap">
+            <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap">
               PizzApp <span className="text-secondary">Rápido</span>
             </span>
           </Link>
