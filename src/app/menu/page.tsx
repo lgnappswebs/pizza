@@ -104,6 +104,10 @@ export default function MenuPage() {
                           imageUrl={product.imageUrl}
                           category={product.categoryId}
                           isPromotion={product.isPromotion}
+                          hasMultipleSizes={product.hasMultipleSizes}
+                          priceSmall={product.priceSmall}
+                          priceMedium={product.priceMedium}
+                          priceLarge={product.priceLarge}
                         />
                       ))}
                     </div>

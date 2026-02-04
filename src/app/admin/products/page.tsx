@@ -76,7 +76,11 @@ export default function AdminProductsPage() {
     categoryId: '',
     imageUrl: '',
     isAvailable: true,
-    isPromotion: false
+    isPromotion: false,
+    hasMultipleSizes: false,
+    priceSmall: '',
+    priceMedium: '',
+    priceLarge: ''
   });
 
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
@@ -98,17 +102,34 @@ export default function AdminProductsPage() {
     p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const formatCurrency = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "";
+    const amount = (parseFloat(digits) / 100).toFixed(2);
+    return amount.replace(".", ",");
+  };
+
+  const parseCurrency = (formattedValue: string) => {
+    if (!formattedValue) return 0;
+    const clean = formattedValue.replace(/[^\d]/g, "");
+    return parseFloat(clean) / 100;
+  };
+
   const handleOpenDialog = (product?: any) => {
     if (product) {
       setEditingProduct(product);
       setFormData({
         name: product.name,
         description: product.description,
-        price: product.price.toString(),
+        price: formatCurrency((product.price * 100).toFixed(0)),
         categoryId: product.categoryId,
         imageUrl: product.imageUrl,
         isAvailable: product.isAvailable,
-        isPromotion: product.isPromotion || false
+        isPromotion: product.isPromotion || false,
+        hasMultipleSizes: product.hasMultipleSizes || false,
+        priceSmall: product.priceSmall ? formatCurrency((product.priceSmall * 100).toFixed(0)) : '',
+        priceMedium: product.priceMedium ? formatCurrency((product.priceMedium * 100).toFixed(0)) : '',
+        priceLarge: product.priceLarge ? formatCurrency((product.priceLarge * 100).toFixed(0)) : ''
       });
     } else {
       setEditingProduct(null);
@@ -119,7 +140,11 @@ export default function AdminProductsPage() {
         categoryId: '',
         imageUrl: '',
         isAvailable: true,
-        isPromotion: false
+        isPromotion: false,
+        hasMultipleSizes: false,
+        priceSmall: '',
+        priceMedium: '',
+        priceLarge: ''
       });
     }
     setIsDialogOpen(true);
@@ -128,7 +153,10 @@ export default function AdminProductsPage() {
   const handleSave = () => {
     const data = {
       ...formData,
-      price: parseFloat(formData.price),
+      price: parseCurrency(formData.price),
+      priceSmall: formData.hasMultipleSizes ? parseCurrency(formData.priceSmall) : null,
+      priceMedium: formData.hasMultipleSizes ? parseCurrency(formData.priceMedium) : null,
+      priceLarge: formData.hasMultipleSizes ? parseCurrency(formData.priceLarge) : null,
     };
 
     if (editingProduct) {
@@ -143,6 +171,10 @@ export default function AdminProductsPage() {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       deleteDocumentNonBlocking(doc(firestore, 'produtos', id));
     }
+  };
+
+  const handlePriceChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: formatCurrency(value) });
   };
 
   return (
@@ -245,8 +277,10 @@ export default function AdminProductsPage() {
                       <div>
                         <p className="font-bold text-lg">{product.name}</p>
                         <p className="text-sm text-muted-foreground line-clamp-1">{product.description}</p>
-                        <div className="flex gap-2 mt-1">
-                          <Badge variant="outline">R$ {product.price.toFixed(2)}</Badge>
+                        <div className="flex gap-2 mt-1 flex-wrap">
+                          <Badge variant="outline">
+                            {product.hasMultipleSizes ? `P: R$ ${product.priceSmall?.toFixed(2)} | M: R$ ${product.priceMedium?.toFixed(2)} | G: R$ ${product.priceLarge?.toFixed(2)}` : `R$ ${product.price?.toFixed(2)}`}
+                          </Badge>
                           <Badge variant={product.isAvailable ? 'default' : 'destructive'}>
                             {product.isAvailable ? 'Disponível' : 'Indisponível'}
                           </Badge>
@@ -275,7 +309,7 @@ export default function AdminProductsPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">
                 {editingProduct ? 'Editar Produto' : 'Novo Produto'}
@@ -290,104 +324,165 @@ export default function AdminProductsPage() {
                 <Label htmlFor="desc">Descrição / Ingredientes</Label>
                 <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="price">Preço (R$)</Label>
-                  <Input id="price" type="number" step="0.01" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="rounded-xl" />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="category">Categoria</Label>
-                  <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                    <SelectTrigger className="rounded-xl">
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories?.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+              <div className="grid gap-2">
+                <Label htmlFor="category">Categoria</Label>
+                <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
+                  <SelectTrigger className="rounded-xl h-12">
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories?.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+
+              <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl border-2 border-dashed">
+                <div className="space-y-0.5">
+                  <Label>Múltiplos Tamanhos</Label>
+                  <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
+                </div>
+                <Switch checked={formData.hasMultipleSizes} onCheckedChange={(v) => setFormData({...formData, hasMultipleSizes: v})} />
+              </div>
+
+              {!formData.hasMultipleSizes ? (
+                <div className="grid gap-2">
+                  <Label htmlFor="price">Preço Único (R$)</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                    <Input 
+                      id="price" 
+                      value={formData.price} 
+                      onChange={(e) => handlePriceChange('price', e.target.value)} 
+                      className="rounded-xl h-12 pl-10" 
+                      placeholder="0,00"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-4 p-4 bg-muted/20 rounded-2xl border">
+                  <div className="grid gap-2">
+                    <Label htmlFor="pSmall">Preço Pequena (Broto)</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <Input 
+                        id="pSmall" 
+                        value={formData.priceSmall} 
+                        onChange={(e) => handlePriceChange('priceSmall', e.target.value)} 
+                        className="rounded-xl h-12 pl-10" 
+                        placeholder="0,00"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="pMedium">Preço Médio</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <Input 
+                        id="pMedium" 
+                        value={formData.priceMedium} 
+                        onChange={(e) => handlePriceChange('priceMedium', e.target.value)} 
+                        className="rounded-xl h-12 pl-10" 
+                        placeholder="0,00"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="pLarge">Preço Grande</Label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">R$</span>
+                      <Input 
+                        id="pLarge" 
+                        value={formData.priceLarge} 
+                        onChange={(e) => handlePriceChange('priceLarge', e.target.value)} 
+                        className="rounded-xl h-12 pl-10" 
+                        placeholder="0,00"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="grid gap-2">
                 <Label htmlFor="image">URL da Imagem</Label>
-                <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl" placeholder="https://..." />
+                <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl h-12" placeholder="https://..." />
               </div>
+              
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
                 <div className="space-y-0.5">
                   <Label>Disponível na Loja</Label>
-                  <p className="text-xs text-muted-foreground">O produto aparecerá no cardápio</p>
                 </div>
                 <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} />
               </div>
+              
               <div className="flex items-center justify-between p-3 bg-muted/30 rounded-xl">
                 <div className="space-y-0.5">
                   <Label>Produto em Promoção</Label>
-                  <p className="text-xs text-muted-foreground">Exibir selo de fogo no cardápio</p>
                 </div>
                 <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} />
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-12 rounded-full font-bold bg-primary">
+              <Button onClick={handleSave} className="w-full h-12 rounded-full font-bold bg-primary shadow-lg shadow-primary/20">
                 Salvar Alterações
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
-        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <LayoutDashboard className="h-5 w-5 text-blue-600" />
-          <span className="text-[12px] font-black uppercase">Painel</span>
-        </Link>
-        <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
-          <Layers className="h-5 w-5 text-emerald-600" />
-          <span className="text-[12px] font-black uppercase">Categorias</span>
-        </Link>
-        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
-          <PizzaIcon className="h-5 w-5 text-amber-600" />
-          <span className="text-[12px] font-black uppercase">Produtos</span>
-        </Link>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
-              <Plus className="h-5 w-5 text-violet-600" />
-              <span className="text-[12px] font-black uppercase">Mais</span>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
-            <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
-                <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
-                <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
-                <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
-                <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/menu" target="_blank" className="flex items-center h-10 rounded-xl text-primary font-bold">
-                <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </nav>
+        <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
+          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+            <LayoutDashboard className="h-5 w-5 text-blue-600" />
+            <span className="text-[12px] font-black uppercase">Painel</span>
+          </Link>
+          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+            <Layers className="h-5 w-5 text-emerald-600" />
+            <span className="text-[12px] font-black uppercase">Categorias</span>
+          </Link>
+          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
+            <PizzaIcon className="h-5 w-5 text-amber-600" />
+            <span className="text-[12px] font-black uppercase">Produtos</span>
+          </Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+                <Plus className="h-5 w-5 text-violet-600" />
+                <span className="text-[12px] font-black uppercase">Mais</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+              <DropdownMenuItem asChild>
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+                  <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+                  <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+                  <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+                  <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/menu" target="_blank" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                  <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
+      </main>
     </div>
   );
 }

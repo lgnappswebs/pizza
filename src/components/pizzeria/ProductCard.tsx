@@ -21,20 +21,45 @@ interface ProductCardProps {
   imageUrl: string;
   category: string;
   isPromotion?: boolean;
+  hasMultipleSizes?: boolean;
+  priceSmall?: number;
+  priceMedium?: number;
+  priceLarge?: number;
 }
 
-export function ProductCard({ id, name, description, price, imageUrl, category, isPromotion }: ProductCardProps) {
+export function ProductCard({ 
+  id, 
+  name, 
+  description, 
+  price, 
+  imageUrl, 
+  category, 
+  isPromotion,
+  hasMultipleSizes,
+  priceSmall,
+  priceMedium,
+  priceLarge 
+}: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
   const [size, setSize] = useState('Média');
   const [crust, setCrust] = useState('Tradicional');
   const [notes, setNotes] = useState('');
   const [open, setOpen] = useState(false);
 
+  const getPrice = () => {
+    if (!hasMultipleSizes) return price;
+    if (size === 'Pequena') return priceSmall || price;
+    if (size === 'Média') return priceMedium || price;
+    if (size === 'Grande') return priceLarge || price;
+    return price;
+  };
+
   const handleAddToCart = () => {
+    const finalPrice = getPrice();
     addItem({
       id: `${id}-${size}-${crust}`,
       name,
-      price: price + (size === 'Grande' ? 10 : size === 'Família' ? 20 : 0),
+      price: finalPrice,
       quantity: 1,
       size,
       crust,
@@ -63,7 +88,7 @@ export function ProductCard({ id, name, description, price, imageUrl, category, 
       <CardContent className="p-4 space-y-2">
         <div className="flex justify-between items-start">
           <h3 className="text-xl font-bold font-headline leading-tight">{name}</h3>
-          <span className="text-xl font-bold text-primary">R$ {price.toFixed(2)}</span>
+          <span className="text-xl font-bold text-primary">R$ {getPrice().toFixed(2)}</span>
         </div>
         <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
       </CardContent>
@@ -83,29 +108,34 @@ export function ProductCard({ id, name, description, price, imageUrl, category, 
               </div>
             </DialogHeader>
             <div className="space-y-6 py-4">
-              <div className="space-y-3">
-                <Label className="text-lg font-semibold">Tamanho da Pizza</Label>
-                <RadioGroup value={size} onValueChange={setSize} className="grid grid-cols-3 gap-2">
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Broto" id="broto" className="sr-only" />
-                    <Label htmlFor="broto" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Broto' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Broto
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Média" id="media" className="sr-only" />
-                    <Label htmlFor="media" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Média' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Média
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Grande" id="grande" className="sr-only" />
-                    <Label htmlFor="grande" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Grande
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
+              {hasMultipleSizes && (
+                <div className="space-y-3">
+                  <Label className="text-lg font-semibold">Tamanho</Label>
+                  <RadioGroup value={size} onValueChange={setSize} className="grid grid-cols-3 gap-2">
+                    <div className="flex flex-col items-center">
+                      <RadioGroupItem value="Pequena" id="broto" className="sr-only" />
+                      <Label htmlFor="broto" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                        <span className="block font-bold">Pequena</span>
+                        <span className="text-[10px] opacity-70">R$ {priceSmall?.toFixed(2)}</span>
+                      </Label>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <RadioGroupItem value="Média" id="media" className="sr-only" />
+                      <Label htmlFor="media" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Média' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                        <span className="block font-bold">Média</span>
+                        <span className="text-[10px] opacity-70">R$ {priceMedium?.toFixed(2)}</span>
+                      </Label>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <RadioGroupItem value="Grande" id="grande" className="sr-only" />
+                      <Label htmlFor="grande" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                        <span className="block font-bold">Grande</span>
+                        <span className="text-[10px] opacity-70">R$ {priceLarge?.toFixed(2)}</span>
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+              )}
 
               <div className="space-y-3">
                 <Label className="text-lg font-semibold">Borda Recheada</Label>
@@ -137,7 +167,7 @@ export function ProductCard({ id, name, description, price, imageUrl, category, 
             </div>
             <DialogFooter>
               <Button onClick={handleAddToCart} className="w-full rounded-full py-6 text-xl font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
-                Confirmar Item
+                Confirmar Item • R$ {getPrice().toFixed(2)}
               </Button>
             </DialogFooter>
           </DialogContent>

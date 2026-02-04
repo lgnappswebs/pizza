@@ -31,6 +31,18 @@
         },
         "isPromotion": {
           "type": "boolean"
+        },
+        "hasMultipleSizes": {
+          "type": "boolean"
+        },
+        "priceSmall": {
+          "type": "number"
+        },
+        "priceMedium": {
+          "type": "number"
+        },
+        "priceLarge": {
+          "type": "number"
         }
       },
       "required": [
