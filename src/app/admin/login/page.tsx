@@ -13,8 +13,8 @@ import { useAuth, initiateEmailSignIn } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('lgngregorio@icloud.com');
+  const [password, setPassword] = useState('Lgn92ltc79');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const auth = useAuth();
@@ -26,21 +26,23 @@ export default function AdminLoginPage() {
     
     initiateEmailSignIn(auth, email, password);
     
-    // We listen to auth state changes in the layout/provider
-    // But we can add a small timeout or wait for the provider to update
-    // For a smoother demo, we check if successful after a brief moment
+    // Pequeno delay para permitir que o Firebase processe o login
     setTimeout(() => {
       if (auth.currentUser) {
+        toast({
+          title: "Bem-vindo!",
+          description: "Login realizado com sucesso."
+        });
         router.push('/admin/dashboard');
       } else {
         setLoading(false);
         toast({
           variant: "destructive",
           title: "Erro de Autenticação",
-          description: "Verifique suas credenciais e tente novamente."
+          description: "Usuário não encontrado ou senha incorreta. Certifique-se de criar este usuário no Console do Firebase."
         });
       }
-    }, 1500);
+    }, 2000);
   };
 
   return (
@@ -60,6 +62,9 @@ export default function AdminLoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
+            <strong>Aviso:</strong> Você deve criar este usuário manualmente no <strong>Console do Firebase > Authentication</strong> para que o login funcione com estas credenciais.
+          </div>
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">E-mail</Label>
