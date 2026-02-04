@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
         </CardHeader>
         <CardContent>
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800">
-            <strong>Aviso:</strong> Você deve criar este usuário manualmente no <strong>Console do Firebase > Authentication</strong> para que o login funcione com estas credenciais.
+            <strong>Aviso:</strong> Você deve criar este usuário manualmente no <strong>Console do Firebase &gt; Authentication</strong> para que o login funcione com estas credenciais.
           </div>
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
