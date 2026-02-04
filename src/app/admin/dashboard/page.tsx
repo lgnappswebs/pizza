@@ -132,7 +132,7 @@ export default function AdminDashboard() {
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
-            <Link href="/menu" target="_blank">
+            <Link href="/menu">
               <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
@@ -269,7 +269,7 @@ export default function AdminDashboard() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/menu" target="_blank" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
               </Link>
             </DropdownMenuItem>

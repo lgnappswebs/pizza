@@ -49,7 +49,6 @@ export default function AdminFinancePage() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
 
-  // Estados do Filtro (Inicia com hoje)
   const today = useMemo(() => new Date(), []);
   const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
   const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
@@ -62,7 +61,6 @@ export default function AdminFinancePage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Lógica de Filtragem
   const filteredOrders = useMemo(() => {
     if (!allOrders) return [];
     return allOrders.filter(order => {
@@ -80,7 +78,6 @@ export default function AdminFinancePage() {
   const deliveredInPeriod = useMemo(() => filteredOrders.filter(o => o.status === 'Delivered'), [filteredOrders]);
   const revenueInPeriod = useMemo(() => deliveredInPeriod.reduce((acc, order) => acc + (order.totalAmount || 0), 0), [deliveredInPeriod]);
   
-  // Faturamento HOJE (Sempre atualizado para o dia real)
   const revenueToday = useMemo(() => {
     if (!allOrders) return 0;
     const realToday = new Date();
@@ -93,7 +90,6 @@ export default function AdminFinancePage() {
       .reduce((acc, o) => acc + (o.totalAmount || 0), 0);
   }, [allOrders]);
 
-  // Médias e Estatísticas
   const averageTicket = useMemo(() => deliveredInPeriod.length > 0 ? revenueInPeriod / deliveredInPeriod.length : 0, [deliveredInPeriod.length, revenueInPeriod]);
 
   useEffect(() => {
@@ -107,7 +103,6 @@ export default function AdminFinancePage() {
     router.push('/admin/login');
   };
 
-  // Gerar Relatório de Texto
   const handleShareText = (period: 'day' | 'month' | 'year') => {
     if (!allOrders) return;
     
@@ -144,7 +139,6 @@ export default function AdminFinancePage() {
     window.print();
   };
 
-  // Dias, Meses e Anos para os seletores
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months = [
     { v: "1", l: "Janeiro" }, { v: "2", l: "Fevereiro" }, { v: "3", l: "Março" },
@@ -202,6 +196,13 @@ export default function AdminFinancePage() {
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
+          <div className="pt-4 border-t mt-4">
+            <Link href="/menu">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+                <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
+              </Button>
+            </Link>
+          </div>
         </nav>
         <div className="p-4 border-t">
           <Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive hover:bg-destructive/10 rounded-xl font-bold h-12">
@@ -439,7 +440,7 @@ export default function AdminFinancePage() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/menu" target="_blank" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
               </Link>
             </DropdownMenuItem>
