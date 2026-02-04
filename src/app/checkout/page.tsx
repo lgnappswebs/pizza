@@ -28,7 +28,6 @@ export default function CheckoutPage() {
     phone: ''
   });
 
-  // Busca dados do usuário logado para preencher automaticamente
   const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
   const { data: userProfile, isLoading: loadingProfile } = useDoc(userDocRef);
 
@@ -49,6 +48,7 @@ export default function CheckoutPage() {
   const config = configs?.[0];
 
   const total = getTotal();
+  const deliveryFee = config?.deliveryFee || 0;
 
   const handleSendToWhatsApp = async () => {
     if (!form.name || !form.address || !form.neighborhood || !form.phone) {
@@ -59,34 +59,27 @@ export default function CheckoutPage() {
     setLoading(true);
     
     try {
-      // 1. Save order to Firestore
       const orderId = doc(collection(firestore, 'pedidos')).id;
-      const orderRef = doc(firestore, 'pedidos', orderId);
-      
       const orderData = {
         id: orderId,
         customerName: form.name,
         customerAddress: `${form.address}, ${form.neighborhood}${form.complement ? ` - ${form.complement}` : ''}`,
         customerPhoneNumber: form.phone,
         createdAt: serverTimestamp(),
-        totalAmount: total,
+        totalAmount: total + deliveryFee,
         status: 'New',
         userId: user?.uid || null
       };
 
       await addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
       
-      // Save items
       for (const item of items) {
-        const itemRef = doc(collection(firestore, 'pedidos', orderId, 'items'));
         await addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
           ...item,
-          id: itemRef.id,
           orderId
         });
       }
 
-      // 2. Prepare WhatsApp message
       const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
       let message = `*NOVO PEDIDO - ${config?.restaurantName || 'PizzApp Rápido'}*%0A%0A`;
       message += `*CLIENTE:* ${form.name}%0A`;
@@ -103,7 +96,9 @@ export default function CheckoutPage() {
         message += `%0A`;
       });
 
-      message += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A%0A`;
+      message += `%0A*Subtotal:* R$ ${total.toFixed(2)}`;
+      message += `%0A*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}`;
+      message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A%0A`;
       message += `_Pedido registrado com ID: ${orderId}_`;
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
@@ -212,11 +207,11 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-lg">
                     <span>Taxa de Entrega</span>
-                    <span className="text-green-600 font-bold">{config?.deliveryFee ? `R$ ${config.deliveryFee.toFixed(2)}` : 'Grátis'}</span>
+                    <span className="text-green-600 font-bold">{deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}</span>
                   </div>
                   <div className="flex justify-between text-3xl font-black text-primary pt-2">
                     <span>Total</span>
-                    <span>R$ {(total + (config?.deliveryFee || 0)).toFixed(2)}</span>
+                    <span>R$ {(total + deliveryFee).toFixed(2)}</span>
                   </div>
                 </div>
               </CardContent>
@@ -302,11 +297,11 @@ export default function CheckoutPage() {
 
                 <Button 
                   onClick={handleSendToWhatsApp}
-                  disabled={loading}
-                  className="w-full h-20 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-xl shadow-[#25D366]/30 flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6"
+                  disabled={loading || (config && !config.isStoreOpen)}
+                  className={`w-full h-20 rounded-full text-white text-2xl font-black shadow-xl flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6 ${config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-[#25D366] hover:bg-[#20bd5a] shadow-[#25D366]/30'}`}
                 >
                   {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-8 w-8" />}
-                  {loading ? 'Processando...' : 'Enviar Pedido pelo WhatsApp'}
+                  {config && !config.isStoreOpen ? 'Loja Fechada' : loading ? 'Processando...' : 'Enviar Pedido pelo WhatsApp'}
                 </Button>
               </CardContent>
             </Card>

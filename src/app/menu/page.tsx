@@ -5,9 +5,10 @@ import { useState } from 'react';
 import { Header } from '@/components/pizzeria/Header';
 import { ProductCard } from '@/components/pizzeria/ProductCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck } from 'lucide-react';
+import { ShoppingBasket, Pizza as PizzaIcon, Loader2, Search, ShieldCheck, Clock, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
@@ -28,15 +29,18 @@ export default function MenuPage() {
     return collection(firestore, 'produtos');
   }, [firestore]);
 
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+
   const { data: categories, isLoading: loadingCats } = useCollection(categoriesQuery);
   const { data: products, isLoading: loadingProds } = useCollection(productsQuery);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
 
   const filteredProducts = products?.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Define o e-mail administrativo autorizado
   const isAdmin = user && user.email === 'lgngregorio@icloud.com';
 
   if (loadingCats || loadingProds) {
@@ -52,9 +56,28 @@ export default function MenuPage() {
       <Header />
       <main className="flex-1 pb-24">
         <div className="container mx-auto px-4 py-8">
+          
+          {/* Alerta de Loja Fechada */}
+          {config && !config.isStoreOpen && (
+            <Alert variant="destructive" className="mb-8 rounded-2xl border-2 bg-red-50 text-red-900 border-red-200 shadow-lg">
+              <Clock className="h-6 w-6 text-red-600" />
+              <AlertTitle className="text-xl font-black mb-2">Pizzaria Fechada no Momento</AlertTitle>
+              <AlertDescription className="text-lg">
+                <p className="font-bold">{config.closedMessage || "Estamos fechados agora. Volte em breve!"}</p>
+                {config.openingHoursText && (
+                  <p className="mt-2 text-sm opacity-80">Horário: {config.openingHoursText}</p>
+                )}
+              </AlertDescription>
+            </Alert>
+          )}
+
           <div className="mb-8 text-center space-y-2">
-            <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Nosso Cardápio</h1>
-            <p className="text-muted-foreground text-lg">Escolha suas pizzas favoritas e monte seu pedido</p>
+            <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">
+              {config?.menuTitle || "Nosso Cardápio"}
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              {config?.menuSubtitle || "Escolha suas pizzas favoritas e monte seu pedido"}
+            </p>
           </div>
 
           <div className="max-w-md mx-auto mb-10 relative">
@@ -129,8 +152,7 @@ export default function MenuPage() {
         </div>
       </main>
 
-      {/* Botão de Carrinho / Checkout */}
-      {cartItems.length > 0 && (
+      {cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-6 left-4 md:left-8 z-40">
           <Link href="/checkout">
             <Button className="h-16 px-8 rounded-full bg-secondary hover:bg-secondary/90 text-secondary-foreground text-xl font-black shadow-2xl flex items-center justify-between gap-8 transform hover:scale-105 active:scale-95 transition-all">
@@ -146,7 +168,6 @@ export default function MenuPage() {
         </div>
       )}
 
-      {/* Botão Suspenso do Administrador - Apenas visível para o admin autorizado */}
       {isAdmin && (
         <div className="fixed bottom-6 right-4 md:right-8 z-40">
           <Link href="/admin/dashboard">

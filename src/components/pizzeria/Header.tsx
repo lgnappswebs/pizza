@@ -7,8 +7,10 @@ import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Settings } from '
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { signOut } from 'firebase/auth';
+import { collection } from 'firebase/firestore';
+import * as LucideIcons from 'lucide-react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -21,30 +23,50 @@ import {
 export function Header() {
   const cartItems = useCartStore((state) => state.items);
   const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const logo = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
+  const logoPlaceholder = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
   const { user } = useUser();
   const auth = useAuth();
+  const firestore = useFirestore();
+
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
 
   const handleLogout = () => {
     signOut(auth);
   };
+
+  // Dinamicamente carrega o ícone se existir
+  const LogoIcon = config?.logoIconName && (LucideIcons as any)[config.logoIconName] 
+    ? (LucideIcons as any)[config.logoIconName] 
+    : LucideIcons.Pizza;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 flex h-20 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0">
-              <Image 
-                src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
-                alt="PizzApp Logo" 
-                fill 
-                className="object-cover"
-                data-ai-hint="pizza logo"
-              />
+            <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white">
+              {config?.logoImageUrl ? (
+                <Image 
+                  src={config.logoImageUrl} 
+                  alt={config.restaurantName || "Logo"} 
+                  fill 
+                  className="object-cover"
+                />
+              ) : config?.showLogoIcon ? (
+                <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+              ) : (
+                <Image 
+                  src={logoPlaceholder?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                  alt="Logo" 
+                  fill 
+                  className="object-cover"
+                />
+              )}
             </div>
             <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap">
-              PizzApp <span className="text-secondary">Rápido</span>
+              {config?.restaurantName || "PizzApp"} <span className="text-secondary">{config?.restaurantName ? "" : "Rápido"}</span>
             </span>
           </Link>
         </div>

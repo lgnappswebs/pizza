@@ -19,7 +19,6 @@ import {
   Mail,
   MapPin,
   MessageSquare,
-  Eye,
   LogOut,
   Layers,
   Image as ImageIcon,
@@ -79,7 +78,7 @@ export default function AdminSettingsPage() {
     logoIconName: '',
     logoImageUrl: '',
     whatsappNumber: '',
-    deliveryFee: '0',
+    deliveryFee: '',
     isStoreOpen: true,
     openingHoursText: '',
     closedMessage: '',
@@ -99,6 +98,34 @@ export default function AdminSettingsPage() {
     tiktokUrl: ''
   });
 
+  const formatCurrency = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "0,00";
+    const amount = (parseFloat(digits) / 100).toFixed(2);
+    return amount.replace(".", ",");
+  };
+
+  const parseCurrency = (formattedValue: string) => {
+    if (!formattedValue) return 0;
+    const clean = formattedValue.replace(/[^\d]/g, "");
+    return parseFloat(clean) / 100;
+  };
+
+  const handlePhoneMask = (value: string) => {
+    let v = value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length > 10) {
+      v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7,11)}`;
+    } else if (v.length > 6) {
+      v = `(${v.slice(0,2)}) ${v.slice(2,6)}-${v.slice(6,10)}`;
+    } else if (v.length > 2) {
+      v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+    } else if (v.length > 0) {
+      v = `(${v}`;
+    }
+    return v;
+  };
+
   useEffect(() => {
     if (config) {
       setForm({
@@ -106,8 +133,8 @@ export default function AdminSettingsPage() {
         showLogoIcon: config.showLogoIcon ?? true,
         logoIconName: config.logoIconName || '',
         logoImageUrl: config.logoImageUrl || '',
-        whatsappNumber: config.whatsappNumber || '',
-        deliveryFee: config.deliveryFee?.toString() || '0',
+        whatsappNumber: handlePhoneMask(config.whatsappNumber || ''),
+        deliveryFee: formatCurrency((config.deliveryFee || 0).toFixed(2).replace('.', '')),
         isStoreOpen: config.isStoreOpen ?? true,
         openingHoursText: config.openingHoursText || '',
         closedMessage: config.closedMessage || '',
@@ -142,7 +169,8 @@ export default function AdminSettingsPage() {
     setLoading(true);
     const data = {
       ...form,
-      deliveryFee: parseFloat(form.deliveryFee) || 0
+      whatsappNumber: form.whatsappNumber.replace(/\D/g, ""),
+      deliveryFee: parseCurrency(form.deliveryFee)
     };
 
     if (config?.id) {
@@ -228,7 +256,7 @@ export default function AdminSettingsPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 overflow-y-auto pb-32">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-32">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
@@ -247,52 +275,52 @@ export default function AdminSettingsPage() {
               <CardDescription className="text-base">Altere as informações principais e a aparência do seu aplicativo.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="restaurantName">Nome da Pizzaria</Label>
+                  <Label htmlFor="restaurantName" className="text-lg font-bold">Nome da Pizzaria</Label>
                   <Input 
                     id="restaurantName" 
                     value={form.restaurantName} 
                     onChange={(e) => setForm({...form, restaurantName: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
-                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
+                
+                <div className="flex items-center justify-between p-6 bg-muted/30 rounded-2xl border-2 border-dashed">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Exibir Ícone no Logo</Label>
-                    <p className="text-xs text-muted-foreground">Define se um ícone aparece ao lado do nome.</p>
+                    <Label className="text-lg font-bold">Exibir Ícone no Logo</Label>
+                    <p className="text-sm text-muted-foreground">Define se um ícone aparece ao lado do nome.</p>
                   </div>
-                  <Switch checked={form.showLogoIcon} onCheckedChange={(v) => setForm({...form, showLogoIcon: v})} />
+                  <Switch checked={form.showLogoIcon} onCheckedChange={(v) => setForm({...form, showLogoIcon: v})} className="scale-125" />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="logoIconName" className="flex items-center gap-1">
-                    Ícone do Logo (Opcional) <span className="text-xs text-muted-foreground font-normal">(Lucide Icon Name)</span>
+                  <Label htmlFor="logoIconName" className="text-lg font-bold flex items-center gap-2">
+                    Ícone do Logo <span className="text-sm font-normal text-muted-foreground">(Lucide Icon Name)</span>
                   </Label>
                   <Input 
                     id="logoIconName" 
                     placeholder="Ex: Pizza, Flame, Utensils"
                     value={form.logoIconName} 
                     onChange={(e) => setForm({...form, logoIconName: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="logoImageUrl">Logotipo da Pizzaria (URL ou Galeria)</Label>
+                  <Label htmlFor="logoImageUrl" className="text-lg font-bold">Logotipo da Pizzaria (URL ou Galeria)</Label>
                   
                   {form.logoImageUrl && (
-                    <div className="relative h-20 w-20 rounded-xl overflow-hidden border-2 mb-2 bg-muted">
+                    <div className="relative h-32 w-32 rounded-2xl overflow-hidden border-2 mb-4 bg-muted">
                       <img src={form.logoImageUrl} alt="Preview" className="object-cover w-full h-full" />
                       <Button 
                         type="button"
                         variant="destructive" 
                         size="icon" 
-                        className="absolute top-1 right-1 rounded-full h-6 w-6"
+                        className="absolute top-2 right-2 rounded-full h-8 w-8"
                         onClick={() => setForm({...form, logoImageUrl: ''})}
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   )}
@@ -303,41 +331,41 @@ export default function AdminSettingsPage() {
                       placeholder="https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1 border-2"
+                      className="rounded-xl h-14 flex-1 border-2 text-lg"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-12 rounded-xl border-2"
+                      className="h-14 rounded-xl border-2 px-6"
                       onClick={() => document.getElementById('logo-upload')?.click()}
                     >
-                      <ImageIcon className="h-5 w-5 text-primary" />
+                      <ImageIcon className="h-6 w-6 text-primary" />
                     </Button>
                     <input id="logo-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('logoImageUrl')} />
                   </div>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="whatsapp">Número do WhatsApp para Pedidos</Label>
+                  <Label htmlFor="whatsapp" className="text-lg font-bold">Número do WhatsApp para Pedidos</Label>
                   <Input 
                     id="whatsapp" 
-                    placeholder="5511999999999"
+                    placeholder="(00) 00000-0000"
                     value={form.whatsappNumber} 
-                    onChange={(e) => setForm({...form, whatsappNumber: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    onChange={(e) => setForm({...form, whatsappNumber: handlePhoneMask(e.target.value)})}
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="fee">Taxa de Entrega (R$)</Label>
-                  <Input 
-                    id="fee" 
-                    type="number" 
-                    step="0.01"
-                    value={form.deliveryFee} 
-                    onChange={(e) => setForm({...form, deliveryFee: e.target.value})}
-                    className="rounded-xl h-12 border-2"
-                  />
+                  <Label htmlFor="fee" className="text-lg font-bold">Taxa de Entrega (R$)</Label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">R$</span>
+                    <Input 
+                      id="fee" 
+                      value={form.deliveryFee} 
+                      onChange={(e) => setForm({...form, deliveryFee: formatCurrency(e.target.value)})}
+                      className="rounded-xl h-14 pl-14 border-2 text-lg"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -363,24 +391,24 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="hours">Horário de Funcionamento (Texto)</Label>
+                <Label htmlFor="hours" className="text-lg font-bold">Horário de Funcionamento (Texto)</Label>
                 <Input 
                   id="hours" 
                   placeholder="Ex: Aberto das 18h às 23h30"
                   value={form.openingHoursText} 
                   onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
-                  className="rounded-xl h-12 border-2"
+                  className="rounded-xl h-14 border-2 text-lg"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="closedMessage">Mensagem de "Fechado no Momento"</Label>
+                <Label htmlFor="closedMessage" className="text-lg font-bold">Mensagem de "Fechado no Momento"</Label>
                 <Textarea 
                   id="closedMessage" 
                   placeholder="Esta mensagem aparecerá no topo do cardápio quando a loja estiver fechada."
                   value={form.closedMessage} 
                   onChange={(e) => setForm({...form, closedMessage: e.target.value})}
-                  className="rounded-2xl min-h-[100px] border-2"
+                  className="rounded-2xl min-h-[120px] border-2 text-lg"
                 />
               </div>
             </CardContent>
@@ -393,42 +421,39 @@ export default function AdminSettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="menuTitle">Título do Cardápio</Label>
+                  <Label htmlFor="menuTitle" className="text-lg font-bold">Título do Cardápio</Label>
                   <Input 
                     id="menuTitle" 
                     value={form.menuTitle} 
                     onChange={(e) => setForm({...form, menuTitle: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="menuSubtitle">Subtítulo do Cardápio</Label>
+                  <Label htmlFor="menuSubtitle" className="text-lg font-bold">Subtítulo do Cardápio</Label>
                   <Input 
                     id="menuSubtitle" 
                     value={form.menuSubtitle} 
                     onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="bannerText">Texto do Banner Principal</Label>
+                  <Label htmlFor="bannerText" className="text-lg font-bold">Texto do Banner Principal</Label>
                   <Input 
                     id="bannerText" 
                     value={form.heroBannerText} 
                     onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bannerImage">Banner Principal (URL ou Galeria)</Label>
+                  <Label htmlFor="bannerImage" className="text-lg font-bold">Banner Principal (URL ou Galeria)</Label>
                   
                   {form.heroBannerImageUrl && (
-                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
+                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-4 bg-muted">
                       <img src={form.heroBannerImageUrl} alt="Preview" className="object-cover w-full h-full" />
                       <Button 
                         type="button"
@@ -447,69 +472,16 @@ export default function AdminSettingsPage() {
                       id="bannerImage" 
                       value={form.heroBannerImageUrl} 
                       onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1 border-2"
+                      className="rounded-xl h-14 flex-1 border-2 text-lg"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-12 rounded-xl border-2"
+                      className="h-14 rounded-xl border-2 px-6"
                       onClick={() => document.getElementById('banner-hero-upload')?.click()}
                     >
-                      <ImageIcon className="h-5 w-5 text-primary" />
+                      <ImageIcon className="h-6 w-6 text-primary" />
                     </Button>
                     <input id="banner-hero-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('heroBannerImageUrl')} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="pColor">Cor Principal</Label>
-                  <div className="flex gap-2">
-                    <Input id="pColor" value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="rounded-xl h-12 font-mono border-2" />
-                    <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.primaryColor }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bgColor">Cor de Fundo</Label>
-                  <div className="flex gap-2">
-                    <Input id="bgColor" value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="rounded-xl h-12 font-mono border-2" />
-                    <div className="w-12 h-12 rounded-xl border-2" style={{ backgroundColor: form.backgroundColor }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bgPattern">Plano de Fundo (URL ou Galeria)</Label>
-                  
-                  {form.appBackgroundImageUrl && (
-                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
-                      <img src={form.appBackgroundImageUrl} alt="Preview" className="object-cover w-full h-full" />
-                      <Button 
-                        type="button"
-                        variant="destructive" 
-                        size="icon" 
-                        className="absolute top-2 right-2 rounded-full h-8 w-8"
-                        onClick={() => setForm({...form, appBackgroundImageUrl: ''})}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    <Input 
-                      id="bgPattern" 
-                      placeholder="URL de padrão ou imagem"
-                      value={form.appBackgroundImageUrl} 
-                      onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
-                      className="rounded-xl h-12 flex-1 border-2"
-                    />
-                    <Button 
-                      variant="outline" 
-                      className="h-12 rounded-xl border-2"
-                      onClick={() => document.getElementById('bg-app-upload')?.click()}
-                    >
-                      <ImageIcon className="h-5 w-5 text-primary" />
-                    </Button>
-                    <input id="bg-app-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('appBackgroundImageUrl')} />
                   </div>
                 </div>
               </div>
@@ -524,59 +496,59 @@ export default function AdminSettingsPage() {
             </CardHeader>
             <CardContent className="p-8 space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="addressFooter">Endereço Físico (Rodapé)</Label>
+                <Label htmlFor="addressFooter" className="text-lg font-bold">Endereço Físico (Rodapé)</Label>
                 <Input 
                   id="addressFooter" 
                   value={form.address} 
                   onChange={(e) => setForm({...form, address: e.target.value})}
-                  className="rounded-xl h-12 border-2"
+                  className="rounded-xl h-14 border-2 text-lg"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="contactPhone">Telefone de Contato (Rodapé)</Label>
+                  <Label htmlFor="contactPhone" className="text-lg font-bold">Telefone de Contato (Rodapé)</Label>
                   <Input 
                     id="contactPhone" 
                     value={form.contactPhone} 
                     onChange={(e) => setForm({...form, contactPhone: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="contactEmail">E-mail de Contato</Label>
+                  <Label htmlFor="contactEmail" className="text-lg font-bold">E-mail de Contato</Label>
                   <Input 
                     id="contactEmail" 
                     value={form.contactEmail} 
                     onChange={(e) => setForm({...form, contactEmail: e.target.value})}
-                    className="rounded-xl h-12 border-2"
+                    className="rounded-xl h-14 border-2 text-lg"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="waAuto">Mensagem Automática do WhatsApp (Rodapé)</Label>
+                <Label htmlFor="waAuto" className="text-lg font-bold">Mensagem Automática do WhatsApp (Rodapé)</Label>
                 <Input 
                   id="waAuto" 
                   placeholder="Ex: Olá, gostaria de tirar uma dúvida!"
                   value={form.whatsappAutoMessage} 
                   onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
-                  className="rounded-xl h-12 border-2"
+                  className="rounded-xl h-14 border-2 text-lg"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <Label className="flex items-center gap-1"><Instagram className="h-4 w-4" /> Instagram URL</Label>
-                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-12 border-2" />
+                  <Label className="flex items-center gap-2 text-lg font-bold"><Instagram className="h-5 w-5" /> Instagram URL</Label>
+                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="flex items-center gap-1"><Facebook className="h-4 w-4" /> Facebook URL</Label>
-                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-12 border-2" />
+                  <Label className="flex items-center gap-2 text-lg font-bold"><Facebook className="h-5 w-5" /> Facebook URL</Label>
+                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="flex items-center gap-1"><Music2 className="h-4 w-4" /> TikTok URL</Label>
-                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-12 border-2" />
+                  <Label className="flex items-center gap-2 text-lg font-bold"><Music2 className="h-5 w-5" /> TikTok URL</Label>
+                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
               </div>
             </CardContent>

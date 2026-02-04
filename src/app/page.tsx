@@ -1,22 +1,35 @@
 
+"use client"
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Pizza } from 'lucide-react';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection } from 'firebase/firestore';
+import * as LucideIcons from 'lucide-react';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find(img => img.id === 'hero-pizza');
-  const logo = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
+  const firestore = useFirestore();
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
+
+  const heroPlaceholder = PlaceHolderImages.find(img => img.id === 'hero-pizza');
+  const logoPlaceholder = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
+
+  const LogoIcon = config?.logoIconName && (LucideIcons as any)[config.logoIconName] 
+    ? (LucideIcons as any)[config.logoIconName] 
+    : LucideIcons.Pizza;
 
   return (
     <>
       <main className="flex-1">
-        {/* Hero Section */}
         <section className="relative h-screen flex items-start md:items-center justify-center overflow-hidden pt-12 md:pt-0">
           <div className="absolute inset-0 z-0">
             <Image 
-              src={heroImage?.imageUrl || 'https://images.unsplash.com/photo-1693609930470-2eb935294945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkZWxpY2lvdXMlMjBwaXp6YXxlbnwwfHx8fDE3NzAyMTA0Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080'} 
+              src={config?.heroBannerImageUrl || heroPlaceholder?.imageUrl || 'https://images.unsplash.com/photo-1693609930470-2eb935294945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxkZWxpY2lvdXMlMjBwaXp6YXxlbnwwfHx8fDE3NzAyMTA0Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080'} 
               alt="PizzApp Hero" 
               fill 
               className="object-cover brightness-50"
@@ -27,27 +40,36 @@ export default function Home() {
           
           <div className="container relative z-10 px-4 text-center space-y-8 max-w-5xl">
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex flex-col items-center">
-              {/* Brand Branding above the headline */}
               <div className="mb-8 flex flex-col items-center gap-6">
-                <div className="relative w-32 h-32 md:w-48 md:h-48 overflow-hidden rounded-full border-4 border-primary shadow-2xl bg-white/10 backdrop-blur-sm">
-                  <Image 
-                    src={logo?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
-                    alt="PizzApp Logo" 
-                    fill 
-                    className="object-cover"
-                    data-ai-hint="pizza logo"
-                  />
+                <div className="relative w-32 h-32 md:w-48 md:h-48 overflow-hidden rounded-full border-4 border-primary shadow-2xl bg-white flex items-center justify-center">
+                  {config?.logoImageUrl ? (
+                    <Image 
+                      src={config.logoImageUrl} 
+                      alt="Logo" 
+                      fill 
+                      className="object-cover"
+                    />
+                  ) : config?.showLogoIcon ? (
+                    <LogoIcon className="h-16 w-16 md:h-24 md:w-24 text-primary" />
+                  ) : (
+                    <Image 
+                      src={logoPlaceholder?.imageUrl || 'https://images.unsplash.com/photo-1769968079563-65519a9147da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxwaXp6YSUyMGxvZ298ZW58MHwxfHx8MTc3MDIxMDQ3N3ww&ixlib=rb-4.1.0&q=80&w=1080'} 
+                      alt="Logo" 
+                      fill 
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <h2 className="text-5xl md:text-8xl font-black font-headline tracking-tighter text-white drop-shadow-2xl">
-                  PizzApp <span className="text-secondary">Rápido</span>
+                  {config?.restaurantName || "PizzApp"} <span className="text-secondary">{config?.restaurantName ? "" : "Rápido"}</span>
                 </h2>
               </div>
 
               <h1 className="text-3xl md:text-5xl font-bold text-white/90 font-headline leading-tight drop-shadow-lg max-w-3xl">
-                Pizza quentinha, sabor <span className="text-secondary">inesquecível</span> 🍕🔥
+                {config?.heroBannerText || "Pizza quentinha, sabor inesquecível 🍕🔥"}
               </h1>
               <p className="text-lg md:text-2xl text-white/80 font-medium mt-4 drop-shadow-md">
-                A melhor pizzaria da cidade na palma da sua mão.
+                {config?.openingHoursText || "A melhor pizzaria da cidade na palma da sua mão."}
               </p>
             </div>
 
