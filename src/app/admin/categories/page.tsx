@@ -227,15 +227,15 @@ export default function AdminCategoriesPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 pb-32 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold">Categorias</h1>
-            <p className="text-muted-foreground">Gerencie as divisões do seu cardápio</p>
+            <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
+            <p className="text-sm md:text-base text-muted-foreground">Gerencie as divisões do seu cardápio</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
             <Plus className="mr-2 h-5 w-5" /> Nova Categoria
@@ -243,42 +243,42 @@ export default function AdminCategoriesPage() {
         </div>
 
         <Card className="rounded-2xl border-2">
-          <CardContent className="pt-6">
+          <CardContent className="p-3 md:p-6">
             {isLoading ? (
               <div className="flex justify-center py-12">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-3 md:gap-4">
                 {categories?.map((category) => (
-                  <div key={category.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">
+                  <div key={category.id} className="flex items-center justify-between p-3 md:p-4 border rounded-2xl hover:bg-muted/30 transition-colors gap-2">
+                    <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                      <div className="h-8 w-8 md:h-10 md:w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold shrink-0 text-sm md:text-base">
                         {category.order}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="font-bold text-lg">{category.name}</p>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <p className="font-bold text-base md:text-lg truncate">{category.name}</p>
                           {category.subName && (
-                            <Badge variant="outline" className="text-xs font-normal">
+                            <Badge variant="outline" className="text-[10px] md:text-xs font-normal truncate max-w-[100px]">
                               {category.subName}
                             </Badge>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl">
-                        <Edit2 className="h-4 w-4" />
+                    <div className="flex gap-1.5 md:gap-2 shrink-0">
+                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10">
+                        <Edit2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => handleDelete(category.id)} className="rounded-xl text-destructive hover:bg-destructive/10">
-                        <Trash2 className="h-4 w-4" />
+                      <Button variant="outline" size="icon" onClick={() => handleDelete(category.id)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive hover:bg-destructive/10">
+                        <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
                     </div>
                   </div>
                 ))}
                 {categories?.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
+                  <div className="text-center py-12 text-muted-foreground text-sm md:text-base">
                     Nenhuma categoria encontrada.
                   </div>
                 )}
