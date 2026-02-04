@@ -280,6 +280,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="restaurantName" className="text-lg font-bold">Nome da Pizzaria</Label>
                   <Input 
                     id="restaurantName" 
+                    placeholder="Ex: PizzApp Rápido"
                     value={form.restaurantName} 
                     onChange={(e) => setForm({...form, restaurantName: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -296,11 +297,11 @@ export default function AdminSettingsPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="logoIconName" className="text-lg font-bold flex items-center gap-2">
-                    Ícone do Logo <span className="text-sm font-normal text-muted-foreground">(Lucide Icon Name)</span>
+                    Ícone do Logo <span className="text-sm font-normal text-muted-foreground">(Nome Lucide)</span>
                   </Label>
                   <Input 
                     id="logoIconName" 
-                    placeholder="Ex: Pizza, Flame, Utensils"
+                    placeholder="Ex: Pizza, Flame, Utensils, Flame"
                     value={form.logoIconName} 
                     onChange={(e) => setForm({...form, logoIconName: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -328,7 +329,7 @@ export default function AdminSettingsPage() {
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
-                      placeholder="https://suaimagem.com/logo.png"
+                      placeholder="Ex: https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
                       className="rounded-xl h-14 flex-1 border-2 text-lg"
@@ -348,7 +349,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="whatsapp" className="text-lg font-bold">Número do WhatsApp para Pedidos</Label>
                   <Input 
                     id="whatsapp" 
-                    placeholder="(00) 00000-0000"
+                    placeholder="Ex: (11) 99999-9999"
                     value={form.whatsappNumber} 
                     onChange={(e) => setForm({...form, whatsappNumber: handlePhoneMask(e.target.value)})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -361,6 +362,7 @@ export default function AdminSettingsPage() {
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">R$</span>
                     <Input 
                       id="fee" 
+                      placeholder="Ex: 5,00"
                       value={form.deliveryFee} 
                       onChange={(e) => setForm({...form, deliveryFee: formatCurrency(e.target.value)})}
                       className="rounded-xl h-14 pl-14 border-2 text-lg"
@@ -386,7 +388,7 @@ export default function AdminSettingsPage() {
                 <Switch 
                   className="scale-150 data-[state=checked]:bg-green-500"
                   checked={form.isStoreOpen} 
-                  onCheckedChange={(v) => setForm({...form, isStoreOpen: v})} 
+                  onCheckedChange={(v) => setForm({...form, iIsStoreOpen: v})} 
                 />
               </div>
 
@@ -405,7 +407,7 @@ export default function AdminSettingsPage() {
                 <Label htmlFor="closedMessage" className="text-lg font-bold">Mensagem de "Fechado no Momento"</Label>
                 <Textarea 
                   id="closedMessage" 
-                  placeholder="Esta mensagem aparecerá no topo do cardápio quando a loja estiver fechada."
+                  placeholder="Ex: Estamos fechados agora. Volte em breve!"
                   value={form.closedMessage} 
                   onChange={(e) => setForm({...form, closedMessage: e.target.value})}
                   className="rounded-2xl min-h-[120px] border-2 text-lg"
@@ -426,6 +428,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="menuTitle" className="text-lg font-bold">Título do Cardápio</Label>
                   <Input 
                     id="menuTitle" 
+                    placeholder="Ex: Nosso Cardápio"
                     value={form.menuTitle} 
                     onChange={(e) => setForm({...form, menuTitle: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -435,6 +438,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="menuSubtitle" className="text-lg font-bold">Subtítulo do Cardápio</Label>
                   <Input 
                     id="menuSubtitle" 
+                    placeholder="Ex: Escolha suas pizzas favoritas e monte seu pedido"
                     value={form.menuSubtitle} 
                     onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -444,6 +448,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="bannerText" className="text-lg font-bold">Texto do Banner Principal</Label>
                   <Input 
                     id="bannerText" 
+                    placeholder="Ex: Pizza quentinha, sabor inesquecível 🍕🔥"
                     value={form.heroBannerText} 
                     onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -470,6 +475,7 @@ export default function AdminSettingsPage() {
                   <div className="flex gap-2">
                     <Input 
                       id="bannerImage" 
+                      placeholder="Ex: https://suaimagem.com/banner-pizza.jpg"
                       value={form.heroBannerImageUrl} 
                       onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
                       className="rounded-xl h-14 flex-1 border-2 text-lg"
@@ -499,6 +505,7 @@ export default function AdminSettingsPage() {
                 <Label htmlFor="addressFooter" className="text-lg font-bold">Endereço Físico (Rodapé)</Label>
                 <Input 
                   id="addressFooter" 
+                  placeholder="Ex: Rua das Pizzas, 123 - Centro"
                   value={form.address} 
                   onChange={(e) => setForm({...form, address: e.target.value})}
                   className="rounded-xl h-14 border-2 text-lg"
@@ -510,6 +517,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="contactPhone" className="text-lg font-bold">Telefone de Contato (Rodapé)</Label>
                   <Input 
                     id="contactPhone" 
+                    placeholder="Ex: (11) 1234-5678"
                     value={form.contactPhone} 
                     onChange={(e) => setForm({...form, contactPhone: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -519,6 +527,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="contactEmail" className="text-lg font-bold">E-mail de Contato</Label>
                   <Input 
                     id="contactEmail" 
+                    placeholder="Ex: contato@suapizzaria.com"
                     value={form.contactEmail} 
                     onChange={(e) => setForm({...form, contactEmail: e.target.value})}
                     className="rounded-xl h-14 border-2 text-lg"
@@ -540,15 +549,15 @@ export default function AdminSettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold"><Instagram className="h-5 w-5" /> Instagram URL</Label>
-                  <Input value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
+                  <Input placeholder="Ex: instagram.com/suapizzaria" value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold"><Facebook className="h-5 w-5" /> Facebook URL</Label>
-                  <Input value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
+                  <Input placeholder="Ex: facebook.com/suapizzaria" value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold"><Music2 className="h-5 w-5" /> TikTok URL</Label>
-                  <Input value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
+                  <Input placeholder="Ex: tiktok.com/@suapizzaria" value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg" />
                 </div>
               </div>
             </CardContent>
