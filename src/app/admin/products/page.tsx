@@ -329,11 +329,23 @@ export default function AdminProductsPage() {
             <div className="grid gap-6 py-4">
               <div className="grid gap-2">
                 <Label htmlFor="name" className="text-lg font-bold">Nome do Produto</Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
+                <Input 
+                  id="name" 
+                  value={formData.name} 
+                  onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                  className="rounded-xl border-2 h-12 text-lg" 
+                  placeholder="Ex: Pizza de Calabresa"
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="desc" className="text-lg font-bold">Descrição / Ingredientes</Label>
-                <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
+                <Input 
+                  id="desc" 
+                  value={formData.description} 
+                  onChange={(e) => setFormData({...formData, description: e.target.value})} 
+                  className="rounded-xl border-2 h-12 text-lg" 
+                  placeholder="Ex: Molho de tomate, mussarela e calabresa"
+                />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="category" className="text-lg font-bold">Categoria</Label>
@@ -423,7 +435,7 @@ export default function AdminProductsPage() {
                     value={formData.imageUrl} 
                     onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
                     className="rounded-xl h-12 flex-1 border-2 text-lg" 
-                    placeholder="https://..." 
+                    placeholder="https://suaimagem.com/foto.jpg" 
                   />
                   <Button 
                     type="button" 
