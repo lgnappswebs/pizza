@@ -97,17 +97,23 @@ export default function MenuPage() {
 
   // Garantir que a aba de Pizzas seja selecionada e a rolagem esteja no início
   useEffect(() => {
-    if (mainNames.length > 0 && !activeCategory) {
+    if (mainNames.length > 0) {
       const pizzaName = mainNames.find(n => {
         const low = n.trim().toLowerCase();
         return low === 'pizzas' || low === 'pizza';
       });
-      setActiveCategory(pizzaName || mainNames[0]);
-    }
-    
-    // Forçar scroll para o início (esquerda) quando as categorias carregarem
-    if (mainNames.length > 0 && scrollRef.current) {
-      scrollRef.current.scrollLeft = 0;
+
+      if (!activeCategory) {
+        setActiveCategory(pizzaName || mainNames[0]);
+      }
+      
+      // Forçar scroll para o início (esquerda) com um pequeno delay para garantir renderização mobile
+      const timer = setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollLeft = 0;
+        }
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [mainNames, activeCategory]);
 
@@ -489,7 +495,10 @@ export default function MenuPage() {
       )}
 
       {isAdmin && (
-        <div className="fixed bottom-10 right-4 md:right-8 z-40">
+        <div className={cn(
+          "fixed right-4 md:right-8 z-40 transition-all duration-500 ease-in-out",
+          cartItems.length > 0 && config?.isStoreOpen ? "bottom-32" : "bottom-10"
+        )}>
           <Link href="/admin/dashboard">
             <Button size="icon" className="h-16 w-16 rounded-2xl bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all border-4 border-white">
               <LayoutGrid className="h-8 w-8" />
