@@ -20,7 +20,8 @@ import {
   Wallet,
   Sparkles,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Tags
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -59,6 +60,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+const MAIN_CATEGORY_SUGGESTIONS = [
+  "Pizzas", "Bebidas", "Porções", "Combos", "Acompanhamentos", "Sobremesas", "Outros"
+];
 
 const CATEGORIZED_SUGGESTIONS = [
   {
@@ -164,7 +169,11 @@ export default function AdminCategoriesPage() {
     }
   };
 
-  const addSuggestion = (suggestion: string) => {
+  const addNameSuggestion = (suggestion: string) => {
+    setFormData({ ...formData, name: suggestion });
+  };
+
+  const addSubSuggestion = (suggestion: string) => {
     setFormData({ ...formData, subName: suggestion });
   };
 
@@ -295,12 +304,30 @@ export default function AdminCategoriesPage() {
               </DialogTitle>
             </DialogHeader>
             <div className="grid gap-6 py-6">
-              <div className="grid gap-2">
-                <Label htmlFor="name" className="text-lg font-bold">Nome da Categoria</Label>
+              <div className="grid gap-3">
+                <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2">
+                  <Tags className="h-5 w-5 text-primary" /> Nome da Categoria
+                </Label>
                 <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas" />
+                
+                <div className="space-y-2 mt-1">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground ml-1">Sugestões Rápidas</p>
+                  <div className="flex flex-wrap gap-2">
+                    {MAIN_CATEGORY_SUGGESTIONS.map((suggestion) => (
+                      <Badge 
+                        key={suggestion} 
+                        variant="secondary" 
+                        className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted"
+                        onClick={() => addNameSuggestion(suggestion)}
+                      >
+                        {suggestion}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
               </div>
               
-              <div className="grid gap-2">
+              <div className="grid gap-2 border-t pt-4">
                 <Label htmlFor="subName" className="text-lg font-bold">Subcategoria <span className="text-sm font-normal text-muted-foreground">(Opcional)</span></Label>
                 <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Salgadas" />
                 
@@ -308,7 +335,7 @@ export default function AdminCategoriesPage() {
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10">
                       <Sparkles className="h-4 w-4" />
-                      {isSuggestionsOpen ? 'Esconder Sugestões' : 'Ver Sugestões'}
+                      {isSuggestionsOpen ? 'Esconder Ideias de Sabores' : 'Ver Ideias de Sabores'}
                       {isSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                     </Button>
                   </CollapsibleTrigger>
@@ -323,7 +350,7 @@ export default function AdminCategoriesPage() {
                                 key={suggestion} 
                                 variant="secondary" 
                                 className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1 px-3 rounded-full text-[11px]"
-                                onClick={() => addSuggestion(suggestion)}
+                                onClick={() => addSubSuggestion(suggestion)}
                               >
                                 {suggestion}
                               </Badge>
@@ -336,7 +363,7 @@ export default function AdminCategoriesPage() {
                 </Collapsible>
               </div>
 
-              <div className="grid gap-2">
+              <div className="grid gap-2 border-t pt-4">
                 <Label htmlFor="order" className="text-lg font-bold">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
                    <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
@@ -347,7 +374,7 @@ export default function AdminCategoriesPage() {
             </div>
             <DialogFooter>
               <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg transform transition active:scale-95">
-                {editingCategory ? 'Salvar Alterações' : 'Salvar Categoria'}
+                {editingCategory ? 'Salvar Alterações' : 'Criar Categoria'}
               </Button>
             </DialogFooter>
           </DialogContent>
