@@ -99,6 +99,7 @@ export default function AdminCategoriesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const [isMainSuggestionsOpen, setIsMainSuggestionsOpen] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -146,6 +147,7 @@ export default function AdminCategoriesPage() {
     }
     setIsDialogOpen(true);
     setIsSuggestionsOpen(false);
+    setIsMainSuggestionsOpen(false);
   };
 
   const handleSave = () => {
@@ -171,6 +173,7 @@ export default function AdminCategoriesPage() {
 
   const addNameSuggestion = (suggestion: string) => {
     setFormData({ ...formData, name: suggestion });
+    setIsMainSuggestionsOpen(false);
   };
 
   const addSubSuggestion = (suggestion: string) => {
@@ -312,19 +315,29 @@ export default function AdminCategoriesPage() {
                 <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas" />
                 
                 <div className="space-y-2 mt-1">
-                  <p className="text-[10px] font-black uppercase text-muted-foreground ml-1">Sugestões Rápidas</p>
-                  <div className="flex flex-wrap gap-2">
-                    {MAIN_CATEGORY_SUGGESTIONS.map((suggestion) => (
-                      <Badge 
-                        key={suggestion} 
-                        variant="secondary" 
-                        className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted"
-                        onClick={() => addNameSuggestion(suggestion)}
-                      >
-                        {suggestion}
-                      </Badge>
-                    ))}
-                  </div>
+                  <Collapsible open={isMainSuggestionsOpen} onOpenChange={setIsMainSuggestionsOpen} className="w-full">
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10 px-1">
+                        <Sparkles className="h-4 w-4" />
+                        {isMainSuggestionsOpen ? 'Esconder Sugestões' : 'Ver Sugestões Rápidas'}
+                        {isMainSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2">
+                      <div className="flex flex-wrap gap-2 p-3 bg-muted/30 rounded-xl border-2 border-dashed">
+                        {MAIN_CATEGORY_SUGGESTIONS.map((suggestion) => (
+                          <Badge 
+                            key={suggestion} 
+                            variant="secondary" 
+                            className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted"
+                            onClick={() => addNameSuggestion(suggestion)}
+                          >
+                            {suggestion}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </div>
               </div>
               
