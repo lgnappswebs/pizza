@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { ChevronRight, Pizza, Clock, Truck } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-pizza');
@@ -58,41 +58,6 @@ export default function Home() {
                   <ChevronRight className="ml-2 h-8 w-8 group-hover:translate-x-2 transition-transform" />
                 </Button>
               </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-              <div className="space-y-4 p-8 rounded-3xl bg-background border-2 border-primary/5 hover:border-primary/20 transition-all duration-300">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <Pizza className="h-10 w-10" />
-                </div>
-                <h3 className="text-2xl font-bold">Ingredientes Frescos</h3>
-                <p className="text-muted-foreground text-lg">
-                  Nossas massas são artesanais e os ingredientes selecionados diariamente.
-                </p>
-              </div>
-              <div className="space-y-4 p-8 rounded-3xl bg-background border-2 border-primary/5 hover:border-primary/20 transition-all duration-300">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 text-secondary">
-                  <Clock className="h-10 w-10" />
-                </div>
-                <h3 className="text-2xl font-bold">Entrega Veloz</h3>
-                <p className="text-muted-foreground text-lg">
-                  Pizza quentinha direto do forno para sua mesa em até 30 minutos.
-                </p>
-              </div>
-              <div className="space-y-4 p-8 rounded-3xl bg-background border-2 border-primary/5 hover:border-primary/20 transition-all duration-300">
-                <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <Truck className="h-10 w-10" />
-                </div>
-                <h3 className="text-2xl font-bold">Peça Fácil</h3>
-                <p className="text-muted-foreground text-lg">
-                  Sistema de pedidos simplificado via WhatsApp para sua comodidade.
-                </p>
-              </div>
             </div>
           </div>
         </section>
