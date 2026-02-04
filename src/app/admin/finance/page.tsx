@@ -80,7 +80,7 @@ export default function AdminFinancePage() {
   const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
   const { data: allOrders, isLoading } = useCollection(allOrdersQuery);
 
-  // Lógica de Filtragem (Hooks movidos para cima para evitar erro de Rules of Hooks)
+  // Lógica de Filtragem
   const filteredOrders = useMemo(() => {
     if (!allOrders) return [];
     return allOrders.filter(order => {
@@ -231,8 +231,8 @@ export default function AdminFinancePage() {
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:w-auto">
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto justify-center">
+          <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:flex-1 lg:max-w-md justify-center">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
                 <SelectTrigger className="w-14 h-9 border-none font-bold px-1">
                   <SelectValue />
@@ -469,3 +469,4 @@ export default function AdminFinancePage() {
     </div>
   );
 }
+
