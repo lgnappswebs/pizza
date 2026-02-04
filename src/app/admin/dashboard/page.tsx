@@ -15,7 +15,8 @@ import {
   Calendar,
   Layers,
   Image as ImageIcon,
-  ExternalLink
+  ExternalLink,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -39,7 +40,6 @@ import {
   Tooltip, 
   Cell 
 } from 'recharts';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useEffect } from 'react';
 
 export default function AdminDashboard() {
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
     router.push('/admin/login');
   };
 
-  const totalRevenue = allOrders?.reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
+  const totalRevenue = allOrders?.filter(o => o.status === 'Delivered').reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
   const todayOrders = allOrders?.filter(order => {
     if (!order.createdAt?.seconds) return false;
     const orderDate = new Date(order.createdAt.seconds * 1000);
@@ -92,7 +92,7 @@ export default function AdminDashboard() {
     { title: 'Pedidos Hoje', value: todayOrders.toString(), icon: ShoppingBag, color: 'text-blue-600', href: '/admin/orders' },
     { title: 'Produtos Ativos', value: allProducts?.length.toString() || '0', icon: PizzaIcon, color: 'text-primary', href: '/admin/products' },
     { title: 'Total Pedidos', value: allOrders?.length.toString() || '0', icon: Users, color: 'text-green-600', href: '/admin/orders' },
-    { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: TrendingUp, color: 'text-secondary', href: '/admin/orders' },
+    { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: Wallet, color: 'text-secondary', href: '/admin/finance' },
   ];
 
   return (
@@ -120,6 +120,11 @@ export default function AdminDashboard() {
           <Link href="/admin/orders">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
+            </Button>
+          </Link>
+          <Link href="/admin/finance">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
@@ -282,6 +287,10 @@ export default function AdminDashboard() {
         <Link href="/admin/orders" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <Package className="h-5 w-5" />
           <span className="text-[10px] font-bold uppercase">Peds</span>
+        </Link>
+        <Link href="/admin/finance" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Wallet className="h-5 w-5" />
+          <span className="text-[10px] font-bold uppercase">Fin</span>
         </Link>
         <Link href="/admin/banners" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
           <ImageIcon className="h-5 w-5" />
