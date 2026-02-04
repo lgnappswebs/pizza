@@ -11,9 +11,8 @@ export default function Home() {
 
   return (
     <>
-      {/* O cabeçalho foi removido apenas nesta página conforme solicitado */}
       <main className="flex-1">
-        {/* Hero Section - Ajustado para h-screen para um visual de impacto total */}
+        {/* Hero Section */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <Image 
@@ -27,8 +26,24 @@ export default function Home() {
           </div>
           
           <div className="container relative z-10 px-4 text-center space-y-8 max-w-4xl">
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <h1 className="text-4xl md:text-7xl font-bold text-white font-headline leading-tight drop-shadow-lg">
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 flex flex-col items-center">
+              {/* Brand Branding above the headline */}
+              <div className="mb-6 flex flex-col items-center gap-2">
+                <div className="relative w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-full border-4 border-primary shadow-2xl bg-white/10 backdrop-blur-sm">
+                  <Image 
+                    src={logo?.imageUrl || 'https://placehold.co/200x200?text=Logo'} 
+                    alt="PizzApp Logo" 
+                    fill 
+                    className="object-cover"
+                    data-ai-hint="pizza logo"
+                  />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black font-headline tracking-tight text-white drop-shadow-md">
+                  PizzApp <span className="text-secondary">Rápido</span>
+                </h2>
+              </div>
+
+              <h1 className="text-4xl md:text-6xl font-bold text-white font-headline leading-tight drop-shadow-lg">
                 Pizza quentinha, sabor <span className="text-secondary">inesquecível</span> 🍕🔥
               </h1>
               <p className="text-lg md:text-2xl text-white/90 font-medium mt-6 drop-shadow-md">
