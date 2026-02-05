@@ -69,14 +69,14 @@ export function ThemeInjected() {
     if (config.primaryColor) {
       root.style.setProperty('--primary', hexToHsl(config.primaryColor));
       root.style.setProperty('--ring', hexToHsl(config.primaryColor));
-      // Garante que o texto dentro do botão primário seja branco se a cor for escura
+      // Texto do botão primário branco se for escuro
       root.style.setProperty('--primary-foreground', getLuminance(config.primaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
     if (config.secondaryColor) {
       root.style.setProperty('--secondary', hexToHsl(config.secondaryColor));
       root.style.setProperty('--accent', hexToHsl(config.secondaryColor));
-      // Garante que o texto dentro do botão secundário seja branco se a cor for escura
+      // Texto do botão secundário branco se for escuro
       root.style.setProperty('--secondary-foreground', getLuminance(config.secondaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
@@ -85,6 +85,7 @@ export function ThemeInjected() {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
+      // Quando é imagem, usamos um fundo transparente por baixo
       root.style.setProperty('--background', '0 0% 100% / 0');
       isDark = false; 
     } else {
@@ -92,9 +93,10 @@ export function ThemeInjected() {
       isDark = false;
     }
 
-    // Ajustes para modo escuro ou claro (Destaque para Cards e Inputs)
+    // Ajustes de contraste para Temas Escuros
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 100%');
+      // CARDS E CAMPOS BRANCOS PARA DESTAQUE EM FUNDO ESCURO
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
@@ -131,7 +133,7 @@ export function ThemeInjected() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
           style={{ 
             backgroundImage: `url(${config.appBackgroundImageUrl})`,
-            opacity: pathname === '/menu' ? 0.1 : 1.0
+            opacity: (pathname === '/menu' || pathname === '/account') ? 0.2 : 1.0
           }}
         ></div>
       )}

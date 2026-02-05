@@ -599,7 +599,7 @@ export default function AdminSettingsPage() {
                   <Label htmlFor="contactPhone" className="text-lg font-bold">Telefone de Contato (Rodapé)</Label>
                   <Input 
                     id="contactPhone" 
-                    placeholder="(00) 0000-0000"
+                    placeholder="(00) 00000-0000"
                     value={form.contactPhone} 
                     onChange={(e) => setForm({...form, contactPhone: handlePhoneMask(e.target.value)})}
                     className="rounded-xl h-14 border-2 text-lg"
