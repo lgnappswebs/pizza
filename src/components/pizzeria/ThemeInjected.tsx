@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -42,7 +43,6 @@ export function ThemeInjected() {
     return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
   };
 
-  // Função para calcular a luminância e determinar se a cor é escura
   const getLuminance = (hex: string) => {
     let r = 0, g = 0, b = 0;
     if (hex.length === 4) {
@@ -54,7 +54,6 @@ export function ThemeInjected() {
       g = parseInt(hex.slice(3, 5), 16);
       b = parseInt(hex.slice(5, 7), 16);
     }
-    // Fórmula padrão de luminância relativa
     return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
   };
 
@@ -63,53 +62,52 @@ export function ThemeInjected() {
 
     const root = document.documentElement;
     
-    // Aplicar Cor Principal
     if (config.primaryColor) {
       root.style.setProperty('--primary', hexToHsl(config.primaryColor));
       root.style.setProperty('--ring', hexToHsl(config.primaryColor));
     }
 
-    // Aplicar Cor Secundária (Accent)
     if (config.secondaryColor) {
       root.style.setProperty('--secondary', hexToHsl(config.secondaryColor));
       root.style.setProperty('--accent', hexToHsl(config.secondaryColor));
     }
 
-    // Determinar se o fundo é escuro para ajustar o texto
     let isDark = false;
     if (config.appBackgroundType === 'color' && config.backgroundColor) {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else {
-      // Para imagens ou padrões, usamos o fundo branco padrão com opacidade, mantendo texto escuro
       root.style.setProperty('--background', '0 0% 100%');
       isDark = false;
     }
 
-    // Ajustar cores de texto e UI baseado no contraste
-    // CAMPOS DE PREENCHIMENTO SEMPRE BRANCOS EM FUNDO ESCURO
+    // Ajustar cores para máxima visibilidade e profissionalismo
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 98%');
-      root.style.setProperty('--card-foreground', '0 0% 98%');
-      root.style.setProperty('--popover-foreground', '0 0% 98%');
-      root.style.setProperty('--muted-foreground', '0 0% 70%');
-      root.style.setProperty('--accent-foreground', '0 0% 98%');
-      root.style.setProperty('--border', '0 0% 25%');
-      root.style.setProperty('--input', '0 0% 100%');
-      // Variáveis para os campos (Inputs)
+      // Cards Brancos em fundo escuro para "saltarem" e ficarem visíveis
+      root.style.setProperty('--card', '0 0% 100%');
+      root.style.setProperty('--card-foreground', '0 0% 3.9%');
+      root.style.setProperty('--popover', '0 0% 100%');
+      root.style.setProperty('--popover-foreground', '0 0% 3.9%');
+      root.style.setProperty('--muted', '0 0% 90%');
+      root.style.setProperty('--muted-foreground', '0 0% 40%');
+      root.style.setProperty('--border', '0 0% 80%');
+      // Campos de formulário brancos com destaque
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
+      root.style.setProperty('--input', '0 0% 100%');
     } else {
       root.style.setProperty('--foreground', '0 0% 3.9%');
+      root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
+      root.style.setProperty('--popover', '0 0% 100%');
       root.style.setProperty('--popover-foreground', '0 0% 3.9%');
+      root.style.setProperty('--muted', '0 0% 96.1%');
       root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-      root.style.setProperty('--accent-foreground', '0 0% 9%');
       root.style.setProperty('--border', '0 0% 89.8%');
-      root.style.setProperty('--input', '0 0% 89.8%');
-      // Variáveis para os campos (Inputs)
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
+      root.style.setProperty('--input', '0 0% 89.8%');
     }
 
   }, [config]);

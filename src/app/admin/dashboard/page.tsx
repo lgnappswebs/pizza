@@ -1,5 +1,5 @@
 
-"use client"
+"use client";
 
 import { 
   LayoutDashboard, 
@@ -82,12 +82,9 @@ export default function AdminDashboard() {
   };
 
   const handleNotificationClick = (notification: any) => {
-    // Primeiro abre a página redirecionada (Pedidos)
     if (notification.orderId) {
       router.push('/admin/orders');
     }
-    
-    // Depois deleta a notificação do banco (ela sumirá automaticamente da lista)
     deleteDocumentNonBlocking(doc(firestore, 'notificacoes', notification.id));
   };
 

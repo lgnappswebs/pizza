@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
@@ -532,7 +533,7 @@ export default function AdminFinancePage() {
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[100px]">Hora</th>
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest">Detalhamento do Cliente</th>
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status</th>
-                  <th className="p-4 text-[10px) font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
                 </tr>
               </thead>
               <tbody>
@@ -622,7 +623,7 @@ export default function AdminFinancePage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
               </DropdownMenuItem>

@@ -686,17 +686,17 @@ export default function AdminSettingsPage() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
