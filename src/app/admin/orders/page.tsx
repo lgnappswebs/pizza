@@ -26,6 +26,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -39,7 +49,7 @@ import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import {
   DropdownMenu,
@@ -55,6 +65,9 @@ export default function AdminOrdersPage() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
+  
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -86,14 +99,16 @@ export default function AdminOrdersPage() {
     });
   };
 
-  const handleDelete = (orderId: string) => {
-    if (confirm('Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita.')) {
-      deleteDocumentNonBlocking(doc(firestore, 'pedidos', orderId));
+  const confirmDelete = () => {
+    if (orderToDelete) {
+      deleteDocumentNonBlocking(doc(firestore, 'pedidos', orderToDelete));
       toast({
         variant: "destructive",
         title: "Pedido excluído",
         description: "O registro do pedido foi removido do sistema."
       });
+      setIsDeleteDialogOpen(false);
+      setOrderToDelete(null);
     }
   };
 
@@ -225,7 +240,10 @@ export default function AdminOrdersPage() {
                         variant="ghost" 
                         size="icon" 
                         className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full"
-                        onClick={() => handleDelete(order.id)}
+                        onClick={() => {
+                          setOrderToDelete(order.id);
+                          setIsDeleteDialogOpen(true);
+                        }}
                         title="Excluir Pedido"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -270,6 +288,23 @@ export default function AdminOrdersPage() {
             )}
           </div>
         )}
+
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <AlertDialogContent className="rounded-3xl border-2">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
+              <AlertDialogDescription className="text-lg">
+                Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita e removerá o registro do sistema financeiro.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2">
+              <AlertDialogCancel className="rounded-full h-12 font-bold">Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
+                Sim, Excluir Registro
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
