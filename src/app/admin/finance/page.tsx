@@ -139,7 +139,7 @@ export default function AdminFinancePage() {
     // Pequeno delay para garantir que o menu dropdown feche antes de abrir a janela de impressão
     setTimeout(() => {
       window.print();
-    }, 250);
+    }, 350);
   };
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
@@ -280,10 +280,16 @@ export default function AdminFinancePage() {
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Gerar PDF (Impressão)</DropdownMenuLabel>
-                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Período Selecionado
+                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Dia Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Mês Selecionado
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Ano Selecionado
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
                   <Printer className="mr-2 h-4 w-4" /> PDF Geral Completo
                 </DropdownMenuItem>
               </DropdownMenuContent>
