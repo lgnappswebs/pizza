@@ -79,8 +79,9 @@ export default function MenuPage() {
       const aLow = a.trim().toLowerCase();
       const bLow = b.trim().toLowerCase();
       
-      const isAPizza = aLow === 'pizzas' || aLow === 'pizza';
-      const isBPizza = bLow === 'pizzas' || bLow === 'pizza';
+      // FORÇAR PIZZAS EM PRIMEIRO
+      const isAPizza = aLow.includes('pizza');
+      const isBPizza = bLow.includes('pizza');
       
       if (isAPizza && !isBPizza) return -1;
       if (!isAPizza && isBPizza) return 1;
@@ -95,15 +96,16 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (mainNames.length > 0) {
-      const pizzaName = mainNames.find(n => {
-        const low = n.trim().toLowerCase();
-        return low === 'pizzas' || low === 'pizza';
-      });
-
+      // Forçar Pizzas como selecionado se for o primeiro carregamento
       if (activeCategory === 'loading' || !activeCategory) {
+        const pizzaName = mainNames.find(n => {
+          const low = n.trim().toLowerCase();
+          return low.includes('pizza');
+        });
         setActiveCategory(pizzaName || mainNames[0]);
       }
       
+      // Reset scroll horizontal no mobile
       const resetScroll = () => {
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = 0;
@@ -111,13 +113,9 @@ export default function MenuPage() {
       };
       
       resetScroll();
-      const timer = setTimeout(resetScroll, 100);
-      const timer2 = setTimeout(resetScroll, 500);
-      
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(timer2);
-      };
+      // Múltiplas tentativas para garantir o reset após renderização
+      setTimeout(resetScroll, 100);
+      setTimeout(resetScroll, 500);
     }
   }, [mainNames, activeCategory]);
 
@@ -143,27 +141,12 @@ export default function MenuPage() {
     if (!searchTerm.trim()) return [];
 
     const searchLower = searchTerm.toLowerCase();
-    const searchTerms = searchLower.split(' ').filter(term => term.length > 2);
-
     return products.filter(p => {
       const name = p.name.toLowerCase();
       const desc = p.description.toLowerCase();
-      const category = categories?.find(c => c.id === p.categoryId)?.name.toLowerCase() || '';
-      const subCategory = categories?.find(c => c.id === p.categoryId)?.subName?.toLowerCase() || '';
-
-      if (name.includes(searchLower) || desc.includes(searchLower) || category.includes(searchLower)) {
-        return true;
-      }
-
-      if (searchTerms.length > 0) {
-        return searchTerms.some(term => 
-          name.includes(term) || desc.includes(term) || category.includes(term) || subCategory.includes(term)
-        );
-      }
-
-      return false;
+      return name.includes(searchLower) || desc.includes(searchLower);
     });
-  }, [products, searchTerm, categories]);
+  }, [products, searchTerm]);
 
   const isAdmin = user && user.email === 'lgngregorio@icloud.com';
 
@@ -188,7 +171,7 @@ export default function MenuPage() {
     }
   };
 
-  if (loadingCats || loadingProds || loadingConfigs || loadingBanners || !configs) {
+  if (loadingCats || loadingProds || loadingConfigs || loadingBanners) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-12 w-12 text-primary animate-spin" />
@@ -310,19 +293,12 @@ export default function MenuPage() {
                   <p className="text-muted-foreground max-w-xs mx-auto mt-2 text-lg font-medium">
                     Tente usar outras palavras ou procure por categorias.
                   </p>
-                  <Button 
-                    onClick={() => setSearchTerm('')} 
-                    variant="link" 
-                    className="mt-6 text-primary font-black text-xl hover:scale-105 transition-transform"
-                  >
-                    Ver todo o cardápio
-                  </Button>
                 </div>
               )}
             </div>
           ) : (
             <>
-              {!mainNames || mainNames.length === 0 ? (
+              {mainNames.length === 0 ? (
                 <div className="text-center py-24 bg-white rounded-[3rem] shadow-xl border-2">
                   <PizzaIcon className="h-20 w-20 text-muted mx-auto mb-6 opacity-30 animate-pulse" />
                   <h2 className="text-3xl font-black">Cardápio em Construção</h2>
@@ -444,15 +420,6 @@ export default function MenuPage() {
                             />
                           ))}
                         </div>
-                        
-                        {products?.filter(p => {
-                          const pCat = categories?.find(c => c.id === p.categoryId);
-                          return pCat && pCat.name === name && (selectedSubId === 'all' || p.categoryId === selectedSubId);
-                        }).length === 0 && (
-                          <div className="text-center py-20 bg-muted/10 rounded-[3rem] border-2 border-dashed border-muted-foreground/20">
-                             <p className="text-muted-foreground text-xl font-bold italic opacity-60">Nenhum item disponível nesta seleção.</p>
-                          </div>
-                        )}
                       </TabsContent>
                     );
                   })}

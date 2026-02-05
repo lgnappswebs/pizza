@@ -258,7 +258,7 @@ export default function AdminFinancePage() {
                   <Share2 className="mr-2 h-4 w-4" /> Exportar
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer">
                   Faturamento do Dia
@@ -269,9 +269,18 @@ export default function AdminFinancePage() {
                 <DropdownMenuItem onClick={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer">
                   Faturamento do Ano
                 </DropdownMenuItem>
+                
                 <DropdownMenuSeparator />
+                
+                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Gerar PDF (Impressão)</DropdownMenuLabel>
                 <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Dia Atual
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Mês Atual
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Ano Atual
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
