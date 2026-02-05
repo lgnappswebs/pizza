@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -91,7 +92,7 @@ export default function AccountPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto space-y-8 mt-24 md:mt-28">
+        <div className="max-w-3xl mx-auto space-y-8 mt-6 md:mt-10">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}

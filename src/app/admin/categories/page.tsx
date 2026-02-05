@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -271,11 +272,11 @@ export default function AdminCategoriesPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-80 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-96 md:mt-24">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-12">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
             <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
