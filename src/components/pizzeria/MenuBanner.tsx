@@ -50,17 +50,17 @@ export function MenuBanner({ banner, onBannerClick }: MenuBannerProps) {
         priority
       />
       <div className={cn(
-        "absolute inset-0 bg-black/30 p-6 md:p-8 flex flex-col",
+        "absolute inset-0 bg-black/40 p-6 md:p-10 flex flex-col",
         getPositionClasses(banner.textPosition)
       )}>
-        <div className="max-w-2xl">
+        <div className="max-w-3xl">
           {banner.title && (
-            <h2 className="text-xl md:text-4xl font-black text-white drop-shadow-2xl mb-1 md:mb-2 uppercase tracking-tighter">
+            <h2 className="text-2xl md:text-5xl lg:text-6xl font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] mb-2 md:mb-3 uppercase tracking-tighter">
               {banner.title}
             </h2>
           )}
           {banner.description && (
-            <p className="text-xs md:text-lg text-white/90 font-bold drop-shadow-md leading-tight">
+            <p className="text-sm md:text-xl lg:text-2xl text-white/95 font-bold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] leading-tight">
               {banner.description}
             </p>
           )}
