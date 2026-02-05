@@ -181,11 +181,11 @@ export default function AdminOrdersPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
-        <Link href="/admin/dashboard" className="fixed top-80 left-4 md:top-24 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-80 left-4 md:top-8 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex justify-between items-center mb-8 mt-96 md:mt-48">
+        <div className="flex justify-between items-center mb-8 mt-96 md:mt-24">
           <div>
             <h1 className="text-3xl font-bold">Monitor de Pedidos</h1>
             <p className="text-muted-foreground">Acompanhe e gerencie os pedidos em tempo real</p>
