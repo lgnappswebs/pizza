@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -8,8 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { LogIn, UserPlus, ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth, initiateEmailSignIn, useUser } from '@/firebase';
+import { useAuth, initiateEmailSignIn, useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
+import { collection } from 'firebase/firestore';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,8 +20,13 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const auth = useAuth();
+  const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
+
+  const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  const { data: configs } = useCollection(configQuery);
+  const config = configs?.[0];
 
   useEffect(() => {
     if (!isUserLoading && user) {
@@ -59,7 +66,9 @@ export default function LoginPage() {
       
       <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-black text-primary">Entrar</CardTitle>
+          <CardTitle className="text-3xl font-black text-primary">
+            {config?.restaurantName || 'Entrar'}
+          </CardTitle>
           <CardDescription>Acesse sua conta para pedir mais rápido</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
