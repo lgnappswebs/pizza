@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 /**
  * Componente utilitário que injeta as cores personalizadas do banco de dados
- * no :root do CSS via variáveis. Também controla o fundo do app.
+ * no :root do CSS via variáveis. Também controla o contraste automático.
  */
 export function ThemeInjected() {
   const firestore = useFirestore();
@@ -43,6 +43,22 @@ export function ThemeInjected() {
     return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
   };
 
+  // Função para calcular a luminância e determinar se a cor é escura
+  const getLuminance = (hex: string) => {
+    let r = 0, g = 0, b = 0;
+    if (hex.length === 4) {
+      r = parseInt(hex[1] + hex[1], 16);
+      g = parseInt(hex[2] + hex[2], 16);
+      b = parseInt(hex[3] + hex[3], 16);
+    } else if (hex.length === 7) {
+      r = parseInt(hex.slice(1, 3), 16);
+      g = parseInt(hex.slice(3, 5), 16);
+      b = parseInt(hex.slice(5, 7), 16);
+    }
+    // Fórmula padrão de luminância relativa
+    return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  };
+
   useEffect(() => {
     if (!config) return;
 
@@ -60,16 +76,38 @@ export function ThemeInjected() {
       root.style.setProperty('--accent', hexToHsl(config.secondaryColor));
     }
 
-    // Aplicar Cor de Fundo do Body
+    // Determinar se o fundo é escuro para ajustar o texto
+    let isDark = false;
     if (config.appBackgroundType === 'color' && config.backgroundColor) {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
-    } else if (config.appBackgroundType === 'image' || config.appBackgroundType === 'pattern') {
-      root.style.setProperty('--background', '0 0% 100%'); // Fundo branco base para imagens/padrões
+      isDark = getLuminance(config.backgroundColor) < 0.5;
+    } else {
+      // Para imagens ou padrões, usamos o fundo branco padrão com opacidade, mantendo texto escuro
+      root.style.setProperty('--background', '0 0% 100%');
+      isDark = false;
+    }
+
+    // Ajustar cores de texto e UI baseado no contraste
+    if (isDark) {
+      root.style.setProperty('--foreground', '0 0% 98%');
+      root.style.setProperty('--card-foreground', '0 0% 98%');
+      root.style.setProperty('--popover-foreground', '0 0% 98%');
+      root.style.setProperty('--muted-foreground', '0 0% 70%');
+      root.style.setProperty('--accent-foreground', '0 0% 98%');
+      root.style.setProperty('--border', '0 0% 25%');
+      root.style.setProperty('--input', '0 0% 25%');
+    } else {
+      root.style.setProperty('--foreground', '0 0% 3.9%');
+      root.style.setProperty('--card-foreground', '0 0% 3.9%');
+      root.style.setProperty('--popover-foreground', '0 0% 3.9%');
+      root.style.setProperty('--muted-foreground', '0 0% 45.1%');
+      root.style.setProperty('--accent-foreground', '0 0% 9%');
+      root.style.setProperty('--border', '0 0% 89.8%');
+      root.style.setProperty('--input', '0 0% 89.8%');
     }
 
   }, [config]);
 
-  // Renderizar o fundo dinâmico
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
       {config?.appBackgroundType === 'pattern' && (
@@ -77,7 +115,7 @@ export function ThemeInjected() {
       )}
       {config?.appBackgroundType === 'image' && config.appBackgroundImageUrl && (
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.1]" 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.15]" 
           style={{ backgroundImage: `url(${config.appBackgroundImageUrl})` }}
         ></div>
       )}

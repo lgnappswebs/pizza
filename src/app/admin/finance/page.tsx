@@ -16,7 +16,6 @@ import {
   Wallet,
   Share2,
   Printer,
-  Plus,
   ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
