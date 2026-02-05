@@ -68,14 +68,12 @@ export function ThemeInjected() {
     if (config.primaryColor) {
       root.style.setProperty('--primary', hexToHsl(config.primaryColor));
       root.style.setProperty('--ring', hexToHsl(config.primaryColor));
-      // Texto do botão primário branco se for escuro
       root.style.setProperty('--primary-foreground', getLuminance(config.primaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
     if (config.secondaryColor) {
       root.style.setProperty('--secondary', hexToHsl(config.secondaryColor));
       root.style.setProperty('--accent', hexToHsl(config.secondaryColor));
-      // Texto do botão secundário branco se for escuro
       root.style.setProperty('--secondary-foreground', getLuminance(config.secondaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
@@ -84,8 +82,8 @@ export function ThemeInjected() {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
-      // Quando é imagem, usamos um fundo que permite ver a imagem mas mantém os componentes nítidos
-      root.style.setProperty('--background', '0 0% 100%'); 
+      // Quando é imagem, o background base deve ser transparente para mostrar a camada fixa
+      root.style.setProperty('--background', '0 0% 100% / 0%'); 
       root.style.setProperty('--app-bg-image', `url(${config.appBackgroundImageUrl})`);
       isDark = false; 
     } else {
@@ -94,10 +92,8 @@ export function ThemeInjected() {
       isDark = false;
     }
 
-    // Ajustes de contraste para Temas Escuros
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 100%');
-      // CARDS E CAMPOS BRANCOS SÓLIDOS PARA DESTAQUE TOTAL
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
