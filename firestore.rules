@@ -5,7 +5,7 @@ service cloud.firestore {
 
     // Função auxiliar para verificar se o usuário logado é o administrador autorizado
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'lgngregorio@icloud.com';
+      return request.auth != null && (request.auth.token.email == 'lgngregorio@icloud.com' || request.auth.token.email == 'admin@pizzapp.com');
     }
 
     // Produtos e Categorias: Leitura pública, escrita apenas para o admin
