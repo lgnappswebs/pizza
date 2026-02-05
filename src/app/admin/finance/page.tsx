@@ -274,7 +274,7 @@ export default function AdminFinancePage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-16 md:mt-8 print:hidden">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-16 md:mt-24 print:hidden">
           <div className="w-full lg:w-auto">
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>

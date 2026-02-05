@@ -269,7 +269,7 @@ export default function AdminSettingsPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="mb-8 text-center md:text-left mt-16 md:mt-8">
+        <div className="mb-8 text-center md:text-left mt-16 md:mt-24">
           <h1 className="text-3xl font-black md:text-2xl lg:text-3xl">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>

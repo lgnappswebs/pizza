@@ -96,7 +96,7 @@ export default function AccountPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
         </Link>
 
-        <div className="max-w-3xl mx-auto space-y-8 mt-16 md:mt-0">
+        <div className="max-w-3xl mx-auto space-y-8 mt-16 md:mt-24">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
