@@ -20,7 +20,8 @@ import {
   ExternalLink,
   ChevronLeft,
   Wallet,
-  Plus
+  Plus,
+  Trash2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,6 +32,7 @@ import {
   useFirestore, 
   useMemoFirebase, 
   updateDocumentNonBlocking,
+  deleteDocumentNonBlocking,
   useUser 
 } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';
@@ -46,11 +48,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -76,6 +80,21 @@ export default function AdminOrdersPage() {
 
   const updateStatus = (orderId: string, newStatus: string) => {
     updateDocumentNonBlocking(doc(firestore, 'pedidos', orderId), { status: newStatus });
+    toast({
+      title: "Status atualizado",
+      description: "O pedido foi atualizado com sucesso."
+    });
+  };
+
+  const handleDelete = (orderId: string) => {
+    if (confirm('Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita.')) {
+      deleteDocumentNonBlocking(doc(firestore, 'pedidos', orderId));
+      toast({
+        variant: "destructive",
+        title: "Pedido excluído",
+        description: "O registro do pedido foi removido do sistema."
+      });
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -166,7 +185,7 @@ export default function AdminOrdersPage() {
         ) : (
           <div className="grid grid-cols-1 gap-6">
             {orders?.map((order) => (
-              <Card key={order.id} className="rounded-2xl border-2 overflow-hidden">
+              <Card key={order.id} className="rounded-2xl border-2 overflow-hidden hover:shadow-md transition-shadow">
                 <div className="flex flex-col md:flex-row">
                   <div className="p-6 flex-1 space-y-4">
                     <div className="flex justify-between items-start">
@@ -200,7 +219,18 @@ export default function AdminOrdersPage() {
                   </div>
 
                   <div className="bg-muted/30 p-6 w-full md:w-80 border-t md:border-t-0 md:border-l space-y-4">
-                    <p className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Atualizar Status</p>
+                    <div className="flex justify-between items-center">
+                      <p className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Atualizar Status</p>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full"
+                        onClick={() => handleDelete(order.id)}
+                        title="Excluir Pedido"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                     <div className="grid grid-cols-2 gap-2">
                       <Button 
                         variant={order.status === 'Preparing' ? 'default' : 'outline'} 
