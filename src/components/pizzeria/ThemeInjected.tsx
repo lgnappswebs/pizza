@@ -100,10 +100,10 @@ export function ThemeInjected() {
       root.style.setProperty('--popover-foreground', '0 0% 3.9%');
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
-      root.style.setProperty('--input', '0 0% 80%');
+      root.style.setProperty('--input', '0 0% 100%');
       root.style.setProperty('--border', '0 0% 100%');
       root.style.setProperty('--muted', '0 0% 90%');
-      root.style.setProperty('--muted-foreground', '0 0% 40%');
+      root.style.setProperty('--muted-foreground', '0 0% 80%');
     } else {
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--card', '0 0% 100%');

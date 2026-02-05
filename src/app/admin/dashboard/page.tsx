@@ -225,11 +225,11 @@ export default function AdminDashboard() {
 
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="font-bold">{user.email?.split('@')[0] || 'Admin'}</p>
+                <p className="font-bold">{user?.email?.split('@')[0] || 'Admin'}</p>
                 <p className="text-xs text-muted-foreground">Administrador</p>
               </div>
               <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold border-2 border-primary/20">
-                {user.email?.charAt(0).toUpperCase()}
+                {user?.email?.charAt(0).toUpperCase()}
               </div>
             </div>
           </div>
@@ -327,12 +327,12 @@ export default function AdminDashboard() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
