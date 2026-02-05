@@ -15,7 +15,8 @@ import {
   Wallet,
   Share2,
   Printer,
-  ArrowLeft
+  ArrowLeft,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -531,7 +532,7 @@ export default function AdminFinancePage() {
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[100px]">Hora</th>
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest">Detalhamento do Cliente</th>
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
+                  <th className="p-4 text-[10px) font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
                 </tr>
               </thead>
               <tbody>
