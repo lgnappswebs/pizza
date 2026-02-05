@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, MapPin, Phone, Save, Loader2, ChevronLeft } from 'lucide-react';
+import { User, MapPin, Phone, Save, Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
@@ -73,7 +73,6 @@ export default function AccountPage() {
     if (!user) return;
     setLoading(true);
 
-    // Usamos setDocumentNonBlocking com merge: true para garantir que o documento seja criado caso não exista
     setDocumentNonBlocking(doc(firestore, 'users', user.uid), formData, { merge: true });
 
     setTimeout(() => {
@@ -93,11 +92,11 @@ export default function AccountPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <Link href="/menu" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
-          <ChevronLeft className="h-5 w-5" /> Voltar ao Cardápio
+        <Link href="/menu" className="fixed top-24 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
         </Link>
 
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-3xl mx-auto space-y-8 mt-12 md:mt-0">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}

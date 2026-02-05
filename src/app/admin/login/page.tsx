@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ShieldAlert, LogIn, ChevronLeft, Loader2 } from 'lucide-react';
+import { ShieldAlert, LogIn, ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, initiateEmailSignIn } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +26,6 @@ export default function AdminLoginPage() {
     
     initiateEmailSignIn(auth, email, password);
     
-    // Pequeno delay para permitir que o Firebase processe o login
     setTimeout(() => {
       if (auth.currentUser) {
         toast({
@@ -47,11 +46,11 @@ export default function AdminLoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/50">
-      <Link href="/" className="fixed top-8 left-8 flex items-center text-primary font-bold hover:underline gap-1">
-        <ChevronLeft className="h-5 w-5" /> Voltar ao Início
+      <Link href="/" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <ArrowLeft className="h-5 w-5" /> Voltar ao Início
       </Link>
       
-      <Card className="w-full max-w-md rounded-3xl border-2 shadow-2xl">
+      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0">
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit">
             <ShieldAlert className="h-12 w-12 text-primary" />

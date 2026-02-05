@@ -60,11 +60,11 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
-      <Link href="/" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm p-2 rounded-full shadow-md">
+      <Link href="/" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Início
       </Link>
       
-      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl">
+      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-black text-primary">
             {config?.restaurantName || 'Entrar'}

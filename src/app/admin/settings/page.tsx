@@ -6,7 +6,6 @@ import {
   Settings as SettingsIcon, 
   Save, 
   Store, 
-  Phone, 
   Palette, 
   Loader2,
   LayoutDashboard,
@@ -27,7 +26,8 @@ import {
   ChevronLeft,
   X,
   Type,
-  Plus
+  Plus,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -265,11 +265,11 @@ export default function AdminSettingsPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-32">
-        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
-          <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-8 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="mb-8 text-center md:text-left">
+        <div className="mb-8 text-center md:text-left mt-16 md:mt-8">
           <h1 className="text-3xl font-black md:text-2xl lg:text-3xl">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>

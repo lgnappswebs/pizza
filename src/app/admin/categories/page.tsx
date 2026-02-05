@@ -22,7 +22,8 @@ import {
   ChevronDown,
   ChevronUp,
   Tags,
-  FolderTree
+  FolderTree,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -115,7 +116,6 @@ export default function AdminCategoriesPage() {
   const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
   const [isMainSuggestionsOpen, setIsMainSuggestionsOpen] = useState(false);
   
-  // Estado para exclusão
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
 
@@ -273,11 +273,11 @@ export default function AdminCategoriesPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
-        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
-          <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-8 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-8">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
             <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
@@ -341,7 +341,6 @@ export default function AdminCategoriesPage() {
           </CardContent>
         </Card>
 
-        {/* Modal de Criação/Edição */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
@@ -440,7 +439,6 @@ export default function AdminCategoriesPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Diálogo de Confirmação de Exclusão */}
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent className="rounded-3xl border-2">
             <AlertDialogHeader>

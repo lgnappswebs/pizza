@@ -115,11 +115,11 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 py-20 relative">
-      <Link href="/login" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm p-2 rounded-full shadow-md">
+      <Link href="/login" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       
-      <Card className="w-full max-w-2xl rounded-3xl border-2 shadow-xl overflow-hidden">
+      <Card className="w-full max-w-2xl rounded-3xl border-2 shadow-xl overflow-hidden mt-12 md:mt-0">
         <CardHeader className="text-center bg-primary/5 pb-8 border-b">
           <CardTitle className="text-4xl font-black text-primary">Cadastro</CardTitle>
           <CardDescription className="text-lg">Complete seus dados para facilitar seus pedidos</CardDescription>

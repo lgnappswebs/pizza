@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   Share2,
   Printer,
-  Plus
+  Plus,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -270,11 +271,11 @@ export default function AdminFinancePage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0">
-        <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
-          <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-8 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95 print:hidden">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 print:hidden">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-16 md:mt-8 print:hidden">
           <div className="w-full lg:w-auto">
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
@@ -469,7 +470,6 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        {/* ÁREA DE EXPORTAÇÃO (MESMO LAYOUT PARA PDF E IMPRESSÃO) */}
         <div 
           ref={exportRef} 
           className="bg-white p-12 hidden print:block" 
