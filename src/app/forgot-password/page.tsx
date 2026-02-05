@@ -1,5 +1,4 @@
-
-"use client"
+["use client"
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -42,7 +41,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
-      <Link href="/login" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+      <Link href="/login" className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       
@@ -92,3 +91,5 @@ export default function ForgotPasswordPage() {
     </main>
   );
 }
+
+    
