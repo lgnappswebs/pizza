@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -250,7 +249,7 @@ export default function AdminProductsPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
@@ -522,12 +521,12 @@ export default function AdminProductsPage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>

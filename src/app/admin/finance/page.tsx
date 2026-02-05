@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
@@ -269,7 +268,7 @@ export default function AdminFinancePage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95 print:hidden">
+        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95 print:hidden">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 

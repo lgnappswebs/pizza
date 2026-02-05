@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -88,6 +87,7 @@ export function ThemeInjected() {
     }
 
     // Ajustar cores de texto e UI baseado no contraste
+    // CAMPOS DE PREENCHIMENTO SEMPRE BRANCOS EM FUNDO ESCURO
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 98%');
       root.style.setProperty('--card-foreground', '0 0% 98%');
@@ -95,7 +95,10 @@ export function ThemeInjected() {
       root.style.setProperty('--muted-foreground', '0 0% 70%');
       root.style.setProperty('--accent-foreground', '0 0% 98%');
       root.style.setProperty('--border', '0 0% 25%');
-      root.style.setProperty('--input', '0 0% 25%');
+      root.style.setProperty('--input', '0 0% 100%');
+      // Variáveis para os campos (Inputs)
+      root.style.setProperty('--field', '0 0% 100%');
+      root.style.setProperty('--field-foreground', '0 0% 3.9%');
     } else {
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
@@ -104,6 +107,9 @@ export function ThemeInjected() {
       root.style.setProperty('--accent-foreground', '0 0% 9%');
       root.style.setProperty('--border', '0 0% 89.8%');
       root.style.setProperty('--input', '0 0% 89.8%');
+      // Variáveis para os campos (Inputs)
+      root.style.setProperty('--field', '0 0% 100%');
+      root.style.setProperty('--field-foreground', '0 0% 3.9%');
     }
 
   }, [config]);
