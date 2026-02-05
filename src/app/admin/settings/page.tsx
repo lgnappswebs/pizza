@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -726,7 +727,7 @@ export default function AdminSettingsPage() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
             <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
               </Link>
             </DropdownMenuItem>
@@ -741,7 +742,7 @@ export default function AdminSettingsPage() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
