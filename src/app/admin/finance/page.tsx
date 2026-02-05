@@ -223,9 +223,10 @@ export default function AdminFinancePage() {
           <div>
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
-            <div className="hidden print:block mt-2">
-              <p className="font-bold text-lg">{config?.restaurantName || 'PizzApp'}</p>
-              <p className="text-sm">Relatório: {selectedDay}/{selectedMonth}/{selectedYear}</p>
+            <div className="hidden print:block mt-2 border-b-2 pb-4 w-full">
+              <p className="font-black text-2xl uppercase text-primary">{config?.restaurantName || 'PizzApp'}</p>
+              <p className="text-lg font-bold">Relatório Financeiro: {selectedDay}/{selectedMonth}/{selectedYear}</p>
+              <p className="text-xs text-muted-foreground mt-1">Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
             </div>
           </div>
 
