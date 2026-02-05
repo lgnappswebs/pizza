@@ -123,6 +123,9 @@ export function ProductCard({
               <div className="relative aspect-video w-full rounded-xl overflow-hidden mt-4">
                 <Image src={imageUrl} alt={name} fill className="object-cover" />
               </div>
+              <p className="text-muted-foreground text-sm mt-3 leading-relaxed text-left">
+                {description}
+              </p>
             </DialogHeader>
             <div className="space-y-6 py-4">
               {hasMultipleSizes && (
