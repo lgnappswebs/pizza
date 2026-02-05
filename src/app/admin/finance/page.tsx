@@ -136,7 +136,7 @@ export default function AdminFinancePage() {
   };
 
   const handlePrintPDF = () => {
-    // Aumentamos ligeiramente o delay para garantir que o menu feche 100%
+    // Pequeno delay para garantir que o menu do Radix feche completamente antes do print
     setTimeout(() => {
       window.print();
     }, 500);
@@ -268,13 +268,13 @@ export default function AdminFinancePage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer">
                   Faturamento do Dia
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer">
                   Faturamento do Mês
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer">
                   Faturamento do Ano
                 </DropdownMenuItem>
                 
@@ -282,13 +282,7 @@ export default function AdminFinancePage() {
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Gerar PDF (Impressão)</DropdownMenuLabel>
                 <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Dia Selecionado
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Mês Selecionado
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Ano Selecionado
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Período Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
                   <Printer className="mr-2 h-4 w-4" /> PDF Geral Completo
