@@ -50,6 +50,7 @@ export default function AdminFinancePage() {
   const router = useRouter();
   const { user, isUserLoading } = useUser();
   const reportRef = useRef<HTMLDivElement>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const today = useMemo(() => new Date(), []);
   const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
@@ -140,46 +141,50 @@ export default function AdminFinancePage() {
 
   const generatePDF = async () => {
     setIsGeneratingPDF(true);
-    try {
-      const { jsPDF } = await import('jspdf');
-      const html2canvas = (await import('html2canvas')).default;
+    // Pequeno delay para garantir que o menu dropdown fechou antes da captura
+    setTimeout(async () => {
+      try {
+        const { jsPDF } = await import('jspdf');
+        const html2canvas = (await import('html2canvas')).default;
 
-      const element = reportRef.current;
-      if (!element) return;
+        const element = exportRef.current;
+        if (!element) return;
 
-      // Adiciona classe para forçar renderização completa para o canvas
-      element.classList.add('is-printing-canvas');
+        // Força o elemento a ficar visível apenas para o canvas
+        element.style.display = 'block';
 
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: '#ffffff'
-      });
+        const canvas = await html2canvas(element, {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          windowWidth: 800
+        });
 
-      element.classList.remove('is-printing-canvas');
+        element.style.display = 'none';
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
 
-      const imgProps = pdf.getImageProperties(imgData);
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      
-      const fileName = `relatorio-${selectedDay}-${selectedMonth}-${selectedYear}.pdf`;
-      pdf.save(fileName);
-    } catch (error) {
-      console.error("Erro ao gerar PDF:", error);
-      alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
-    } finally {
-      setIsGeneratingPDF(false);
-    }
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        
+        const fileName = `relatorio-financeiro-${selectedDay}-${selectedMonth}-${selectedYear}.pdf`;
+        pdf.save(fileName);
+      } catch (error) {
+        console.error("Erro ao gerar PDF:", error);
+        alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+      } finally {
+        setIsGeneratingPDF(false);
+      }
+    }, 500);
   };
 
   const days = ["Todos", ...Array.from({ length: 31 }, (_, i) => (i + 1).toString())];
@@ -254,7 +259,7 @@ export default function AdminFinancePage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8" ref={reportRef}>
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
@@ -263,23 +268,6 @@ export default function AdminFinancePage() {
           <div className="w-full lg:w-auto">
             <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
-            
-            {/* Cabeçalho Exclusivo para PDF/Impressão */}
-            <div className="hidden print-header mt-2 border-b-4 border-primary pb-6 w-full">
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="font-black text-4xl uppercase text-primary tracking-tighter">{config?.restaurantName || 'PizzApp'}</p>
-                  <p className="text-xl font-bold mt-1">RELATÓRIO FINANCEIRO DE VENDAS</p>
-                  <p className="text-lg bg-muted px-3 py-1 rounded-lg mt-2 inline-block">
-                    Período: {selectedDay}/{selectedMonth}/{selectedYear}
-                  </p>
-                </div>
-                <div className="text-right text-xs text-muted-foreground">
-                  <p>Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
-                  <p>Sistema Administrativo PizzApp</p>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
@@ -315,7 +303,8 @@ export default function AdminFinancePage() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-bold bg-primary shadow-lg shadow-primary/20">
-                  <Share2 className="mr-2 h-4 w-4" /> Exportar
+                  {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <Share2 className="mr-2 h-4 w-4" />}
+                  Exportar
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
@@ -347,14 +336,14 @@ export default function AdminFinancePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-3 opacity-20 print:hidden">
+            <div className="absolute top-0 right-0 p-3 opacity-20">
               <DollarSign className="h-12 w-12" />
             </div>
             <CardHeader className="pb-2 p-4">
               <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
               <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0 print:hidden">
+            <CardContent className="p-4 pt-0">
               <p className="text-[9px] font-medium opacity-80">Atualizado em tempo real</p>
             </CardContent>
           </Card>
@@ -364,7 +353,7 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0 print:hidden">
+            <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">{selectedDay}/{selectedMonth}/{selectedYear}</p>
             </CardContent>
           </Card>
@@ -374,7 +363,7 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Pedidos Período</CardDescription>
               <CardTitle className="text-2xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0 print:hidden">
+            <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
           </Card>
@@ -384,14 +373,14 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Ticket Médio</CardDescription>
               <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0 print:hidden">
+            <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 gap-8">
-          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm finance-table-card">
+          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm">
             <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
                 <div>
@@ -462,6 +451,88 @@ export default function AdminFinancePage() {
             </CardContent>
           </Card>
         </div>
+
+        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA PARA O PDF) */}
+        <div 
+          ref={exportRef} 
+          className="bg-white p-10 hidden" 
+          style={{ width: '800px', display: 'none' }}
+        >
+          {/* Cabeçalho do Relatório */}
+          <div className="border-b-4 border-primary pb-6 mb-8 flex justify-between items-end">
+            <div>
+              <h1 className="text-4xl font-black text-primary uppercase tracking-tighter mb-1">
+                {config?.restaurantName || 'PIZZAPP'}
+              </h1>
+              <h2 className="text-xl font-bold text-gray-800">RELATÓRIO FINANCEIRO DE VENDAS</h2>
+              <div className="mt-4 inline-block bg-gray-100 px-4 py-2 rounded-lg">
+                <p className="text-sm font-bold text-gray-600 uppercase tracking-widest">Período de Referência</p>
+                <p className="text-xl font-black text-primary">
+                  {selectedDay === "Todos" ? 'Mês Inteiro' : `${selectedDay}`}/{selectedMonth}/{selectedYear}
+                </p>
+              </div>
+            </div>
+            <div className="text-right text-xs text-gray-400">
+              <p>Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
+              <p>PizzApp Business Intelligence</p>
+            </div>
+          </div>
+
+          {/* Resumo Financeiro */}
+          <div className="grid grid-cols-3 gap-4 mb-10">
+            <div className="bg-gray-50 p-4 rounded-xl border-2">
+              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Faturamento Total</p>
+              <p className="text-2xl font-black text-emerald-600">R$ {revenueInPeriod.toFixed(2)}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl border-2">
+              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Total de Pedidos</p>
+              <p className="text-2xl font-black text-blue-600">{filteredOrders.length}</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl border-2">
+              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Ticket Médio</p>
+              <p className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</p>
+            </div>
+          </div>
+
+          {/* Tabela de Dados (Exportação) */}
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-primary text-white">
+              <tr>
+                <th className="p-3 text-[10px] font-black uppercase w-[80px]">Hora</th>
+                <th className="p-3 text-[10px] font-black uppercase">Cliente / Endereço</th>
+                <th className="p-3 text-[10px] font-black uppercase w-[100px] text-center">Status</th>
+                <th className="p-3 text-[10px] font-black uppercase w-[120px] text-right">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.map((order, idx) => (
+                <tr key={order.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <td className="p-3 border-b align-top font-bold text-gray-700">
+                    {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
+                  </td>
+                  <td className="p-3 border-b align-top">
+                    <p className="font-black text-gray-800 text-sm">{order.customerName}</p>
+                    <p className="text-[10px] text-gray-500 leading-tight mt-1">{order.customerAddress}</p>
+                  </td>
+                  <td className="p-3 border-b align-top text-center">
+                    <span className="inline-block px-2 py-1 rounded text-[9px] font-black uppercase bg-gray-200 text-gray-600">
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="p-3 border-b align-top text-right font-black text-gray-800">
+                    R$ {order.totalAmount?.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Rodapé do PDF */}
+          <div className="mt-12 pt-6 border-t-2 border-dashed text-center text-[10px] text-gray-400">
+            <p>Este documento é um registro oficial de vendas da pizzaria {config?.restaurantName || 'PizzApp'}.</p>
+            <p>© {new Date().getFullYear()} - Sistema de Gestão Rápida</p>
+          </div>
+        </div>
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
@@ -517,28 +588,15 @@ export default function AdminFinancePage() {
       </nav>
 
       <style jsx global>{`
-        .print-header { display: none; }
-        
-        .is-printing-canvas {
-          padding: 20px !important;
-          background: white !important;
-        }
-        .is-printing-canvas .print-header { display: block !important; }
-        .is-printing-canvas .print-hidden { display: none !important; }
-        .is-printing-canvas .card { border: none !important; box-shadow: none !important; }
-
         @media print {
           @page { size: portrait; margin: 1cm; }
           body { font-size: 10pt; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-hidden { display: none !important; }
-          .print-header { display: block !important; }
           main { padding: 0 !important; width: 100% !important; max-width: none !important; }
           .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
-          .finance-table-card { border: none !important; }
           aside, nav { display: none !important; }
-          .rounded-3xl, .rounded-2xl { border-radius: 8px !important; }
-          table { width: 100% !important; border-collapse: collapse !important; table-layout: fixed !important; }
-          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+          table { width: 100% !important; border-collapse: collapse !important; }
+          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; }
         }
       `}</style>
     </div>
