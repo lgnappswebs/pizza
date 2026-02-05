@@ -30,6 +30,12 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Notificações: Criação pública (pelo checkout), leitura e gerenciamento pelo admin
+    match /notificacoes/{doc} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
     // Perfis de Usuário: O próprio usuário pode ler e escrever seus dados
     match /users/{userId} {
       allow read, create, update: if request.auth != null && request.auth.uid == userId;

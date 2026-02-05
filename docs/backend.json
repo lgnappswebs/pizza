@@ -191,6 +191,20 @@
         "facebookUrl": { "type": "string" },
         "tiktokUrl": { "type": "string" }
       }
+    },
+    "Notification": {
+      "title": "Notification",
+      "type": "object",
+      "description": "Represents a notification for the administrator.",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isRead": { "type": "boolean" },
+        "orderId": { "type": "string" }
+      },
+      "required": ["title", "message", "createdAt", "isRead"]
     }
   },
   "auth": {
@@ -226,6 +240,10 @@
     "configuracoes": {
       "schema": "#/backend/entities/Configuration",
       "description": "App settings"
+    },
+    "notificacoes": {
+      "schema": "#/backend/entities/Notification",
+      "description": "Admin notifications"
     }
   }
 }

@@ -74,6 +74,15 @@ export default function CheckoutPage() {
 
       addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
       
+      // Criar Notificação para o Admin
+      addDocumentNonBlocking(collection(firestore, 'notificacoes'), {
+        title: 'Novo Pedido!',
+        message: `Pedido de ${form.name} recebido.`,
+        createdAt: serverTimestamp(),
+        isRead: false,
+        orderId: orderId
+      });
+      
       for (const item of items) {
         addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
           ...item,

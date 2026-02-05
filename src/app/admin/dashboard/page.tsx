@@ -27,9 +27,10 @@ import {
   useCollection, 
   useFirestore, 
   useMemoFirebase,
-  useUser 
+  useUser,
+  updateDocumentNonBlocking
 } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 import { useEffect } from 'react';
@@ -40,6 +41,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default function AdminDashboard() {
   const firestore = useFirestore();
@@ -56,12 +61,17 @@ export default function AdminDashboard() {
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
   const allOrdersQuery = useMemoFirebase(() => collection(firestore, 'pedidos'), [firestore]);
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
+  const notificationsQuery = useMemoFirebase(() => query(collection(firestore, 'notificacoes'), orderBy('createdAt', 'desc'), limit(20)), [firestore]);
 
   const { data: recentOrders, isLoading: loadingOrders } = useCollection(ordersQuery);
   const { data: allProducts } = useCollection(productsQuery);
   const { data: allOrders } = useCollection(allOrdersQuery);
   const { data: configs } = useCollection(configQuery);
+  const { data: notifications } = useCollection(notificationsQuery);
+  
   const config = configs?.[0];
+  const unreadNotifications = notifications?.filter(n => !n.isRead) || [];
+  const unreadCount = unreadNotifications.length;
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -70,6 +80,14 @@ export default function AdminDashboard() {
   const handleLogout = async () => {
     await signOut(getAuth());
     router.push('/admin/login');
+  };
+
+  const markAsRead = (id: string) => {
+    updateDocumentNonBlocking(doc(firestore, 'notificacoes', id), { isRead: true });
+  };
+
+  const markAllAsRead = () => {
+    unreadNotifications.forEach(n => markAsRead(n.id));
   };
 
   const totalRevenue = allOrders?.filter(o => o.status === 'Delivered').reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
@@ -150,16 +168,72 @@ export default function AdminDashboard() {
         <header className="bg-white border-b h-20 flex items-center justify-between px-8 sticky top-0 z-20">
           <h1 className="text-2xl font-bold">Painel de Controle</h1>
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="relative rounded-full">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white"></span>
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="relative rounded-full border-2">
+                  <Bell className="h-5 w-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold animate-in zoom-in duration-300">
+                      {unreadCount}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0 rounded-2xl shadow-2xl overflow-hidden border-2" align="end">
+                <div className="p-4 border-b bg-muted/30 flex justify-between items-center">
+                  <h3 className="font-bold text-lg">Notificações</h3>
+                  {unreadCount > 0 && (
+                    <Button variant="ghost" size="sm" className="text-[10px] h-7 px-2 font-bold" onClick={markAllAsRead}>
+                      Ler todas
+                    </Button>
+                  )}
+                </div>
+                <ScrollArea className="h-80">
+                  {notifications?.length === 0 ? (
+                    <div className="p-12 text-center text-muted-foreground">
+                      <Bell className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                      <p className="italic text-sm">Nenhuma notificação</p>
+                    </div>
+                  ) : (
+                    <div className="divide-y">
+                      {notifications?.map((n) => (
+                        <div 
+                          key={n.id} 
+                          className={cn(
+                            "p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative",
+                            !n.isRead && "bg-primary/5 border-l-4 border-primary"
+                          )}
+                          onClick={() => markAsRead(n.id)}
+                        >
+                          <div className="flex justify-between items-start gap-2">
+                            <p className="font-bold text-sm leading-tight">{n.title}</p>
+                            {!n.isRead && <span className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />}
+                          </div>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{n.message}</p>
+                          <div className="flex justify-between items-center mt-2">
+                            <p className="text-[10px] text-muted-foreground font-medium">
+                              {n.createdAt?.seconds ? format(new Date(n.createdAt.seconds * 1000), "HH:mm 'de' d/MM") : 'Agora'}
+                            </p>
+                            {n.orderId && (
+                              <Link href="/admin/orders" className="text-[10px] font-bold text-primary hover:underline">
+                                Ver Pedido
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
+              </PopoverContent>
+            </Popover>
+
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
                 <p className="font-bold">{user.email?.split('@')[0] || 'Admin'}</p>
                 <p className="text-xs text-muted-foreground">Administrador</p>
               </div>
-              <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
+              <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold border-2 border-primary/20">
                 {user.email?.charAt(0).toUpperCase()}
               </div>
             </div>
