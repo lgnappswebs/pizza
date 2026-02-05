@@ -136,10 +136,10 @@ export default function AdminFinancePage() {
   };
 
   const handlePrintPDF = () => {
-    // Pequeno delay para garantir que o menu dropdown feche antes de abrir a janela de impressão
+    // Aumentamos ligeiramente o delay para garantir que o menu feche 100%
     setTimeout(() => {
       window.print();
-    }, 350);
+    }, 500);
   };
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
