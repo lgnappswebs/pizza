@@ -136,7 +136,10 @@ export default function AdminFinancePage() {
   };
 
   const handlePrintPDF = () => {
-    window.print();
+    // Pequeno delay para garantir que o menu dropdown feche antes de abrir a janela de impressão
+    setTimeout(() => {
+      window.print();
+    }, 250);
   };
 
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
@@ -153,7 +156,7 @@ export default function AdminFinancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white print:block">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 print:hidden">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary truncate">
@@ -211,7 +214,7 @@ export default function AdminFinancePage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
@@ -219,7 +222,11 @@ export default function AdminFinancePage() {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
-            <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
+            <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
+            <div className="hidden print:block mt-2">
+              <p className="font-bold text-lg">{config?.restaurantName || 'PizzApp'}</p>
+              <p className="text-sm">Relatório: {selectedDay}/{selectedMonth}/{selectedYear}</p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
@@ -274,26 +281,23 @@ export default function AdminFinancePage() {
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Gerar PDF (Impressão)</DropdownMenuLabel>
                 <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Dia Atual
+                  <Printer className="mr-2 h-4 w-4" /> PDF do Período Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Mês Atual
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Ano Atual
+                  <Printer className="mr-2 h-4 w-4" /> PDF Geral Completo
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 p-3 opacity-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:grid-cols-2 print:gap-2">
+          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative print:bg-emerald-600 print:text-white">
+            <div className="absolute top-0 right-0 p-3 opacity-20 print:hidden">
               <DollarSign className="h-12 w-12" />
             </div>
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px] print:text-white/90">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
               <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
@@ -301,7 +305,7 @@ export default function AdminFinancePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white print:border-emerald-600/30">
             <CardHeader className="pb-2 p-4">
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
@@ -333,8 +337,8 @@ export default function AdminFinancePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8">
-          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm">
-            <CardHeader className="border-b bg-muted/10 p-4">
+          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm print:border-none print:shadow-none">
+            <CardHeader className="border-b bg-muted/10 p-4 print:bg-transparent">
               <div className="flex justify-between items-center">
                 <div>
                   <CardTitle className="text-lg font-bold">Detalhamento</CardTitle>
@@ -346,7 +350,7 @@ export default function AdminFinancePage() {
             <CardContent className="p-0">
               <div className="w-full overflow-hidden">
                 <table className="w-full text-left table-fixed">
-                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b">
+                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b print:bg-muted/10">
                     <tr>
                       <th className="px-1 py-3 w-[45px] md:w-[80px]">Hora</th>
                       <th className="px-1 py-3">Cliente</th>
@@ -460,10 +464,15 @@ export default function AdminFinancePage() {
 
       <style jsx global>{`
         @media print {
-          body { font-size: 10pt; }
+          @page { size: portrait; margin: 1cm; }
+          body { font-size: 10pt; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-hidden { display: none !important; }
-          main { padding: 0 !important; }
-          .card { border: 1px solid #eee !important; box-shadow: none !important; }
+          main { padding: 0 !important; width: 100% !important; max-width: none !important; }
+          .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
+          aside, nav { display: none !important; }
+          .rounded-3xl, .rounded-2xl { border-radius: 8px !important; }
+          table { width: 100% !important; border-collapse: collapse !important; }
+          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; }
         }
       `}</style>
     </div>
