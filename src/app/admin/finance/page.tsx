@@ -53,6 +53,7 @@ export default function AdminFinancePage() {
   const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
   const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
@@ -67,7 +68,7 @@ export default function AdminFinancePage() {
       if (!order.createdAt?.seconds) return false;
       const orderDate = new Date(order.createdAt.seconds * 1000);
       
-      const matchDay = orderDate.getDate().toString() === selectedDay;
+      const matchDay = selectedDay === "Todos" || orderDate.getDate().toString() === selectedDay;
       const matchMonth = (orderDate.getMonth() + 1).toString() === selectedMonth;
       const matchYear = orderDate.getFullYear().toString() === selectedYear;
 
@@ -98,6 +99,17 @@ export default function AdminFinancePage() {
     }
   }, [user, isUserLoading, router]);
 
+  // Efeito para disparar a impressão de forma segura após o menu fechar
+  useEffect(() => {
+    if (isPrinting) {
+      const timer = setTimeout(() => {
+        window.print();
+        setIsPrinting(false);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isPrinting]);
+
   const handleLogout = async () => {
     await signOut(getAuth());
     router.push('/admin/login');
@@ -108,7 +120,7 @@ export default function AdminFinancePage() {
     
     let reportOrders = [];
     let periodLabel = "";
-    const targetDate = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1, parseInt(selectedDay));
+    const targetDate = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1, selectedDay === "Todos" ? 1 : parseInt(selectedDay));
 
     if (period === 'day') {
       reportOrders = allOrders.filter(o => o.createdAt?.seconds && isSameDay(new Date(o.createdAt.seconds * 1000), targetDate));
@@ -135,14 +147,11 @@ export default function AdminFinancePage() {
     window.open(`https://wa.me/?text=${encodedText}`, '_blank');
   };
 
-  const handlePrintPDF = () => {
-    // Pequeno delay para garantir que o menu do Radix feche completamente antes do print
-    setTimeout(() => {
-      window.print();
-    }, 500);
+  const handlePrintRequest = () => {
+    setIsPrinting(true);
   };
 
-  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const days = ["Todos", ...Array.from({ length: 31 }, (_, i) => (i + 1).toString())];
   const months = [
     { v: "1", l: "Janeiro" }, { v: "2", l: "Fevereiro" }, { v: "3", l: "Março" },
     { v: "4", l: "Abril" }, { v: "5", l: "Maio" }, { v: "6", l: "Junho" },
@@ -220,18 +229,30 @@ export default function AdminFinancePage() {
         </Link>
 
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Gestão Financeira</h1>
+          <div className="w-full lg:w-auto">
+            <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
-            <div className="hidden print:block mt-2 border-b-2 pb-4 w-full">
-              <p className="font-black text-2xl uppercase text-primary">{config?.restaurantName || 'PizzApp'}</p>
-              <p className="text-lg font-bold">Relatório Financeiro: {selectedDay}/{selectedMonth}/{selectedYear}</p>
-              <p className="text-xs text-muted-foreground mt-1">Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
+            
+            {/* Cabeçalho exclusivo para o PDF */}
+            <div className="hidden print:block mt-2 border-b-4 border-primary pb-6 w-full">
+              <div className="flex justify-between items-end">
+                <div>
+                  <p className="font-black text-4xl uppercase text-primary tracking-tighter">{config?.restaurantName || 'PizzApp'}</p>
+                  <p className="text-xl font-bold mt-1">RELATÓRIO DE VENDAS</p>
+                  <p className="text-lg bg-muted px-3 py-1 rounded-lg mt-2 inline-block">
+                    Período: {selectedDay}/{selectedMonth}/{selectedYear}
+                  </p>
+                </div>
+                <div className="text-right text-xs text-muted-foreground">
+                  <p>Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
+                  <p>Sistema Administrativo PizzApp</p>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
-            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto">
+            <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto overflow-hidden">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
                 <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
                   <SelectValue />
@@ -280,28 +301,28 @@ export default function AdminFinancePage() {
                 
                 <DropdownMenuSeparator />
                 
-                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Gerar PDF (Impressão)</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF do Período Selecionado
+                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
+                <DropdownMenuItem onSelect={handlePrintRequest} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF do Período
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePrintPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> PDF Geral Completo
+                <DropdownMenuItem onSelect={handlePrintRequest} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF Completo
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:grid-cols-2 print:gap-2">
-          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative print:bg-emerald-600 print:text-white">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:grid-cols-2 print:gap-4 print:mb-12">
+          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative print:bg-white print:text-emerald-600 print:border-emerald-600">
             <div className="absolute top-0 right-0 p-3 opacity-20 print:hidden">
               <DollarSign className="h-12 w-12" />
             </div>
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px] print:text-white/90">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px] print:text-emerald-600/70">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
               <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
+            <CardContent className="p-4 pt-0 print:hidden">
               <p className="text-[9px] font-medium opacity-80">Atualizado em tempo real</p>
             </CardContent>
           </Card>
@@ -311,7 +332,7 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
+            <CardContent className="p-4 pt-0 print:hidden">
               <p className="text-[9px] text-muted-foreground font-medium">{selectedDay}/{selectedMonth}/{selectedYear}</p>
             </CardContent>
           </Card>
@@ -321,7 +342,7 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Pedidos Período</CardDescription>
               <CardTitle className="text-2xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
+            <CardContent className="p-4 pt-0 print:hidden">
               <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
           </Card>
@@ -331,7 +352,7 @@ export default function AdminFinancePage() {
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Ticket Médio</CardDescription>
               <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
-            <CardContent className="p-4 pt-0">
+            <CardContent className="p-4 pt-0 print:hidden">
               <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
             </CardContent>
           </Card>
@@ -353,10 +374,10 @@ export default function AdminFinancePage() {
                 <table className="w-full text-left table-fixed">
                   <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b print:bg-muted/10">
                     <tr>
-                      <th className="px-1 py-3 w-[45px] md:w-[80px]">Hora</th>
+                      <th className="px-1 py-3 w-[50px] md:w-[80px]">Hora</th>
                       <th className="px-1 py-3">Cliente</th>
-                      <th className="px-1 py-3 w-[45px] md:w-[70px] text-center">Status</th>
-                      <th className="px-1 py-3 text-right w-[65px] md:w-[100px]">Valor</th>
+                      <th className="px-1 py-3 w-[50px] md:w-[70px] text-center">Status</th>
+                      <th className="px-1 py-3 text-right w-[75px] md:w-[100px]">Valor</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -472,8 +493,8 @@ export default function AdminFinancePage() {
           .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
           aside, nav { display: none !important; }
           .rounded-3xl, .rounded-2xl { border-radius: 8px !important; }
-          table { width: 100% !important; border-collapse: collapse !important; }
-          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; }
+          table { width: 100% !important; border-collapse: collapse !important; table-layout: fixed !important; }
+          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; overflow: hidden !important; text-overflow: ellipsis !important; }
         }
       `}</style>
     </div>
