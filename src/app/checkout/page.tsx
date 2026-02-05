@@ -72,17 +72,19 @@ export default function CheckoutPage() {
         userId: user?.uid || null
       };
 
+      // 1. Criar o pedido
       addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
       
-      // Criar Notificação para o Admin
+      // 2. Criar Notificação para o Admin (Garante que apareça no sino do Dashboard)
       addDocumentNonBlocking(collection(firestore, 'notificacoes'), {
-        title: 'Novo Pedido!',
-        message: `Pedido de ${form.name} recebido.`,
+        title: `Novo Pedido #${orderId.slice(-4).toUpperCase()}`,
+        message: `Cliente ${form.name} acabou de pedir R$ ${(total + deliveryFee).toFixed(2)}.`,
         createdAt: serverTimestamp(),
         isRead: false,
         orderId: orderId
       });
       
+      // 3. Criar itens do pedido
       for (const item of items) {
         addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
           ...item,
@@ -90,6 +92,7 @@ export default function CheckoutPage() {
         });
       }
 
+      // 4. Formatar mensagem WhatsApp
       const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
       let message = `*NOVO PEDIDO - ${config?.restaurantName || 'Pizzaria'}*%0A%0A`;
       message += `*CLIENTE:* ${form.name}%0A`;

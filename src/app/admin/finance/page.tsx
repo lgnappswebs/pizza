@@ -333,13 +333,13 @@ export default function AdminFinancePage() {
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
                 <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
-                  Gerar PDF do Dia
+                  PDF do Dia Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
-                  Gerar PDF do Mês
+                  PDF do Mês Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => generatePDF('year')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  Gerar PDF do Ano
+                  PDF do Ano Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer">
                   <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
