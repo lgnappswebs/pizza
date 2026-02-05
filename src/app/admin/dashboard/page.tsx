@@ -81,14 +81,18 @@ export default function AdminDashboard() {
     router.push('/admin/login');
   };
 
-  const markAsRead = (id: string) => {
-    // Conforme solicitado: ao ler uma notificação ela deve sumir sozinha (excluir do banco)
-    deleteDocumentNonBlocking(doc(firestore, 'notificacoes', id));
+  const handleNotificationClick = (notification: any) => {
+    // Primeiro abre a página redirecionada (Pedidos)
+    if (notification.orderId) {
+      router.push('/admin/orders');
+    }
+    
+    // Depois deleta a notificação do banco (ela sumirá automaticamente da lista)
+    deleteDocumentNonBlocking(doc(firestore, 'notificacoes', notification.id));
   };
 
   const markAllAsRead = () => {
-    // Limpa todas as notificações de uma vez
-    notifications?.forEach(n => markAsRead(n.id));
+    notifications?.forEach(n => deleteDocumentNonBlocking(doc(firestore, 'notificacoes', n.id)));
   };
 
   const totalRevenue = allOrders?.filter(o => o.status === 'Delivered').reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
@@ -201,7 +205,7 @@ export default function AdminDashboard() {
                         <div 
                           key={n.id} 
                           className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative bg-primary/5 border-l-4 border-primary"
-                          onClick={() => markAsRead(n.id)}
+                          onClick={() => handleNotificationClick(n)}
                         >
                           <div className="flex justify-between items-start gap-2">
                             <p className="font-bold text-sm leading-tight">{n.title}</p>
@@ -212,7 +216,7 @@ export default function AdminDashboard() {
                             <p className="text-[10px] text-muted-foreground font-medium">
                               {n.createdAt?.seconds ? format(new Date(n.createdAt.seconds * 1000), "HH:mm 'de' d/MM") : 'Agora'}
                             </p>
-                            <span className="text-[10px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">Clique para fechar</span>
+                            <span className="text-[10px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">Abrir Pedido</span>
                           </div>
                         </div>
                       ))}

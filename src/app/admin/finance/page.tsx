@@ -628,7 +628,7 @@ export default function AdminFinancePage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>
