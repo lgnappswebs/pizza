@@ -17,6 +17,7 @@ export function ThemeInjected() {
 
   // Função para converter Hex para HSL (Tailwind usa HSL)
   const hexToHsl = (hex: string) => {
+    if (!hex) return "0 0% 100%";
     let r = 0, g = 0, b = 0;
     if (hex.length === 4) {
       r = parseInt(hex[1] + hex[1], 16);
@@ -81,20 +82,22 @@ export function ThemeInjected() {
     if (config.appBackgroundType === 'color' && config.backgroundColor) {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
+    } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
+      // Torna o fundo transparente para que a imagem apareça no div abaixo
+      root.style.setProperty('--background', '0 0% 100% / 0');
+      isDark = false; // Por padrão imagens mantêm contraste claro, a menos que especificado
     } else {
       root.style.setProperty('--background', '0 0% 100%');
       isDark = false;
     }
 
-    // Ajustes para modo escuro ou claro
+    // Ajustes para modo escuro ou claro (Destaque para Cards e Inputs)
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 100%');
-      // Cards brancos sólidos para destaque contra o fundo escuro
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
       root.style.setProperty('--popover-foreground', '0 0% 3.9%');
-      // Inputs brancos para máximo destaque
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
       root.style.setProperty('--input', '0 0% 80%');
@@ -124,7 +127,7 @@ export function ThemeInjected() {
       )}
       {config?.appBackgroundType === 'image' && config.appBackgroundImageUrl && (
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.15]" 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100" 
           style={{ backgroundImage: `url(${config.appBackgroundImageUrl})` }}
         ></div>
       )}
