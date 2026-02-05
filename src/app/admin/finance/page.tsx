@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { 
   DollarSign, 
   Loader2,
@@ -15,8 +15,8 @@ import {
   ExternalLink,
   Wallet,
   ChevronLeft,
-  Plus,
   Share2,
+  FileText,
   Printer
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -48,12 +48,13 @@ export default function AdminFinancePage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
+  const reportRef = useRef<HTMLDivElement>(null);
 
   const today = useMemo(() => new Date(), []);
   const [selectedDay, setSelectedDay] = useState(today.getDate().toString());
   const [selectedMonth, setSelectedMonth] = useState((today.getMonth() + 1).toString());
   const [selectedYear, setSelectedYear] = useState(today.getFullYear().toString());
-  const [isPrinting, setIsPrinting] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const allOrdersQuery = useMemoFirebase(() => query(collection(firestore, 'pedidos'), orderBy('createdAt', 'desc')), [firestore]);
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
@@ -99,17 +100,6 @@ export default function AdminFinancePage() {
     }
   }, [user, isUserLoading, router]);
 
-  // Efeito para disparar a impressão de forma segura após o menu fechar
-  useEffect(() => {
-    if (isPrinting) {
-      const timer = setTimeout(() => {
-        window.print();
-        setIsPrinting(false);
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [isPrinting]);
-
   const handleLogout = async () => {
     await signOut(getAuth());
     router.push('/admin/login');
@@ -147,8 +137,49 @@ export default function AdminFinancePage() {
     window.open(`https://wa.me/?text=${encodedText}`, '_blank');
   };
 
-  const handlePrintRequest = () => {
-    setIsPrinting(true);
+  const generatePDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      const { jsPDF } = await import('jspdf');
+      const html2canvas = (await import('html2canvas')).default;
+
+      // Pegar o elemento do relatório
+      const element = reportRef.current;
+      if (!element) return;
+
+      // Temporariamente mostrar o cabeçalho de impressão e remover sombras para o canvas
+      element.classList.add('is-printing-canvas');
+
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      element.classList.remove('is-printing-canvas');
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      
+      const fileName = `relatorio-${selectedDay}-${selectedMonth}-${selectedYear}.pdf`;
+      pdf.save(fileName);
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const days = ["Todos", ...Array.from({ length: 31 }, (_, i) => (i + 1).toString())];
@@ -165,7 +196,7 @@ export default function AdminFinancePage() {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row print:bg-white print:block">
+    <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 print:hidden">
         <div className="p-6 border-b">
           <h2 className="text-2xl font-black text-primary truncate">
@@ -223,7 +254,7 @@ export default function AdminFinancePage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8" ref={reportRef}>
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
@@ -233,12 +264,12 @@ export default function AdminFinancePage() {
             <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
             
-            {/* Cabeçalho exclusivo para o PDF */}
-            <div className="hidden print:block mt-2 border-b-4 border-primary pb-6 w-full">
+            {/* Cabeçalho exclusivo para o PDF/Impressão */}
+            <div className="hidden print-header mt-2 border-b-4 border-primary pb-6 w-full">
               <div className="flex justify-between items-end">
                 <div>
                   <p className="font-black text-4xl uppercase text-primary tracking-tighter">{config?.restaurantName || 'PizzApp'}</p>
-                  <p className="text-xl font-bold mt-1">RELATÓRIO DE VENDAS</p>
+                  <p className="text-xl font-bold mt-1">RELATÓRIO FINANCEIRO DE VENDAS</p>
                   <p className="text-lg bg-muted px-3 py-1 rounded-lg mt-2 inline-block">
                     Período: {selectedDay}/{selectedMonth}/{selectedYear}
                   </p>
@@ -302,24 +333,25 @@ export default function AdminFinancePage() {
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={handlePrintRequest} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF do Período
+                <DropdownMenuItem onSelect={generatePDF} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <FileText className="mr-2 h-4 w-4" />}
+                  Gerar PDF do Período
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={handlePrintRequest} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  <Printer className="mr-2 h-4 w-4" /> Gerar PDF Completo
+                <DropdownMenuItem onSelect={() => window.print()} className="h-10 rounded-xl cursor-pointer">
+                  <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:grid-cols-2 print:gap-4 print:mb-12">
-          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative print:bg-white print:text-emerald-600 print:border-emerald-600">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 p-3 opacity-20 print:hidden">
               <DollarSign className="h-12 w-12" />
             </div>
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px] print:text-emerald-600/70">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
               <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 print:hidden">
@@ -327,7 +359,7 @@ export default function AdminFinancePage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white print:border-emerald-600/30">
+          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
               <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
@@ -359,8 +391,8 @@ export default function AdminFinancePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8">
-          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm print:border-none print:shadow-none">
-            <CardHeader className="border-b bg-muted/10 p-4 print:bg-transparent">
+          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm finance-table-card">
+            <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
                 <div>
                   <CardTitle className="text-lg font-bold">Detalhamento</CardTitle>
@@ -372,7 +404,7 @@ export default function AdminFinancePage() {
             <CardContent className="p-0">
               <div className="w-full overflow-hidden">
                 <table className="w-full text-left table-fixed">
-                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b print:bg-muted/10">
+                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b">
                     <tr>
                       <th className="px-1 py-3 w-[50px] md:w-[80px]">Hora</th>
                       <th className="px-1 py-3">Cliente</th>
@@ -485,12 +517,24 @@ export default function AdminFinancePage() {
       </nav>
 
       <style jsx global>{`
+        .print-header { display: none; }
+        
+        .is-printing-canvas {
+          padding: 20px !important;
+          background: white !important;
+        }
+        .is-printing-canvas .print-header { display: block !important; }
+        .is-printing-canvas .print-hidden { display: none !important; }
+        .is-printing-canvas .card { border: none !important; box-shadow: none !important; }
+
         @media print {
           @page { size: portrait; margin: 1cm; }
           body { font-size: 10pt; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-hidden { display: none !important; }
+          .print-header { display: block !important; }
           main { padding: 0 !important; width: 100% !important; max-width: none !important; }
           .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
+          .finance-table-card { border: none !important; }
           aside, nav { display: none !important; }
           .rounded-3xl, .rounded-2xl { border-radius: 8px !important; }
           table { width: 100% !important; border-collapse: collapse !important; table-layout: fixed !important; }
