@@ -452,85 +452,128 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA PARA O PDF) */}
+        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA E PROFISSIONAL PARA O PDF) */}
         <div 
           ref={exportRef} 
-          className="bg-white p-10 hidden" 
-          style={{ width: '800px', display: 'none' }}
+          className="bg-white p-12 hidden" 
+          style={{ width: '850px', display: 'none', fontFamily: 'sans-serif' }}
         >
+          {/* Top Bar Branding */}
+          <div className="h-3 w-full bg-primary mb-10"></div>
+
           {/* Cabeçalho do Relatório */}
-          <div className="border-b-4 border-primary pb-6 mb-8 flex justify-between items-end">
+          <div className="flex justify-between items-start border-b-2 border-gray-100 pb-10 mb-10">
             <div>
-              <h1 className="text-4xl font-black text-primary uppercase tracking-tighter mb-1">
+              <h1 className="text-5xl font-black text-primary uppercase tracking-tighter mb-2">
                 {config?.restaurantName || 'PIZZAPP'}
               </h1>
-              <h2 className="text-xl font-bold text-gray-800">RELATÓRIO FINANCEIRO DE VENDAS</h2>
-              <div className="mt-4 inline-block bg-gray-100 px-4 py-2 rounded-lg">
-                <p className="text-sm font-bold text-gray-600 uppercase tracking-widest">Período de Referência</p>
-                <p className="text-xl font-black text-primary">
-                  {selectedDay === "Todos" ? 'Mês Inteiro' : `${selectedDay}`}/{selectedMonth}/{selectedYear}
-                </p>
+              <p className="text-sm font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Business Intelligence Report</p>
+              
+              <div className="space-y-1">
+                <h2 className="text-2xl font-bold text-gray-800">Relatório Consolidado de Vendas</h2>
+                <div className="flex items-center gap-3">
+                  <span className="px-3 py-1 bg-gray-100 rounded text-xs font-black text-gray-600 uppercase">Período</span>
+                  <span className="text-lg font-black text-primary">
+                    {selectedDay === "Todos" ? 'Ciclo Mensal Completo' : `${selectedDay} de ${months.find(m => m.v === selectedMonth)?.l}`} / {selectedYear}
+                  </span>
+                </div>
               </div>
             </div>
-            <div className="text-right text-xs text-gray-400">
-              <p>Gerado em: {format(new Date(), "dd/MM/yyyy HH:mm")}</p>
-              <p>PizzApp Business Intelligence</p>
+            
+            <div className="text-right flex flex-col items-end">
+              <div className="bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl mb-4">
+                <p className="text-[10px] font-black text-gray-400 uppercase mb-1">Data de Emissão</p>
+                <p className="text-sm font-bold text-gray-700">{format(new Date(), "dd/MM/yyyy HH:mm")}</p>
+              </div>
+              <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest">Documento ID: #FIN-{Date.now().toString().slice(-6)}</p>
             </div>
           </div>
 
-          {/* Resumo Financeiro */}
-          <div className="grid grid-cols-3 gap-4 mb-10">
-            <div className="bg-gray-50 p-4 rounded-xl border-2">
-              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Faturamento Total</p>
-              <p className="text-2xl font-black text-emerald-600">R$ {revenueInPeriod.toFixed(2)}</p>
+          {/* Dash Cards de Resumo */}
+          <div className="grid grid-cols-3 gap-6 mb-12">
+            <div className="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-emerald-500 h-1 w-full"></div>
+              <p className="text-[10px] font-black uppercase text-emerald-600 mb-2 tracking-widest">Receita Líquida</p>
+              <p className="text-3xl font-black text-gray-800">R$ {revenueInPeriod.toFixed(2)}</p>
+              <p className="text-[9px] text-emerald-500 font-bold mt-1">Pedidos Finalizados</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-xl border-2">
-              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Total de Pedidos</p>
-              <p className="text-2xl font-black text-blue-600">{filteredOrders.length}</p>
+            <div className="bg-white p-6 rounded-3xl border-2 border-blue-100 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-blue-500 h-1 w-full"></div>
+              <p className="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">Volume de Transações</p>
+              <p className="text-3xl font-black text-gray-800">{filteredOrders.length}</p>
+              <p className="text-[9px] text-blue-500 font-bold mt-1">Total de Atendimentos</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-xl border-2">
-              <p className="text-[10px] font-black uppercase text-gray-400 mb-1">Ticket Médio</p>
-              <p className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</p>
+            <div className="bg-white p-6 rounded-3xl border-2 border-amber-100 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-amber-500 h-1 w-full"></div>
+              <p className="text-[10px] font-black uppercase text-amber-600 mb-2 tracking-widest">Ticket Médio</p>
+              <p className="text-3xl font-black text-gray-800">R$ {averageTicket.toFixed(2)}</p>
+              <p className="text-[9px] text-amber-500 font-bold mt-1">Média por Operação</p>
             </div>
           </div>
 
           {/* Tabela de Dados (Exportação) */}
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-primary text-white">
-              <tr>
-                <th className="p-3 text-[10px] font-black uppercase w-[80px]">Hora</th>
-                <th className="p-3 text-[10px] font-black uppercase">Cliente / Endereço</th>
-                <th className="p-3 text-[10px] font-black uppercase w-[100px] text-center">Status</th>
-                <th className="p-3 text-[10px] font-black uppercase w-[120px] text-right">Valor</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredOrders.map((order, idx) => (
-                <tr key={order.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                  <td className="p-3 border-b align-top font-bold text-gray-700">
-                    {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
-                  </td>
-                  <td className="p-3 border-b align-top">
-                    <p className="font-black text-gray-800 text-sm">{order.customerName}</p>
-                    <p className="text-[10px] text-gray-500 leading-tight mt-1">{order.customerAddress}</p>
-                  </td>
-                  <td className="p-3 border-b align-top text-center">
-                    <span className="inline-block px-2 py-1 rounded text-[9px] font-black uppercase bg-gray-200 text-gray-600">
-                      {order.status}
-                    </span>
-                  </td>
-                  <td className="p-3 border-b align-top text-right font-black text-gray-800">
-                    R$ {order.totalAmount?.toFixed(2)}
-                  </td>
+          <div className="rounded-3xl border-2 border-gray-100 overflow-hidden mb-12 shadow-sm">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-800 text-white">
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[100px]">Hora</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest">Detalhamento do Cliente</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status Operacional</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Final</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredOrders.map((order, idx) => (
+                  <tr key={order.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
+                    <td className="p-4 border-b border-gray-100 align-middle">
+                      <p className="text-sm font-black text-gray-700">
+                        {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
+                      </p>
+                      <p className="text-[9px] font-bold text-primary">ID: {order.id.slice(-6).toUpperCase()}</p>
+                    </td>
+                    <td className="p-4 border-b border-gray-100 align-middle">
+                      <p className="font-black text-gray-800 text-base mb-0.5">{order.customerName}</p>
+                      <p className="text-[10px] text-gray-400 font-medium italic">{order.customerAddress}</p>
+                    </td>
+                    <td className="p-4 border-b border-gray-100 align-middle text-center">
+                      <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter border-2 ${
+                        order.status === 'Delivered' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
+                        order.status === 'Cancelled' ? 'bg-red-50 border-red-200 text-red-700' : 
+                        'bg-amber-50 border-amber-200 text-amber-700'
+                      }`}>
+                        {order.status === 'Delivered' ? 'Entregue' : 
+                         order.status === 'Cancelled' ? 'Cancelado' : 
+                         order.status === 'New' ? 'Novo Pedido' : 'Em Trânsito'}
+                      </span>
+                    </td>
+                    <td className="p-4 border-b border-gray-100 align-middle text-right">
+                      <p className="text-lg font-black text-gray-800">
+                        R$ {order.totalAmount?.toFixed(2)}
+                      </p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-          {/* Rodapé do PDF */}
-          <div className="mt-12 pt-6 border-t-2 border-dashed text-center text-[10px] text-gray-400">
-            <p>Este documento é um registro oficial de vendas da pizzaria {config?.restaurantName || 'PizzApp'}.</p>
-            <p>© {new Date().getFullYear()} - Sistema de Gestão Rápida</p>
+          {/* Rodapé do PDF Corporativo */}
+          <div className="flex justify-between items-center mt-12 pt-8 border-t-4 border-gray-50">
+            <div className="text-left text-[10px] text-gray-400 font-bold space-y-1">
+              <p>Relatório Financeiro Confidencial</p>
+              <p>© {new Date().getFullYear()} {config?.restaurantName || 'PizzApp'} Operations</p>
+            </div>
+            <div className="flex gap-4">
+               <div className="text-right">
+                  <p className="text-[10px] font-black text-gray-300 uppercase">Página</p>
+                  <p className="text-lg font-black text-gray-200">01/01</p>
+               </div>
+               <div className="h-10 w-1 bg-gray-100"></div>
+               <div className="text-right">
+                  <p className="text-[10px] font-black text-gray-300 uppercase">Validação</p>
+                  <p className="text-lg font-black text-gray-200">OK</p>
+               </div>
+            </div>
           </div>
         </div>
       </main>
