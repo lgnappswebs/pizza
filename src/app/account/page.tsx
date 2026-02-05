@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -6,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, MapPin, Phone, Save, Loader2, Save as SaveIcon } from 'lucide-react';
+import { User, MapPin, Phone, Save, Loader2, Save as SaveIcon, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 export default function AccountPage() {
   const { user, isUserLoading } = useUser();
@@ -89,8 +91,11 @@ export default function AccountPage() {
   return (
     <>
       <Header />
+      <Link href="/menu" className="fixed top-24 left-4 md:top-28 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
+      </Link>
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto space-y-8 mt-10">
+        <div className="max-w-3xl mx-auto space-y-8 mt-28 md:mt-32">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
