@@ -383,6 +383,7 @@ export default function AdminFinancePage() {
             <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
             </CardContent>
+          </Card>
 
           <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">

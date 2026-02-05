@@ -7,12 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, MapPin, Phone, Save, Loader2, Save as SaveIcon } from 'lucide-react';
+import { User, MapPin, Loader2, Save as SaveIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
 
 export default function AccountPage() {
   const { user, isUserLoading } = useUser();
