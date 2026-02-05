@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
+import { cn } from '@/lib/utils';
 
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
@@ -81,7 +82,7 @@ export default function CheckoutPage() {
       }
 
       const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
-      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'PizzApp Rápido'}*%0A%0A`;
+      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'PizzApp'}*%0A%0A`;
       message += `*CLIENTE:* ${form.name}%0A`;
       message += `*TELEFONE:* ${form.phone}%0A`;
       message += `*ENDEREÇO:* ${form.address}%0A`;
@@ -143,75 +144,84 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <Card className="rounded-3xl border-2">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold flex items-center gap-2">
+            <Card className="rounded-3xl border-2 shadow-sm overflow-hidden">
+              <CardHeader className="bg-primary/5 border-b py-4">
+                <CardTitle className="text-xl md:text-2xl font-black flex items-center gap-2">
                   Meu Pedido
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 rounded-2xl bg-muted/30">
-                    <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0">
-                      <Image 
-                        src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
-                        alt={item.name} 
-                        fill 
-                        className="object-cover" 
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex justify-between items-start">
-                        <h4 className="font-bold text-lg truncate">{item.name}</h4>
-                        <span className="font-bold text-primary">R$ {(item.price * item.quantity).toFixed(2)}</span>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex gap-3 md:gap-4 p-4 hover:bg-muted/20 transition-colors">
+                      <div className="relative h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden shrink-0 shadow-sm border">
+                        <Image 
+                          src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
+                          alt={item.name} 
+                          fill 
+                          className="object-cover" 
+                        />
                       </div>
-                      <p className="text-sm text-muted-foreground">{item.size} • {item.crust !== 'Tradicional' ? `Borda ${item.crust}` : 'S/ Borda'}</p>
-                      
-                      <div className="flex items-center justify-between mt-2">
-                        <div className="flex items-center gap-2">
+                      <div className="flex-1 min-w-0 flex flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start gap-2">
+                            <h4 className="font-bold text-sm md:text-lg truncate leading-tight">{item.name}</h4>
+                            <span className="font-bold text-primary text-sm md:text-lg shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                          </div>
+                          <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5">
+                            {item.size} {item.crust && item.crust !== 'Tradicional' ? `• Borda ${item.crust}` : '• S/ Borda'}
+                          </p>
+                          {item.notes && <p className="text-[9px] md:text-xs text-primary/70 italic mt-1 line-clamp-1">Obs: {item.notes}</p>}
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="flex items-center gap-1 md:gap-2 bg-muted p-1 rounded-full border border-muted-foreground/10">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6 md:h-8 md:w-8 rounded-full hover:bg-white transition-colors"
+                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            >
+                              <span className="text-lg">-</span>
+                            </Button>
+                            <span className="font-black text-xs md:text-base w-5 md:w-8 text-center">{item.quantity}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6 md:h-8 md:w-8 rounded-full hover:bg-white transition-colors"
+                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            >
+                              <span className="text-lg">+</span>
+                            </Button>
+                          </div>
                           <Button 
-                            variant="outline" 
+                            variant="ghost" 
                             size="icon" 
-                            className="h-8 w-8 rounded-full"
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full"
+                            onClick={() => removeItem(item.id)}
                           >
-                            -
-                          </Button>
-                          <span className="font-bold w-6 text-center">{item.quantity}</span>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-8 w-8 rounded-full"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          >
-                            +
+                            <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
                           </Button>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-8 w-8 text-destructive"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
 
-                <div className="pt-4 border-t-2 border-dashed space-y-2">
-                  <div className="flex justify-between text-lg">
-                    <span>Subtotal</span>
-                    <span>R$ {total.toFixed(2)}</span>
+                <div className="p-6 bg-primary/5 border-t-2 border-dashed space-y-3">
+                  <div className="flex justify-between items-center text-sm md:text-lg">
+                    <span className="text-muted-foreground font-medium">Subtotal</span>
+                    <span className="font-bold">R$ {total.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-lg">
-                    <span>Taxa de Entrega</span>
-                    <span className="text-green-600 font-bold">{deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}</span>
+                  <div className="flex justify-between items-center text-sm md:text-lg">
+                    <span className="text-muted-foreground font-medium">Taxa de Entrega</span>
+                    <span className={cn("font-bold", deliveryFee > 0 ? "text-primary" : "text-green-600")}>
+                      {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
+                    </span>
                   </div>
-                  <div className="flex justify-between text-3xl font-black text-primary pt-2">
+                  <div className="flex justify-between items-center text-2xl md:text-4xl font-black text-primary pt-4">
                     <span>Total</span>
-                    <span>R$ {(total + deliveryFee).toFixed(2)}</span>
+                    <span className="drop-shadow-sm">R$ {(total + deliveryFee).toFixed(2)}</span>
                   </div>
                 </div>
               </CardContent>
@@ -219,74 +229,77 @@ export default function CheckoutPage() {
           </div>
 
           <div className="space-y-6">
-            <Card className="rounded-3xl border-2">
-              <CardHeader>
-                <CardTitle className="text-2xl font-bold">Dados de Entrega</CardTitle>
+            <Card className="rounded-3xl border-2 shadow-sm">
+              <CardHeader className="py-4 border-b">
+                <CardTitle className="text-xl md:text-2xl font-black">Dados de Entrega</CardTitle>
                 {user && !loadingProfile && (
-                  <p className="text-xs text-green-600 font-bold">Endereço carregado da sua conta!</p>
+                  <p className="text-xs text-green-600 font-bold flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse" />
+                    Endereço carregado da sua conta!
+                  </p>
                 )}
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 pt-6">
                 {loadingProfile ? (
                   <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
                 ) : (
                   <>
                     <div className="space-y-2">
-                      <Label htmlFor="name" className="text-lg font-semibold flex items-center gap-2">
+                      <Label htmlFor="name" className="text-base md:text-lg font-bold flex items-center gap-2">
                         <User className="h-5 w-5 text-primary" /> Nome Completo
                       </Label>
                       <Input 
                         id="name" 
                         placeholder="Como devemos te chamar?" 
-                        className="h-14 rounded-xl text-lg"
+                        className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2"
                         value={form.name}
                         onChange={(e) => setForm({...form, name: e.target.value})}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-lg font-semibold flex items-center gap-2">
+                      <Label htmlFor="phone" className="text-base md:text-lg font-bold flex items-center gap-2">
                         <Phone className="h-5 w-5 text-primary" /> Telefone / WhatsApp
                       </Label>
                       <Input 
                         id="phone" 
                         placeholder="(00) 00000-0000" 
-                        className="h-14 rounded-xl text-lg"
+                        className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2"
                         value={form.phone}
                         onChange={(e) => setForm({...form, phone: e.target.value})}
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="address" className="text-lg font-semibold flex items-center gap-2">
+                      <Label htmlFor="address" className="text-base md:text-lg font-bold flex items-center gap-2">
                         <MapPin className="h-5 w-5 text-primary" /> Endereço (Rua e Número)
                       </Label>
                       <Input 
                         id="address" 
                         placeholder="Ex: Rua das Pizzas, 123" 
-                        className="h-14 rounded-xl text-lg"
+                        className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2"
                         value={form.address}
                         onChange={(e) => setForm({...form, address: e.target.value})}
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="neighborhood" className="text-lg font-semibold">Bairro</Label>
+                        <Label htmlFor="neighborhood" className="text-base md:text-lg font-bold">Bairro</Label>
                         <Input 
                           id="neighborhood" 
                           placeholder="Ex: Centro" 
-                          className="h-14 rounded-xl text-lg"
+                          className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2"
                           value={form.neighborhood}
                           onChange={(e) => setForm({...form, neighborhood: e.target.value})}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="complement" className="text-lg font-semibold">Complemento</Label>
+                        <Label htmlFor="complement" className="text-base md:text-lg font-bold">Complemento</Label>
                         <Input 
                           id="complement" 
                           placeholder="Ex: Ap 42" 
-                          className="h-14 rounded-xl text-lg"
+                          className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2"
                           value={form.complement}
                           onChange={(e) => setForm({...form, complement: e.target.value})}
                         />
@@ -298,10 +311,13 @@ export default function CheckoutPage() {
                 <Button 
                   onClick={handleSendToWhatsApp}
                   disabled={loading || (config && !config.isStoreOpen)}
-                  className={`w-full h-20 rounded-full text-white text-2xl font-black shadow-xl flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6 ${config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-[#25D366] hover:bg-[#20bd5a] shadow-[#25D366]/30'}`}
+                  className={cn(
+                    "w-full h-16 md:h-20 rounded-full text-white text-xl md:text-2xl font-black shadow-xl flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6",
+                    config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-[#25D366] hover:bg-[#20bd5a] shadow-[#25D366]/30'
+                  )}
                 >
-                  {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-8 w-8" />}
-                  {config && !config.isStoreOpen ? 'Loja Fechada' : loading ? 'Processando...' : 'Enviar Pedido pelo WhatsApp'}
+                  {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-7 w-7 md:h-8 md:w-8" />}
+                  {config && !config.isStoreOpen ? 'Pizzaria Fechada' : loading ? 'Processando...' : 'Enviar pelo WhatsApp'}
                 </Button>
               </CardContent>
             </Card>
