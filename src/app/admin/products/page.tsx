@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -16,9 +15,7 @@ import {
   Layers,
   Image as ImageIcon,
   ExternalLink,
-  ChevronLeft,
   Wallet,
-  X,
   ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -186,7 +183,7 @@ export default function AdminProductsPage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData({ ...formData, imageUrl: reader.result as string });
+        setForm(prev => ({ ...prev, imageUrl: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -443,22 +440,6 @@ export default function AdminProductsPage() {
 
               <div className="grid gap-2">
                 <Label htmlFor="image" className="text-lg font-bold">Imagem do Produto (URL ou Galeria)</Label>
-                
-                {formData.imageUrl && (
-                  <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
-                    <img src={formData.imageUrl} alt="Preview" className="object-cover w-full h-full" />
-                    <Button 
-                      type="button"
-                      variant="destructive" 
-                      size="icon" 
-                      className="absolute top-2 right-2 rounded-full h-8 w-8 shadow-lg"
-                      onClick={() => setFormData({...formData, imageUrl: ''})}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-
                 <div className="flex gap-2">
                   <Input 
                     id="image" 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -23,7 +22,6 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Wallet,
-  ChevronLeft,
   X,
   Type,
   Plus,
@@ -318,22 +316,6 @@ export default function AdminSettingsPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="logoImageUrl" className="text-lg font-bold">Logotipo da Pizzaria (URL ou Galeria)</Label>
-                  
-                  {form.logoImageUrl && (
-                    <div className="relative h-32 w-32 rounded-2xl overflow-hidden border-2 mb-4 bg-muted">
-                      <img src={form.logoImageUrl} alt="Preview" className="object-cover w-full h-full" />
-                      <Button 
-                        type="button"
-                        variant="destructive" 
-                        size="icon" 
-                        className="absolute top-2 right-2 rounded-full h-8 w-8"
-                        onClick={() => setForm({...form, logoImageUrl: ''})}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
@@ -464,22 +446,6 @@ export default function AdminSettingsPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bannerImage" className="text-lg font-bold">Banner Principal (URL ou Galeria)</Label>
-                  
-                  {form.heroBannerImageUrl && (
-                    <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-4 bg-muted">
-                      <img src={form.heroBannerImageUrl} alt="Preview" className="object-cover w-full h-full" />
-                      <Button 
-                        type="button"
-                        variant="destructive" 
-                        size="icon" 
-                        className="absolute top-2 right-2 rounded-full h-8 w-8"
-                        onClick={() => setForm({...form, heroBannerImageUrl: ''})}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-
                   <div className="flex gap-2">
                     <Input 
                       id="bannerImage" 
@@ -586,19 +552,6 @@ export default function AdminSettingsPage() {
 
                   {form.appBackgroundType === 'image' && (
                     <div className="mt-4 space-y-2 animate-in fade-in zoom-in-95 duration-200">
-                      {form.appBackgroundImageUrl && (
-                        <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
-                          <img src={form.appBackgroundImageUrl} alt="Fundo" className="object-cover w-full h-full" />
-                          <Button 
-                            variant="destructive" 
-                            size="icon" 
-                            className="absolute top-2 right-2 rounded-full h-8 w-8"
-                            onClick={() => setForm({...form, appBackgroundImageUrl: ''})}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
                       <div className="flex gap-2">
                         <Input 
                           placeholder="URL da Imagem"

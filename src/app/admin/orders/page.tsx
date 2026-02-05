@@ -1,4 +1,3 @@
-
 "use client";
 
 import { 
@@ -241,10 +240,8 @@ export default function AdminOrdersPage() {
                   <div className="bg-muted/30 p-6 w-full md:w-80 border-t md:border-t-0 md:border-l space-y-4">
                     <div className="flex justify-between items-center">
                       <p className="font-bold text-sm uppercase tracking-wider text-muted-foreground">Atualizar Status</p>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full"
+                      <button 
+                        className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full flex items-center justify-center transition-colors"
                         onClick={() => {
                           setOrderToDelete(order.id);
                           setIsDeleteDialogOpen(true);
@@ -252,7 +249,7 @@ export default function AdminOrdersPage() {
                         title="Excluir Pedido"
                       >
                         <Trash2 className="h-4 w-4" />
-                      </Button>
+                      </button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <Button 

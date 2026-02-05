@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -15,7 +14,6 @@ import {
   LogOut,
   Layers,
   ExternalLink,
-  ChevronLeft,
   Wallet,
   X,
   Type,
@@ -434,22 +432,6 @@ export default function AdminBannersPage() {
                 <Label htmlFor="image" className="text-lg font-bold flex items-center gap-2">
                   <ImageIcon className="h-5 w-5 text-primary" /> Imagem do Banner
                 </Label>
-                
-                {formData.imageUrl && (
-                  <div className="relative aspect-video w-full rounded-2xl overflow-hidden border-2 mb-2 bg-muted">
-                    <img src={formData.imageUrl} alt="Preview" className="object-cover w-full h-full" />
-                    <Button 
-                      type="button"
-                      variant="destructive" 
-                      size="icon" 
-                      className="absolute top-2 right-2 rounded-full h-8 w-8 shadow-lg"
-                      onClick={() => setFormData({...formData, imageUrl: ''})}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-
                 <div className="flex gap-2">
                   <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-lg" placeholder="Cole a URL ou use a galeria" />
                   <Button 
