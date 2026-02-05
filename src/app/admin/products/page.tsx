@@ -256,7 +256,7 @@ export default function AdminProductsPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-24">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-32">
           <div>
             <h1 className="text-3xl font-bold">Gestão de Produtos</h1>
             <p className="text-muted-foreground">Adicione, edite ou remova itens do seu cardápio</p>

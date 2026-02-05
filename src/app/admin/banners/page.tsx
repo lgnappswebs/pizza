@@ -241,7 +241,7 @@ export default function AdminBannersPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-16 md:mt-24">
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-16 md:mt-32">
           <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>

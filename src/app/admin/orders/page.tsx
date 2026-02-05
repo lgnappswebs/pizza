@@ -186,7 +186,7 @@ export default function AdminOrdersPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex justify-between items-center mb-8 mt-16 md:mt-24">
+        <div className="flex justify-between items-center mb-8 mt-16 md:mt-32">
           <div>
             <h1 className="text-3xl font-bold">Monitor de Pedidos</h1>
             <p className="text-muted-foreground">Acompanhe e gerencie os pedidos em tempo real</p>

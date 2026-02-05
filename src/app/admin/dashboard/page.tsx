@@ -28,7 +28,7 @@ import {
   useFirestore, 
   useMemoFirebase,
   useUser,
-  updateDocumentNonBlocking
+  deleteDocumentNonBlocking
 } from '@/firebase';
 import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
@@ -70,8 +70,7 @@ export default function AdminDashboard() {
   const { data: notifications } = useCollection(notificationsQuery);
   
   const config = configs?.[0];
-  const unreadNotifications = notifications?.filter(n => !n.isRead) || [];
-  const unreadCount = unreadNotifications.length;
+  const unreadCount = notifications?.length || 0;
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -83,11 +82,13 @@ export default function AdminDashboard() {
   };
 
   const markAsRead = (id: string) => {
-    updateDocumentNonBlocking(doc(firestore, 'notificacoes', id), { isRead: true });
+    // Conforme solicitado: ao ler uma notificação ela deve sumir sozinha (excluir do banco)
+    deleteDocumentNonBlocking(doc(firestore, 'notificacoes', id));
   };
 
   const markAllAsRead = () => {
-    unreadNotifications.forEach(n => markAsRead(n.id));
+    // Limpa todas as notificações de uma vez
+    notifications?.forEach(n => markAsRead(n.id));
   };
 
   const totalRevenue = allOrders?.filter(o => o.status === 'Delivered').reduce((acc, order) => acc + (order.totalAmount || 0), 0) || 0;
@@ -184,7 +185,7 @@ export default function AdminDashboard() {
                   <h3 className="font-bold text-lg">Notificações</h3>
                   {unreadCount > 0 && (
                     <Button variant="ghost" size="sm" className="text-[10px] h-7 px-2 font-bold" onClick={markAllAsRead}>
-                      Ler todas
+                      Limpar todas
                     </Button>
                   )}
                 </div>
@@ -199,26 +200,19 @@ export default function AdminDashboard() {
                       {notifications?.map((n) => (
                         <div 
                           key={n.id} 
-                          className={cn(
-                            "p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative",
-                            !n.isRead && "bg-primary/5 border-l-4 border-primary"
-                          )}
+                          className="p-4 hover:bg-muted/50 transition-colors cursor-pointer group relative bg-primary/5 border-l-4 border-primary"
                           onClick={() => markAsRead(n.id)}
                         >
                           <div className="flex justify-between items-start gap-2">
                             <p className="font-bold text-sm leading-tight">{n.title}</p>
-                            {!n.isRead && <span className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />}
+                            <span className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />
                           </div>
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{n.message}</p>
                           <div className="flex justify-between items-center mt-2">
                             <p className="text-[10px] text-muted-foreground font-medium">
                               {n.createdAt?.seconds ? format(new Date(n.createdAt.seconds * 1000), "HH:mm 'de' d/MM") : 'Agora'}
                             </p>
-                            {n.orderId && (
-                              <Link href="/admin/orders" className="text-[10px] font-bold text-primary hover:underline">
-                                Ver Pedido
-                              </Link>
-                            )}
+                            <span className="text-[10px] font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">Clique para fechar</span>
                           </div>
                         </div>
                       ))}
