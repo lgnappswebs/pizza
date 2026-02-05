@@ -8,18 +8,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Send, ArrowLeft, MapPin, User, Phone, Loader2 } from 'lucide-react';
+import { Trash2, Send, ArrowLeft, MapPin, User, Phone, Loader2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
+  const { toast } = useToast();
   
   const [form, setForm] = useState({
     name: '',
@@ -53,7 +55,11 @@ export default function CheckoutPage() {
 
   const handleSendToWhatsApp = async () => {
     if (!form.name || !form.address || !form.neighborhood || !form.phone) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+      toast({
+        variant: "destructive",
+        title: "Atenção",
+        description: "Por favor, preencha todos os campos obrigatórios para finalizar seu pedido."
+      });
       return;
     }
 
@@ -113,9 +119,19 @@ export default function CheckoutPage() {
       window.open(whatsappUrl, '_blank');
       
       clearCart();
+
+      toast({
+        title: "🚀 Pedido Realizado!",
+        description: "Seu pedido foi processado e encaminhado com sucesso para nosso WhatsApp.",
+      });
+
     } catch (error) {
       console.error("Error submitting order:", error);
-      alert("Erro ao enviar pedido. Tente novamente.");
+      toast({
+        variant: "destructive",
+        title: "Erro ao Enviar",
+        description: "Ocorreu um problema ao processar seu pedido. Tente novamente."
+      });
     } finally {
       setLoading(false);
     }
