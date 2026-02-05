@@ -2,7 +2,7 @@
 "use client"
 
 import Image from 'next/image';
-import { Plus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,6 +44,7 @@ export function ProductCard({
   const [size, setSize] = useState('Média');
   const [crust, setCrust] = useState('Tradicional');
   const [notes, setNotes] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
 
   const getPrice = () => {
@@ -60,13 +61,23 @@ export function ProductCard({
       id: `${id}-${size}-${crust}`,
       name,
       price: finalPrice,
-      quantity: 1,
+      quantity: quantity,
       size,
       crust,
       notes,
       imageUrl
     });
     setOpen(false);
+    setQuantity(1);
+    setNotes('');
+  };
+
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setQuantity(1);
+      setNotes('');
+    }
   };
 
   return (
@@ -99,14 +110,14 @@ export function ProductCard({
         <p className="text-muted-foreground text-sm line-clamp-2">{description}</p>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={handleOpenChange}>
           <DialogTrigger asChild>
             <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-lg font-bold py-6">
               <Plus className="mr-2 h-5 w-5" />
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] rounded-3xl">
+          <DialogContent className="sm:max-w-[425px] rounded-3xl max-h-[95vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold">{name}</DialogTitle>
               <div className="relative aspect-video w-full rounded-xl overflow-hidden mt-4">
@@ -162,6 +173,37 @@ export function ProductCard({
               </div>
 
               <div className="space-y-3">
+                <Label className="text-lg font-semibold">Quantidade</Label>
+                <div className="flex items-center justify-center gap-6 p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="icon" 
+                    className="h-12 w-12 rounded-full border-2 bg-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuantity(Math.max(1, quantity - 1));
+                    }}
+                  >
+                    <Minus className="h-6 w-6 text-primary" />
+                  </Button>
+                  <span className="text-3xl font-black w-12 text-center">{quantity}</span>
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="icon" 
+                    className="h-12 w-12 rounded-full border-2 bg-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setQuantity(quantity + 1);
+                    }}
+                  >
+                    <Plus className="h-6 w-6 text-primary" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="space-y-3">
                 <Label className="text-lg font-semibold">Observações</Label>
                 <Textarea 
                   placeholder="Ex: Sem cebola, bem passada..." 
@@ -173,7 +215,7 @@ export function ProductCard({
             </div>
             <DialogFooter>
               <Button onClick={handleAddToCart} className="w-full rounded-full py-6 text-xl font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20">
-                Confirmar Item • R$ {getPrice().toFixed(2)}
+                Confirmar • R$ {(getPrice() * quantity).toFixed(2)}
               </Button>
             </DialogFooter>
           </DialogContent>

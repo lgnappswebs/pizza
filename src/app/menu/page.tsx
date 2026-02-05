@@ -35,7 +35,7 @@ import { cn } from '@/lib/utils';
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>('loading');
   const [showSpecialties, setShowSpecialties] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -85,8 +85,8 @@ export default function MenuPage() {
       if (isAPizza && !isBPizza) return -1;
       if (!isAPizza && isBPizza) return 1;
       
-      const minA = Math.min(...groupedCategories[a].map(c => c.order || 0));
-      const minB = Math.min(...groupedCategories[b].map(c => c.order || 0));
+      const minA = Math.min(...groupedCategories[a].map(c => c.order ?? 99));
+      const minB = Math.min(...groupedCategories[b].map(c => c.order ?? 99));
       return minA - minB;
     });
 
@@ -100,7 +100,7 @@ export default function MenuPage() {
         return low === 'pizzas' || low === 'pizza';
       });
 
-      if (!activeCategory) {
+      if (activeCategory === 'loading') {
         setActiveCategory(pizzaName || mainNames[0]);
       }
       
@@ -108,7 +108,7 @@ export default function MenuPage() {
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = 0;
         }
-      }, 100);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [mainNames, activeCategory]);
