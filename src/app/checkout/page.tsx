@@ -36,7 +36,7 @@ export default function CheckoutPage() {
     if (userProfile) {
       setForm({
         name: userProfile.name || '',
-        address: `${userProfile.address || ''}, ${userProfile.number || ''}`,
+        address: `${userProfile.address || ''}${userProfile.number ? `, ${userProfile.number}` : ''}`,
         complement: userProfile.complement || '',
         neighborhood: userProfile.neighborhood || '',
         phone: userProfile.phone || ''
@@ -72,17 +72,17 @@ export default function CheckoutPage() {
         userId: user?.uid || null
       };
 
-      await addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
+      addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
       
       for (const item of items) {
-        await addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
+        addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
           ...item,
           orderId
         });
       }
 
       const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
-      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'PizzApp'}*%0A%0A`;
+      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'Pizzaria'}*%0A%0A`;
       message += `*CLIENTE:* ${form.name}%0A`;
       message += `*TELEFONE:* ${form.phone}%0A`;
       message += `*ENDEREÇO:* ${form.address}%0A`;
@@ -219,7 +219,7 @@ export default function CheckoutPage() {
                       {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-2xl md:text-4xl font-black text-primary pt-4">
+                  <div className="flex justify-between items-center text-2xl md:text-4xl font-black text-green-600 pt-4">
                     <span>Total</span>
                     <span className="drop-shadow-sm">R$ {(total + deliveryFee).toFixed(2)}</span>
                   </div>
