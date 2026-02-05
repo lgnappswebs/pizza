@@ -264,11 +264,11 @@ export default function AdminSettingsPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-32">
-        <Link href="/admin/dashboard" className="fixed top-48 left-4 md:top-32 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-64 left-4 md:top-32 md:left-72 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="mb-8 text-center md:text-left mt-72 md:mt-48">
+        <div className="mb-8 text-center md:text-left mt-80 md:mt-48">
           <h1 className="text-3xl font-black md:text-2xl lg:text-3xl">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
@@ -726,7 +726,7 @@ export default function AdminSettingsPage() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
             <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-primary font-bold">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
               </Link>
             </DropdownMenuItem>
@@ -741,7 +741,7 @@ export default function AdminSettingsPage() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
