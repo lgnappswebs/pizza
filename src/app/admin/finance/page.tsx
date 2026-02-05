@@ -1,4 +1,4 @@
-["use client"
+"use client";
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { 
@@ -669,5 +669,3 @@ export default function AdminFinancePage() {
     </div>
   );
 }
-
-    

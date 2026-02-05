@@ -1,4 +1,4 @@
-["use client"
+"use client";
 
 import { 
   Package, 
@@ -365,5 +365,3 @@ export default function AdminOrdersPage() {
     </div>
   );
 }
-
-    

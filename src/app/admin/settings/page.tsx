@@ -1,4 +1,4 @@
-["use client"
+"use client";
 
 import { useState, useEffect } from 'react';
 import { 
@@ -741,7 +741,7 @@ export default function AdminSettingsPage() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
@@ -757,5 +757,3 @@ export default function AdminSettingsPage() {
     </div>
   );
 }
-
-    
