@@ -17,7 +17,8 @@ import {
   ChevronLeft,
   Share2,
   FileText,
-  Printer
+  Printer,
+  Plus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -143,11 +144,9 @@ export default function AdminFinancePage() {
       const { jsPDF } = await import('jspdf');
       const html2canvas = (await import('html2canvas')).default;
 
-      // Pegar o elemento do relatório
       const element = reportRef.current;
       if (!element) return;
 
-      // Temporariamente mostrar o cabeçalho de impressão e remover sombras para o canvas
       element.classList.add('is-printing-canvas');
 
       const canvas = await html2canvas(element, {
@@ -264,7 +263,6 @@ export default function AdminFinancePage() {
             <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
             
-            {/* Cabeçalho exclusivo para o PDF/Impressão */}
             <div className="hidden print-header mt-2 border-b-4 border-primary pb-6 w-full">
               <div className="flex justify-between items-end">
                 <div>
@@ -337,7 +335,7 @@ export default function AdminFinancePage() {
                   {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <FileText className="mr-2 h-4 w-4" />}
                   Gerar PDF do Período
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => window.print()} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer">
                   <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
                 </DropdownMenuItem>
               </DropdownMenuContent>
