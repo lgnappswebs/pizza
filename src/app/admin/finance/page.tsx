@@ -14,7 +14,6 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Wallet,
-  ChevronLeft,
   Share2,
   Printer,
   Plus,
@@ -31,7 +30,7 @@ import {
   useMemoFirebase,
   useUser 
 } from '@/firebase';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 import {

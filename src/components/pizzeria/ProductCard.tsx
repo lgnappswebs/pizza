@@ -27,6 +27,15 @@ interface ProductCardProps {
   priceLarge?: number;
 }
 
+const CRUST_OPTIONS = [
+  { name: 'Tradicional', price: 0, label: 'Sem Borda' },
+  { name: 'Catupiry', price: 8, label: 'Catupiry' },
+  { name: 'Cheddar', price: 8, label: 'Cheddar' },
+  { name: 'Cream Cheese', price: 10, label: 'Cream Cheese' },
+  { name: 'Chocolate', price: 12, label: 'Chocolate' },
+  { name: 'Doce de Leite', price: 12, label: 'Doce de Leite' },
+];
+
 export function ProductCard({ 
   id, 
   name, 
@@ -47,12 +56,21 @@ export function ProductCard({
   const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
 
-  const getPrice = () => {
+  const getBasePrice = () => {
     if (!hasMultipleSizes) return price;
     if (size === 'Pequena') return priceSmall || price;
     if (size === 'Média') return priceMedium || price;
     if (size === 'Grande') return priceLarge || price;
     return price;
+  };
+
+  const getCrustPrice = () => {
+    const option = CRUST_OPTIONS.find(o => o.name === crust);
+    return option?.price || 0;
+  };
+
+  const getPrice = () => {
+    return getBasePrice() + getCrustPrice();
   };
 
   const handleAddToCart = () => {
@@ -160,42 +178,24 @@ export function ProductCard({
               <div className="space-y-3">
                 <Label className="text-lg font-semibold">Borda Recheada</Label>
                 <RadioGroup value={crust} onValueChange={setCrust} className="grid grid-cols-2 gap-2">
-                   <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Tradicional" id="trad" className="sr-only" />
-                    <Label htmlFor="trad" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Tradicional' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Sem Borda
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Catupiry" id="cat" className="sr-only" />
-                    <Label htmlFor="cat" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Catupiry' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Catupiry
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Cheddar" id="ched" className="sr-only" />
-                    <Label htmlFor="ched" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Cheddar' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Cheddar
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Cream Cheese" id="cream" className="sr-only" />
-                    <Label htmlFor="cream" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Cream Cheese' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Cream Cheese
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Chocolate" id="choc" className="sr-only" />
-                    <Label htmlFor="choc" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Chocolate' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Chocolate
-                    </Label>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <RadioGroupItem value="Doce de Leite" id="doce" className="sr-only" />
-                    <Label htmlFor="doce" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Doce de Leite' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                      Doce de Leite
-                    </Label>
-                  </div>
+                  {CRUST_OPTIONS.map((option) => (
+                    <div key={option.name} className="flex flex-col items-center">
+                      <RadioGroupItem value={option.name} id={`crust-${option.name}`} className="sr-only" />
+                      <Label 
+                        htmlFor={`crust-${option.name}`} 
+                        className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-all flex flex-col ${
+                          crust === option.name 
+                            ? 'border-primary bg-primary/10 text-primary' 
+                            : 'border-muted hover:border-primary/50'
+                        }`}
+                      >
+                        <span className="font-bold text-sm">{option.label}</span>
+                        {option.price > 0 && (
+                          <span className="text-[10px] font-black opacity-80">+ R$ {option.price.toFixed(2)}</span>
+                        )}
+                      </Label>
+                    </div>
+                  ))}
                 </RadioGroup>
               </div>
 
