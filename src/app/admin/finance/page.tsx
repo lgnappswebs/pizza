@@ -71,7 +71,7 @@ export default function AdminFinancePage() {
       const orderDate = new Date(order.createdAt.seconds * 1000);
       
       const matchDay = selectedDay === "Todos" || orderDate.getDate().toString() === selectedDay;
-      const matchMonth = (orderDate.getMonth() + 1).toString() === selectedMonth;
+      const matchMonth = selectedMonth === "Todos" || (orderDate.getMonth() + 1).toString() === selectedMonth;
       const matchYear = orderDate.getFullYear().toString() === selectedYear;
 
       return matchDay && matchMonth && matchYear;
@@ -111,7 +111,7 @@ export default function AdminFinancePage() {
     
     let reportOrders = [];
     let periodLabel = "";
-    const targetDate = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1, selectedDay === "Todos" ? 1 : parseInt(selectedDay));
+    const targetDate = new Date(parseInt(selectedYear), selectedMonth === "Todos" ? 0 : parseInt(selectedMonth) - 1, selectedDay === "Todos" ? 1 : parseInt(selectedDay));
 
     if (period === 'day') {
       reportOrders = allOrders.filter(o => o.createdAt?.seconds && isSameDay(new Date(o.createdAt.seconds * 1000), targetDate));
@@ -138,8 +138,22 @@ export default function AdminFinancePage() {
     window.open(`https://wa.me/?text=${encodedText}`, '_blank');
   };
 
-  const generatePDF = async () => {
+  const generatePDF = async (mode: 'current' | 'day' | 'month' | 'year') => {
+    const prevDay = selectedDay;
+    const prevMonth = selectedMonth;
+
+    if (mode === 'day') {
+      if (selectedDay === "Todos") setSelectedDay("1");
+    } else if (mode === 'month') {
+      setSelectedDay("Todos");
+    } else if (mode === 'year') {
+      setSelectedDay("Todos");
+      setSelectedMonth("Todos");
+    }
+
     setIsGeneratingPDF(true);
+    
+    // Aguardar atualização do estado e renderização dos filtros
     setTimeout(async () => {
       try {
         const { jsPDF } = await import('jspdf');
@@ -148,7 +162,6 @@ export default function AdminFinancePage() {
         const element = exportRef.current;
         if (!element) return;
 
-        // Tornar temporariamente visível para o canvas
         const originalDisplay = element.style.display;
         element.style.display = 'block';
 
@@ -175,19 +188,23 @@ export default function AdminFinancePage() {
 
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
         
-        const fileName = `relatorio-financeiro-${selectedDay}-${selectedMonth}-${selectedYear}.pdf`;
+        const fileName = `relatorio-financeiro-${mode}-${Date.now()}.pdf`;
         pdf.save(fileName);
       } catch (error) {
         console.error("Erro ao gerar PDF:", error);
         alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
       } finally {
         setIsGeneratingPDF(false);
+        // Restaurar filtros originais
+        setSelectedDay(prevDay);
+        setSelectedMonth(prevMonth);
       }
-    }, 500);
+    }, 800);
   };
 
   const days = ["Todos", ...Array.from({ length: 31 }, (_, i) => (i + 1).toString())];
   const months = [
+    { v: "Todos", l: "Todo o Ano" },
     { v: "1", l: "Janeiro" }, { v: "2", l: "Fevereiro" }, { v: "3", l: "Março" },
     { v: "4", l: "Abril" }, { v: "5", l: "Maio" }, { v: "6", l: "Junho" },
     { v: "7", l: "Julho" }, { v: "8", l: "Agosto" }, { v: "9", l: "Setembro" },
@@ -321,9 +338,14 @@ export default function AdminFinancePage() {
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={generatePDF} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
-                  {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <FileText className="mr-2 h-4 w-4" />}
-                  Gerar PDF do Período
+                <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
+                  Gerar PDF do Dia
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
+                  Gerar PDF do Mês
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => generatePDF('year')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                  Gerar PDF do Ano
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer">
                   <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
@@ -353,7 +375,9 @@ export default function AdminFinancePage() {
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-medium">{selectedDay}/{selectedMonth}/{selectedYear}</p>
+              <p className="text-[9px] text-muted-foreground font-medium">
+                {selectedDay}/{selectedMonth === "Todos" ? "Ano" : selectedMonth}/{selectedYear}
+              </p>
             </CardContent>
           </Card>
 
@@ -388,7 +412,7 @@ export default function AdminFinancePage() {
                 </div>
                 <Badge variant="outline" className="text-[10px] px-2">{filteredOrders.length} Itens</Badge>
               </div>
-            </CardHeader>
+            </Header>
             <CardContent className="p-0">
               <div className="w-full overflow-hidden">
                 <table className="w-full text-left table-fixed">
@@ -466,14 +490,16 @@ export default function AdminFinancePage() {
               <h1 className="text-5xl font-black text-primary uppercase tracking-tighter mb-2">
                 {config?.restaurantName || 'PIZZAPP'}
               </h1>
-              <p className="text-sm font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Business Intelligence Report</p>
+              <p className="text-sm font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Relatório Financeiro Corporativo</p>
               
               <div className="space-y-1">
-                <h2 className="text-2xl font-bold text-gray-800">Relatório Consolidado de Vendas</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Consolidado de Vendas</h2>
                 <div className="flex items-center gap-3">
                   <span className="px-3 py-1 bg-gray-100 rounded text-xs font-black text-gray-600 uppercase">Período</span>
                   <span className="text-lg font-black text-primary">
-                    {selectedDay === "Todos" ? 'Ciclo Mensal Completo' : `${selectedDay} de ${months.find(m => m.v === selectedMonth)?.l}`} / {selectedYear}
+                    {selectedDay === "Todos" && selectedMonth === "Todos" ? `Ciclo Anual de ${selectedYear}` :
+                     selectedDay === "Todos" ? `Ciclo Mensal de ${months.find(m => m.v === selectedMonth)?.l} / ${selectedYear}` :
+                     `${selectedDay} de ${months.find(m => m.v === selectedMonth)?.l} de ${selectedYear}`}
                   </span>
                 </div>
               </div>
@@ -484,7 +510,7 @@ export default function AdminFinancePage() {
                 <p className="text-[10px] font-black text-gray-400 uppercase mb-1">Data de Emissão</p>
                 <p className="text-sm font-bold text-gray-700">{format(new Date(), "dd/MM/yyyy HH:mm")}</p>
               </div>
-              <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest">Documento ID: #FIN-{Date.now().toString().slice(-6)}</p>
+              <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest">Doc ID: #BI-{Date.now().toString().slice(-8)}</p>
             </div>
           </div>
 
@@ -492,21 +518,21 @@ export default function AdminFinancePage() {
           <div className="grid grid-cols-3 gap-6 mb-12">
             <div className="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-emerald-500 h-1 w-full"></div>
-              <p className="text-[10px] font-black uppercase text-emerald-600 mb-2 tracking-widest">Receita Líquida</p>
+              <p className="text-[10px] font-black uppercase text-emerald-600 mb-2 tracking-widest">Receita Bruta</p>
               <p className="text-3xl font-black text-gray-800">R$ {revenueInPeriod.toFixed(2)}</p>
-              <p className="text-[9px] text-emerald-500 font-bold mt-1">Pedidos Finalizados</p>
+              <p className="text-[9px] text-emerald-500 font-bold mt-1">Total Recebido</p>
             </div>
             <div className="bg-white p-6 rounded-3xl border-2 border-blue-100 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-blue-500 h-1 w-full"></div>
-              <p className="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">Volume de Transações</p>
+              <p className="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">Transações</p>
               <p className="text-3xl font-black text-gray-800">{filteredOrders.length}</p>
-              <p className="text-[9px] text-blue-500 font-bold mt-1">Total de Atendimentos</p>
+              <p className="text-[9px] text-blue-500 font-bold mt-1">Pedidos no Período</p>
             </div>
             <div className="bg-white p-6 rounded-3xl border-2 border-amber-100 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-amber-500 h-1 w-full"></div>
               <p className="text-[10px] font-black uppercase text-amber-600 mb-2 tracking-widest">Ticket Médio</p>
               <p className="text-3xl font-black text-gray-800">R$ {averageTicket.toFixed(2)}</p>
-              <p className="text-[9px] text-amber-500 font-bold mt-1">Média por Operação</p>
+              <p className="text-[9px] text-amber-500 font-bold mt-1">Média por Venda</p>
             </div>
           </div>
 
@@ -517,8 +543,8 @@ export default function AdminFinancePage() {
                 <tr className="bg-gray-800 text-white">
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[100px]">Hora</th>
                   <th className="p-4 text-[10px] font-black uppercase tracking-widest">Detalhamento do Cliente</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status Operacional</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Final</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status</th>
+                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
                 </tr>
               </thead>
               <tbody>
@@ -532,7 +558,7 @@ export default function AdminFinancePage() {
                     </td>
                     <td className="p-4 border-b border-gray-100 align-middle">
                       <p className="font-black text-gray-800 text-base mb-0.5">{order.customerName}</p>
-                      <p className="text-[10px] text-gray-400 font-medium italic">{order.customerAddress}</p>
+                      <p className="text-[10px] text-gray-400 font-medium italic truncate max-w-[400px]">{order.customerAddress}</p>
                     </td>
                     <td className="p-4 border-b border-gray-100 align-middle text-center">
                       <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter border-2 ${
@@ -540,9 +566,9 @@ export default function AdminFinancePage() {
                         order.status === 'Cancelled' ? 'bg-red-50 border-red-200 text-red-700' : 
                         'bg-amber-50 border-amber-200 text-amber-700'
                       }`}>
-                        {order.status === 'Delivered' ? 'Entregue' : 
+                        {order.status === 'Delivered' ? 'Finalizado' : 
                          order.status === 'Cancelled' ? 'Cancelado' : 
-                         order.status === 'New' ? 'Novo Pedido' : 'Em Trânsito'}
+                         order.status === 'New' ? 'Novo Pedido' : 'Em Preparo'}
                       </span>
                     </td>
                     <td className="p-4 border-b border-gray-100 align-middle text-right">
@@ -559,7 +585,7 @@ export default function AdminFinancePage() {
           {/* Rodapé do PDF Corporativo */}
           <div className="flex justify-between items-center mt-12 pt-8 border-t-4 border-gray-50">
             <div className="text-left text-[10px] text-gray-400 font-bold space-y-1">
-              <p>Relatório Financeiro Confidencial</p>
+              <p>Relatório de Inteligência de Negócio - Confidencial</p>
               <p>© {new Date().getFullYear()} {config?.restaurantName || 'PIZZAPP'} Operations</p>
             </div>
             <div className="flex gap-4">
@@ -569,8 +595,8 @@ export default function AdminFinancePage() {
                </div>
                <div className="h-10 w-1 bg-gray-100"></div>
                <div className="text-right">
-                  <p className="text-[10px] font-black text-gray-300 uppercase">Validação</p>
-                  <p className="text-lg font-black text-gray-200">OK</p>
+                  <p className="text-[10px] font-black text-gray-300 uppercase">Integridade</p>
+                  <p className="text-lg font-black text-gray-200">VERIFICADO</p>
                </div>
             </div>
           </div>
@@ -636,11 +662,8 @@ export default function AdminFinancePage() {
           .print-hidden { display: none !important; }
           main { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important; }
           aside, nav, header { display: none !important; }
-          /* Esconder tudo que não seja o exportRef na impressão */
           body > div:not([ref="exportRef"]) { display: none !important; }
           [data-radix-portal] { display: none !important; }
-          
-          /* Garantir que o exportRef seja exibido perfeitamente */
           div[style*="font-family: sans-serif"] { 
             display: block !important; 
             visibility: visible !important;
