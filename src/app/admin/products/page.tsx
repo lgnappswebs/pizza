@@ -251,7 +251,7 @@ export default function AdminProductsPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8 pb-32 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
@@ -266,13 +266,13 @@ export default function AdminProductsPage() {
           </Button>
         </div>
 
-        <Card className="rounded-2xl border-2 mb-6">
-          <CardHeader className="pb-0">
+        <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden">
+          <CardHeader className="bg-muted/10 pb-6 border-b">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 placeholder="Buscar produto pelo nome..." 
-                className="pl-10 h-12 rounded-xl border-2 text-lg"
+                className="pl-12 h-14 rounded-xl border-2 text-lg focus:border-primary transition-all shadow-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -284,40 +284,48 @@ export default function AdminProductsPage() {
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
                 {filteredProducts?.map((product) => (
-                  <div key={product.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="h-16 w-16 relative rounded-xl overflow-hidden bg-muted">
-                        <img src={product.imageUrl} alt={product.name} className="object-cover w-full h-full" />
+                  <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all gap-4 group">
+                    <div className="flex items-start gap-4 flex-1 min-w-0">
+                      <div className="h-20 w-20 relative rounded-xl overflow-hidden bg-muted border shrink-0">
+                        <img src={product.imageUrl} alt={product.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
                       </div>
-                      <div>
-                        <p className="font-bold text-lg">{product.name}</p>
-                        <p className="text-sm text-muted-foreground line-clamp-1">{product.description}</p>
-                        <div className="flex gap-2 mt-1 flex-wrap">
-                          <Badge variant="outline">
-                            {product.hasMultipleSizes ? `P: R$ ${product.priceSmall?.toFixed(2)} | M: R$ ${product.priceMedium?.toFixed(2)} | G: R$ ${product.priceLarge?.toFixed(2)}` : `R$ ${product.price?.toFixed(2)}`}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-col gap-1">
+                          <h3 className="font-black text-lg md:text-xl truncate text-primary">{product.name}</h3>
+                          <p className="text-xs md:text-sm text-muted-foreground line-clamp-2 md:line-clamp-1">{product.description}</p>
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-3">
+                          <Badge variant="secondary" className="font-bold bg-primary/10 text-primary border-none">
+                            {product.hasMultipleSizes 
+                              ? `P: R$ ${product.priceSmall?.toFixed(2)} • M: R$ ${product.priceMedium?.toFixed(2)} • G: R$ ${product.priceLarge?.toFixed(2)}` 
+                              : `R$ ${product.price?.toFixed(2)}`}
                           </Badge>
-                          <Badge variant={product.isAvailable ? 'default' : 'destructive'}>
-                            {product.isAvailable ? 'Disponível' : 'Indisponível'}
-                          </Badge>
-                          {product.isPromotion && <Badge className="bg-orange-500">Promoção</Badge>}
+                          <div className="flex gap-2">
+                            <Badge variant={product.isAvailable ? 'default' : 'destructive'} className="shadow-sm">
+                              {product.isAvailable ? 'Disponível' : 'Indisponível'}
+                            </Badge>
+                            {product.isPromotion && <Badge className="bg-orange-500 text-white border-none animate-pulse">PROMO 🔥</Badge>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl">
-                        <Edit2 className="h-4 w-4" />
+                    <div className="flex sm:flex-col lg:flex-row gap-2 pt-2 sm:pt-0 border-t sm:border-none">
+                      <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 hover:bg-primary hover:text-white transition-colors">
+                        <Edit2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Editar</span>
                       </Button>
-                      <Button variant="outline" size="icon" onClick={() => handleDelete(product.id)} className="rounded-xl text-destructive hover:bg-destructive/10">
-                        <Trash2 className="h-4 w-4" />
+                      <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive hover:text-white transition-colors">
+                        <Trash2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Excluir</span>
                       </Button>
                     </div>
                   </div>
                 ))}
                 {filteredProducts?.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground">
-                    Nenhum produto encontrado.
+                  <div className="text-center py-20 bg-muted/10 rounded-3xl border-2 border-dashed">
+                    <PizzaIcon className="h-16 w-16 mx-auto mb-4 text-muted opacity-20" />
+                    <h3 className="text-xl font-bold opacity-60">Nenhum produto encontrado</h3>
+                    <p className="text-muted-foreground">Tente buscar por outro nome ou adicione novos itens.</p>
                   </div>
                 )}
               </div>
