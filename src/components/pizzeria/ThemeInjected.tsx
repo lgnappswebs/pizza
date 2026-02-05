@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -82,7 +83,6 @@ export function ThemeInjected() {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
-      // Quando é imagem, o background base deve ser transparente para mostrar a camada fixa
       root.style.setProperty('--background', '0 0% 100% / 0%'); 
       root.style.setProperty('--app-bg-image', `url(${config.appBackgroundImageUrl})`);
       isDark = false; 
@@ -130,7 +130,7 @@ export function ThemeInjected() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
           style={{ 
             backgroundImage: `url(${config.appBackgroundImageUrl})`,
-            opacity: (pathname === '/menu' || pathname === '/account') ? 0.2 : 1.0
+            opacity: (pathname === '/menu' || pathname === '/account' || pathname.startsWith('/admin')) ? 0.2 : 1.0
           }}
         ></div>
       )}
