@@ -4,6 +4,7 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeInjected } from '@/components/pizzeria/ThemeInjected';
+import { CartSync } from '@/components/pizzeria/CartSync';
 
 export const metadata: Metadata = {
   title: 'PizzApp Rápido - Pizza Quentinha e Saborosa',
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className="font-body antialiased selection:bg-primary/30 min-h-screen relative overflow-x-hidden">
         <FirebaseClientProvider>
           <ThemeInjected />
+          <CartSync />
           <div className="relative z-10 flex flex-col min-h-screen">
             {children}
           </div>
