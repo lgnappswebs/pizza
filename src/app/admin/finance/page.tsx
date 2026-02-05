@@ -16,7 +16,6 @@ import {
   Wallet,
   ChevronLeft,
   Share2,
-  FileText,
   Printer,
   Plus
 } from 'lucide-react';
@@ -138,13 +137,11 @@ export default function AdminFinancePage() {
     window.open(`https://wa.me/?text=${encodedText}`, '_blank');
   };
 
-  const generatePDF = async (mode: 'current' | 'day' | 'month' | 'year') => {
+  const generatePDF = async (mode: 'day' | 'month' | 'year') => {
     const prevDay = selectedDay;
     const prevMonth = selectedMonth;
 
-    if (mode === 'day') {
-      if (selectedDay === "Todos") setSelectedDay(today.getDate().toString());
-    } else if (mode === 'month') {
+    if (mode === 'month') {
       setSelectedDay("Todos");
     } else if (mode === 'year') {
       setSelectedDay("Todos");
@@ -153,7 +150,6 @@ export default function AdminFinancePage() {
 
     setIsGeneratingPDF(true);
     
-    // Aguardar atualização do estado e renderização dos filtros
     setTimeout(async () => {
       try {
         const { jsPDF } = await import('jspdf');
@@ -192,10 +188,8 @@ export default function AdminFinancePage() {
         pdf.save(fileName);
       } catch (error) {
         console.error("Erro ao gerar PDF:", error);
-        alert("Ocorreu um erro ao gerar o PDF. Tente novamente.");
       } finally {
         setIsGeneratingPDF(false);
-        // Restaurar filtros originais
         setSelectedDay(prevDay);
         setSelectedMonth(prevMonth);
       }
@@ -475,16 +469,14 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA E PROFISSIONAL PARA O PDF E IMPRESSÃO) */}
+        {/* ÁREA DE EXPORTAÇÃO (MESMO LAYOUT PARA PDF E IMPRESSÃO) */}
         <div 
           ref={exportRef} 
           className="bg-white p-12 hidden print:block" 
           style={{ width: '850px', fontFamily: 'sans-serif' }}
         >
-          {/* Top Bar Branding */}
           <div className="h-3 w-full bg-primary mb-10"></div>
 
-          {/* Cabeçalho do Relatório */}
           <div className="flex justify-between items-start border-b-2 border-gray-100 pb-10 mb-10">
             <div>
               <h1 className="text-5xl font-black text-primary uppercase tracking-tighter mb-2">
@@ -514,7 +506,6 @@ export default function AdminFinancePage() {
             </div>
           </div>
 
-          {/* Dash Cards de Resumo */}
           <div className="grid grid-cols-3 gap-6 mb-12">
             <div className="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-emerald-500 h-1 w-full"></div>
@@ -536,7 +527,6 @@ export default function AdminFinancePage() {
             </div>
           </div>
 
-          {/* Tabela de Dados (Exportação) */}
           <div className="rounded-3xl border-2 border-gray-100 overflow-hidden mb-12 shadow-sm">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -582,7 +572,6 @@ export default function AdminFinancePage() {
             </table>
           </div>
 
-          {/* Rodapé do PDF Corporativo */}
           <div className="flex justify-between items-center mt-12 pt-8 border-t-4 border-gray-50">
             <div className="text-left text-[10px] text-gray-400 font-bold space-y-1">
               <p>Relatório de Inteligência de Negócio - Confidencial</p>
@@ -662,9 +651,9 @@ export default function AdminFinancePage() {
           .print-hidden { display: none !important; }
           main { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important; }
           aside, nav, header { display: none !important; }
-          body > div:not([ref="exportRef"]) { display: none !important; }
+          body > div:not([style*="width: 850px"]) { display: none !important; }
           [data-radix-portal] { display: none !important; }
-          div[style*="font-family: sans-serif"] { 
+          div[style*="width: 850px"] { 
             display: block !important; 
             visibility: visible !important;
             position: absolute !important;
@@ -673,6 +662,9 @@ export default function AdminFinancePage() {
             width: 100% !important;
             height: auto !important;
             padding: 20mm !important;
+            margin: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
           }
         }
       `}</style>
