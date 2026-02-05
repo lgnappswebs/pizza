@@ -4,6 +4,7 @@
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 /**
  * Componente utilitário que injeta as cores personalizadas do banco de dados
@@ -11,6 +12,7 @@ import { useEffect } from 'react';
  */
 export function ThemeInjected() {
   const firestore = useFirestore();
+  const pathname = usePathname();
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
@@ -83,9 +85,8 @@ export function ThemeInjected() {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
-      // Torna o fundo transparente para que a imagem apareça no div abaixo
       root.style.setProperty('--background', '0 0% 100% / 0');
-      isDark = false; // Por padrão imagens mantêm contraste claro, a menos que especificado
+      isDark = false; 
     } else {
       root.style.setProperty('--background', '0 0% 100%');
       isDark = false;
@@ -127,8 +128,11 @@ export function ThemeInjected() {
       )}
       {config?.appBackgroundType === 'image' && config.appBackgroundImageUrl && (
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100" 
-          style={{ backgroundImage: `url(${config.appBackgroundImageUrl})` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
+          style={{ 
+            backgroundImage: `url(${config.appBackgroundImageUrl})`,
+            opacity: pathname === '/menu' ? 0.1 : 1.0
+          }}
         ></div>
       )}
     </div>
