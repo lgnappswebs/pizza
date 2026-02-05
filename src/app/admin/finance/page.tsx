@@ -345,13 +345,13 @@ export default function AdminFinancePage() {
             </CardHeader>
             <CardContent className="p-0">
               <div className="w-full overflow-hidden">
-                <table className="w-full text-left">
+                <table className="w-full text-left table-fixed">
                   <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b">
                     <tr>
-                      <th className="px-2 py-3 w-[50px] md:w-[80px]">Hora</th>
-                      <th className="px-2 py-3">Cliente</th>
-                      <th className="px-2 py-3 w-[50px] md:w-[70px] text-center">Status</th>
-                      <th className="px-2 py-3 text-right w-[70px] md:w-[80px]">Valor</th>
+                      <th className="px-1 py-3 w-[45px] md:w-[80px]">Hora</th>
+                      <th className="px-1 py-3">Cliente</th>
+                      <th className="px-1 py-3 w-[45px] md:w-[70px] text-center">Status</th>
+                      <th className="px-1 py-3 text-right w-[65px] md:w-[100px]">Valor</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -363,17 +363,17 @@ export default function AdminFinancePage() {
                       </tr>
                     ) : filteredOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-muted/10 transition-colors group">
-                        <td className="px-2 py-3 align-top">
+                        <td className="px-1 py-3 align-top">
                           <p className="text-[10px] font-bold">
                             {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
                           </p>
                           <p className="font-black text-primary text-[8px] opacity-50 hidden md:block">#{order.id.slice(-4).toUpperCase()}</p>
                         </td>
-                        <td className="px-2 py-3 align-top min-w-0">
+                        <td className="px-1 py-3 align-top max-w-0">
                           <p className="font-bold text-[10px] md:text-[11px] truncate leading-tight mb-0.5">{order.customerName}</p>
                           <p className="text-[8px] md:text-[9px] text-muted-foreground truncate opacity-70">{order.customerAddress}</p>
                         </td>
-                        <td className="px-2 py-3 align-top text-center">
+                        <td className="px-1 py-3 align-top text-center">
                           <Badge variant="outline" className={`text-[7px] md:text-[8px] h-3.5 md:h-4 px-1 uppercase font-black tracking-tighter ${
                             order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600' : 
                             order.status === 'Cancelled' ? 'border-red-500 text-red-600' : 
@@ -386,7 +386,7 @@ export default function AdminFinancePage() {
                              order.status === 'Cancelled' ? 'X' : order.status}
                           </Badge>
                         </td>
-                        <td className="px-2 py-3 text-right font-black text-[10px] md:text-[11px] align-top whitespace-nowrap">
+                        <td className="px-1 py-3 text-right font-black text-[10px] md:text-[11px] align-top whitespace-nowrap">
                           R$ {order.totalAmount?.toFixed(2)}
                         </td>
                       </tr>
