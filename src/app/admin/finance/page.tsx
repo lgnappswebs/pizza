@@ -49,7 +49,6 @@ export default function AdminFinancePage() {
   const firestore = useFirestore();
   const router = useRouter();
   const { user, isUserLoading } = useUser();
-  const reportRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
   const today = useMemo(() => new Date(), []);
@@ -141,7 +140,6 @@ export default function AdminFinancePage() {
 
   const generatePDF = async () => {
     setIsGeneratingPDF(true);
-    // Pequeno delay para garantir que o menu dropdown fechou antes da captura
     setTimeout(async () => {
       try {
         const { jsPDF } = await import('jspdf');
@@ -150,7 +148,8 @@ export default function AdminFinancePage() {
         const element = exportRef.current;
         if (!element) return;
 
-        // Força o elemento a ficar visível apenas para o canvas
+        // Tornar temporariamente visível para o canvas
+        const originalDisplay = element.style.display;
         element.style.display = 'block';
 
         const canvas = await html2canvas(element, {
@@ -158,10 +157,10 @@ export default function AdminFinancePage() {
           useCORS: true,
           logging: false,
           backgroundColor: '#ffffff',
-          windowWidth: 800
+          windowWidth: 850
         });
 
-        element.style.display = 'none';
+        element.style.display = originalDisplay;
 
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF({
@@ -259,18 +258,18 @@ export default function AdminFinancePage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0">
         <Link href="/admin/dashboard" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1 print:hidden">
           <ChevronLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 print:hidden">
           <div className="w-full lg:w-auto">
-            <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
-            <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
+            <h1 className="text-3xl font-bold">Gestão Financeira</h1>
+            <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 print:hidden w-full lg:flex-1 lg:justify-end">
+          <div className="flex flex-wrap items-center gap-2 w-full lg:flex-1 lg:justify-end">
             <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto overflow-hidden">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
                 <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
@@ -334,7 +333,7 @@ export default function AdminFinancePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:hidden">
           <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 p-3 opacity-20">
               <DollarSign className="h-12 w-12" />
@@ -379,7 +378,7 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 gap-8 print:hidden">
           <Card className="rounded-2xl border-2 overflow-hidden shadow-sm">
             <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
@@ -452,11 +451,11 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA E PROFISSIONAL PARA O PDF) */}
+        {/* ÁREA DE EXPORTAÇÃO (TABELA ESTRUTURADA E PROFISSIONAL PARA O PDF E IMPRESSÃO) */}
         <div 
           ref={exportRef} 
-          className="bg-white p-12 hidden" 
-          style={{ width: '850px', display: 'none', fontFamily: 'sans-serif' }}
+          className="bg-white p-12 hidden print:block" 
+          style={{ width: '850px', fontFamily: 'sans-serif' }}
         >
           {/* Top Bar Branding */}
           <div className="h-3 w-full bg-primary mb-10"></div>
@@ -561,7 +560,7 @@ export default function AdminFinancePage() {
           <div className="flex justify-between items-center mt-12 pt-8 border-t-4 border-gray-50">
             <div className="text-left text-[10px] text-gray-400 font-bold space-y-1">
               <p>Relatório Financeiro Confidencial</p>
-              <p>© {new Date().getFullYear()} {config?.restaurantName || 'PizzApp'} Operations</p>
+              <p>© {new Date().getFullYear()} {config?.restaurantName || 'PIZZAPP'} Operations</p>
             </div>
             <div className="flex gap-4">
                <div className="text-right">
@@ -632,14 +631,26 @@ export default function AdminFinancePage() {
 
       <style jsx global>{`
         @media print {
-          @page { size: portrait; margin: 1cm; }
+          @page { size: portrait; margin: 0; }
           body { font-size: 10pt; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
           .print-hidden { display: none !important; }
-          main { padding: 0 !important; width: 100% !important; max-width: none !important; }
-          .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
-          aside, nav { display: none !important; }
-          table { width: 100% !important; border-collapse: collapse !important; }
-          th, td { border-bottom: 1px solid #eee !important; padding: 8px 4px !important; }
+          main { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important; }
+          aside, nav, header { display: none !important; }
+          /* Esconder tudo que não seja o exportRef na impressão */
+          body > div:not([ref="exportRef"]) { display: none !important; }
+          [data-radix-portal] { display: none !important; }
+          
+          /* Garantir que o exportRef seja exibido perfeitamente */
+          div[style*="font-family: sans-serif"] { 
+            display: block !important; 
+            visibility: visible !important;
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: auto !important;
+            padding: 20mm !important;
+          }
         }
       `}</style>
     </div>
