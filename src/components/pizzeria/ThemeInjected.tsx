@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
@@ -85,18 +84,20 @@ export function ThemeInjected() {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image' && config.appBackgroundImageUrl) {
-      // Quando é imagem, usamos um fundo transparente por baixo
-      root.style.setProperty('--background', '0 0% 100% / 0');
+      // Quando é imagem, usamos um fundo que permite ver a imagem mas mantém os componentes nítidos
+      root.style.setProperty('--background', '0 0% 100%'); 
+      root.style.setProperty('--app-bg-image', `url(${config.appBackgroundImageUrl})`);
       isDark = false; 
     } else {
       root.style.setProperty('--background', '0 0% 100%');
+      root.style.removeProperty('--app-bg-image');
       isDark = false;
     }
 
     // Ajustes de contraste para Temas Escuros
     if (isDark) {
       root.style.setProperty('--foreground', '0 0% 100%');
-      // CARDS E CAMPOS BRANCOS PARA DESTAQUE EM FUNDO ESCURO
+      // CARDS E CAMPOS BRANCOS SÓLIDOS PARA DESTAQUE TOTAL
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
