@@ -100,7 +100,7 @@ export default function CheckoutPage() {
       message += `%0A*Subtotal:* R$ ${total.toFixed(2)}`;
       message += `%0A*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}`;
       message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A%0A`;
-      message += `_Pedido registrado com ID: ${orderId}_`;
+      // Pedido registrado com ID removido conforme solicitado
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
       window.open(whatsappUrl, '_blank');
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
               <CardContent className="p-0">
                 <div className="divide-y">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3 md:gap-4 p-4 hover:bg-muted/20 transition-colors">
+                    <div key={item.id} className="flex gap-3 md:gap-4 p-4 hover:bg-muted/20 transition-colors items-center">
                       <div className="relative h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden shrink-0 shadow-sm border">
                         <Image 
                           src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
