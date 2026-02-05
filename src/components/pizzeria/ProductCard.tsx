@@ -132,21 +132,21 @@ export function ProductCard({
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Pequena" id="broto" className="sr-only" />
                       <Label htmlFor="broto" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                        <span className="block font-bold">Pequena</span>
+                        <span className="block font-bold text-sm">Pequena</span>
                         <span className="text-[10px] opacity-70">R$ {priceSmall?.toFixed(2)}</span>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Média" id="media" className="sr-only" />
                       <Label htmlFor="media" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Média' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                        <span className="block font-bold">Média</span>
+                        <span className="block font-bold text-sm">Média</span>
                         <span className="text-[10px] opacity-70">R$ {priceMedium?.toFixed(2)}</span>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Grande" id="grande" className="sr-only" />
                       <Label htmlFor="grande" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
-                        <span className="block font-bold">Grande</span>
+                        <span className="block font-bold text-sm">Grande</span>
                         <span className="text-[10px] opacity-70">R$ {priceLarge?.toFixed(2)}</span>
                       </Label>
                     </div>
@@ -167,6 +167,30 @@ export function ProductCard({
                     <RadioGroupItem value="Catupiry" id="cat" className="sr-only" />
                     <Label htmlFor="cat" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Catupiry' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
                       Catupiry
+                    </Label>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <RadioGroupItem value="Cheddar" id="ched" className="sr-only" />
+                    <Label htmlFor="ched" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Cheddar' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                      Cheddar
+                    </Label>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <RadioGroupItem value="Cream Cheese" id="cream" className="sr-only" />
+                    <Label htmlFor="cream" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Cream Cheese' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                      Cream Cheese
+                    </Label>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <RadioGroupItem value="Chocolate" id="choc" className="sr-only" />
+                    <Label htmlFor="choc" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Chocolate' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                      Chocolate
+                    </Label>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <RadioGroupItem value="Doce de Leite" id="doce" className="sr-only" />
+                    <Label htmlFor="doce" className={`w-full text-center py-3 border-2 rounded-xl cursor-pointer transition-colors ${crust === 'Doce de Leite' ? 'border-primary bg-primary/10 text-primary' : 'border-muted hover:border-primary/50'}`}>
+                      Doce de Leite
                     </Label>
                   </div>
                 </RadioGroup>

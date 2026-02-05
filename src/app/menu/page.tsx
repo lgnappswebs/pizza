@@ -100,16 +100,24 @@ export default function MenuPage() {
         return low === 'pizzas' || low === 'pizza';
       });
 
-      if (activeCategory === 'loading') {
+      if (activeCategory === 'loading' || !activeCategory) {
         setActiveCategory(pizzaName || mainNames[0]);
       }
       
-      const timer = setTimeout(() => {
+      const resetScroll = () => {
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = 0;
         }
-      }, 300);
-      return () => clearTimeout(timer);
+      };
+      
+      resetScroll();
+      const timer = setTimeout(resetScroll, 100);
+      const timer2 = setTimeout(resetScroll, 500);
+      
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(timer2);
+      };
     }
   }, [mainNames, activeCategory]);
 
