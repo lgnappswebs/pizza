@@ -100,7 +100,6 @@ export default function CheckoutPage() {
       message += `%0A*Subtotal:* R$ ${total.toFixed(2)}`;
       message += `%0A*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}`;
       message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A%0A`;
-      // Pedido registrado com ID removido conforme solicitado
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
       window.open(whatsappUrl, '_blank');
@@ -118,17 +117,22 @@ export default function CheckoutPage() {
     return (
       <>
         <Header />
-        <main className="container mx-auto px-4 py-20 text-center space-y-6">
-          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
-            <Trash2 className="h-12 w-12" />
-          </div>
-          <h2 className="text-3xl font-bold">Seu pedido está vazio</h2>
-          <p className="text-muted-foreground text-lg">Que tal escolher uma pizza deliciosa agora?</p>
-          <Link href="/menu">
-            <Button className="rounded-full h-14 px-10 text-xl font-bold bg-primary">
-              Ver Cardápio
-            </Button>
+        <main className="container mx-auto px-4 py-8">
+          <Link href="/menu" className="inline-flex items-center text-primary font-bold mb-6 hover:underline gap-1">
+            <ChevronLeft className="h-5 w-5" /> Voltar ao Cardápio
           </Link>
+          <div className="py-20 text-center space-y-6">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
+              <Trash2 className="h-12 w-12" />
+            </div>
+            <h2 className="text-3xl font-bold">Seu pedido está vazio</h2>
+            <p className="text-muted-foreground text-lg">Que tal escolher uma pizza deliciosa agora?</p>
+            <Link href="/menu">
+              <Button className="rounded-full h-14 px-10 text-xl font-bold bg-primary">
+                Ver Cardápio
+              </Button>
+            </Link>
+          </div>
         </main>
       </>
     );
