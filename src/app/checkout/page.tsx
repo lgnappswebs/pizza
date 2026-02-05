@@ -19,6 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [waLink, setWaLink] = useState('');
   const firestore = useFirestore();
   const { user } = useUser();
   const { toast } = useToast();
@@ -116,13 +118,14 @@ export default function CheckoutPage() {
       message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A%0A`;
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
-      window.open(whatsappUrl, '_blank');
       
+      setWaLink(whatsappUrl);
+      setIsSuccess(true);
       clearCart();
 
       toast({
         title: "🚀 Pedido Realizado!",
-        description: "Seu pedido foi processado e encaminhado com sucesso para nosso WhatsApp.",
+        description: "Seu pedido foi processado com sucesso em nosso sistema.",
       });
 
     } catch (error) {
@@ -137,12 +140,55 @@ export default function CheckoutPage() {
     }
   };
 
+  if (isSuccess) {
+    return (
+      <>
+        <Header />
+        <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-[70vh]">
+          <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-50 shadow-2xl p-8 md:p-12 text-center space-y-8 animate-in zoom-in-95 duration-500">
+            <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle2 className="h-16 w-16 text-green-600" />
+            </div>
+            
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black text-green-700 tracking-tighter">Pedido Realizado!</h2>
+              <p className="text-xl text-muted-foreground font-medium max-w-md mx-auto">
+                Seu pedido foi processado com sucesso e já está sendo preparado pela nossa equipe.
+              </p>
+            </div>
+
+            <div className="bg-muted/30 p-6 rounded-3xl border-2 border-dashed text-left space-y-3">
+              <p className="font-bold text-lg text-primary flex items-center gap-2">
+                <Send className="h-5 w-5" /> Importante:
+              </p>
+              <p className="text-muted-foreground font-medium">
+                Clique no botão abaixo para enviar o detalhamento do seu pedido via WhatsApp. Isso agiliza o seu atendimento e garante que recebamos sua localização correta.
+              </p>
+            </div>
+
+            <Button 
+              onClick={() => window.open(waLink, '_blank')}
+              className="w-full h-20 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-xl shadow-[#25D366]/30 transform transition hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
+            >
+              <Send className="h-8 w-8" />
+              Enviar pelo WhatsApp
+            </Button>
+
+            <Link href="/menu" className="block text-muted-foreground font-bold text-lg hover:text-primary transition-colors">
+              Voltar ao Cardápio
+            </Link>
+          </Card>
+        </main>
+      </>
+    );
+  }
+
   if (items.length === 0) {
     return (
       <>
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <Link href="/menu" className="fixed top-24 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <Link href="/menu" className="fixed top-4 left-4 md:top-24 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
             <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
           </Link>
           <div className="py-20 text-center space-y-6 mt-16 md:mt-0">
@@ -166,7 +212,7 @@ export default function CheckoutPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <Link href="/menu" className="fixed top-24 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/menu" className="fixed top-4 left-4 md:top-24 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
         </Link>
 
@@ -341,11 +387,11 @@ export default function CheckoutPage() {
                   disabled={loading || (config && !config.isStoreOpen)}
                   className={cn(
                     "w-full h-16 md:h-20 rounded-full text-white text-xl md:text-2xl font-black shadow-xl flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6",
-                    config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-[#25D366] hover:bg-[#20bd5a] shadow-[#25D366]/30'
+                    config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-primary shadow-primary/30'
                   )}
                 >
                   {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-7 w-7 md:h-8 md:w-8" />}
-                  {config && !config.isStoreOpen ? 'Pizzaria Fechada' : loading ? 'Processando...' : 'Enviar pelo WhatsApp'}
+                  {config && !config.isStoreOpen ? 'Pizzaria Fechada' : loading ? 'Processando...' : 'Finalizar Pedido'}
                 </Button>
               </CardContent>
             </Card>
