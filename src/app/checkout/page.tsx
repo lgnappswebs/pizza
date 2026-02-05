@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Send, ArrowLeft, MapPin, User, Phone, Loader2, CheckCircle2 } from 'lucide-react';
+import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
@@ -187,10 +187,7 @@ export default function CheckoutPage() {
       <>
         <Header />
         <main className="container mx-auto px-4 py-8">
-          <Link href="/menu" className="fixed top-80 left-4 md:top-32 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-            <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
-          </Link>
-          <div className="py-20 text-center space-y-6 mt-96 md:mt-48">
+          <div className="py-20 text-center space-y-6 mt-10">
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
               <Trash2 className="h-12 w-12" />
             </div>
@@ -211,11 +208,7 @@ export default function CheckoutPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8">
-        <Link href="/menu" className="fixed top-80 left-4 md:top-32 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-          <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
-        </Link>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-96 md:mt-48">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
           <div className="space-y-6">
             <Card className="rounded-3xl border-2 shadow-sm overflow-hidden">
               <CardHeader className="bg-primary/5 border-b py-4">
