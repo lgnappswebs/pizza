@@ -45,6 +45,7 @@ export function ThemeInjected() {
 
   const getLuminance = (hex: string) => {
     let r = 0, g = 0, b = 0;
+    if (!hex) return 1;
     if (hex.length === 4) {
       r = parseInt(hex[1] + hex[1], 16);
       g = parseInt(hex[2] + hex[2], 16);
@@ -65,11 +66,15 @@ export function ThemeInjected() {
     if (config.primaryColor) {
       root.style.setProperty('--primary', hexToHsl(config.primaryColor));
       root.style.setProperty('--ring', hexToHsl(config.primaryColor));
+      // Garante que o texto dentro do botão primário seja branco se a cor for escura
+      root.style.setProperty('--primary-foreground', getLuminance(config.primaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
     if (config.secondaryColor) {
       root.style.setProperty('--secondary', hexToHsl(config.secondaryColor));
       root.style.setProperty('--accent', hexToHsl(config.secondaryColor));
+      // Garante que o texto dentro do botão secundário seja branco se a cor for escura
+      root.style.setProperty('--secondary-foreground', getLuminance(config.secondaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
     let isDark = false;
@@ -81,33 +86,33 @@ export function ThemeInjected() {
       isDark = false;
     }
 
-    // Ajustar cores para máxima visibilidade e profissionalismo
+    // Ajustes para modo escuro ou claro
     if (isDark) {
-      root.style.setProperty('--foreground', '0 0% 98%');
-      // Cards Brancos em fundo escuro para "saltarem" e ficarem visíveis
+      root.style.setProperty('--foreground', '0 0% 100%');
+      // Cards brancos sólidos para destaque contra o fundo escuro
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
       root.style.setProperty('--popover-foreground', '0 0% 3.9%');
-      root.style.setProperty('--muted', '0 0% 90%');
-      root.style.setProperty('--muted-foreground', '0 0% 40%');
-      root.style.setProperty('--border', '0 0% 80%');
-      // Campos de formulário brancos com destaque
+      // Inputs brancos para máximo destaque
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
-      root.style.setProperty('--input', '0 0% 100%');
+      root.style.setProperty('--input', '0 0% 80%');
+      root.style.setProperty('--border', '0 0% 100%');
+      root.style.setProperty('--muted', '0 0% 90%');
+      root.style.setProperty('--muted-foreground', '0 0% 40%');
     } else {
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
       root.style.setProperty('--popover-foreground', '0 0% 3.9%');
-      root.style.setProperty('--muted', '0 0% 96.1%');
-      root.style.setProperty('--muted-foreground', '0 0% 45.1%');
-      root.style.setProperty('--border', '0 0% 89.8%');
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 3.9%');
       root.style.setProperty('--input', '0 0% 89.8%');
+      root.style.setProperty('--border', '0 0% 89.8%');
+      root.style.setProperty('--muted', '0 0% 96.1%');
+      root.style.setProperty('--muted-foreground', '0 0% 45.1%');
     }
 
   }, [config]);
