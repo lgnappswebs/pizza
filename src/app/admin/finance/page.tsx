@@ -147,6 +147,7 @@ export default function AdminFinancePage() {
       const element = reportRef.current;
       if (!element) return;
 
+      // Adiciona classe para forçar renderização completa para o canvas
       element.classList.add('is-printing-canvas');
 
       const canvas = await html2canvas(element, {
@@ -263,6 +264,7 @@ export default function AdminFinancePage() {
             <h1 className="text-3xl font-bold print:hidden">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm print:hidden">Relatórios detalhados de faturamento</p>
             
+            {/* Cabeçalho Exclusivo para PDF/Impressão */}
             <div className="hidden print-header mt-2 border-b-4 border-primary pb-6 w-full">
               <div className="flex justify-between items-end">
                 <div>
