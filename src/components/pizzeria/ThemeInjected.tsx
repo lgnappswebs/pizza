@@ -62,7 +62,6 @@ export function ThemeInjected() {
 
     const root = document.documentElement;
     
-    // Injeção de Cores Primárias e Secundárias
     if (config.primaryColor) {
       root.style.setProperty('--primary', hexToHsl(config.primaryColor));
       root.style.setProperty('--ring', hexToHsl(config.primaryColor));
@@ -75,22 +74,18 @@ export function ThemeInjected() {
       root.style.setProperty('--secondary-foreground', getLuminance(config.secondaryColor) < 0.6 ? '0 0% 100%' : '0 0% 0%');
     }
 
-    // Detecção de Modo Escuro Baseado no Fundo
     let isDark = false;
     if (config.appBackgroundType === 'color' && config.backgroundColor) {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image') {
       root.style.setProperty('--background', '0 0% 100%');
-      isDark = true; // Forçamos contraste de modo escuro para imagens para garantir visibilidade
+      isDark = true;
     }
 
     if (isDark) {
-      // Fontes sobre o fundo principal tornam-se BRANCAS
       root.style.setProperty('--foreground', '0 0% 100%');
       root.style.setProperty('--muted-foreground', '0 0% 90%');
-      
-      // Elementos de Conteúdo (Cards, Inputs, Modais) ficam BRANCO SÓLIDO para destaque
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 0%');
       root.style.setProperty('--popover', '0 0% 100%');
@@ -101,7 +96,6 @@ export function ThemeInjected() {
       root.style.setProperty('--border', '0 0% 100% / 30%');
       root.style.setProperty('--muted', '0 0% 100% / 15%');
     } else {
-      // Modo Claro Padrão
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--muted-foreground', '0 0% 45.1%');
       root.style.setProperty('--card', '0 0% 100%');
@@ -127,7 +121,7 @@ export function ThemeInjected() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
           style={{ 
             backgroundImage: `url(${config.appBackgroundImageUrl})`,
-            opacity: 0.4 // Opacidade solicitada de 40%
+            opacity: 0.2
           }}
         ></div>
       )}

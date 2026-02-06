@@ -200,43 +200,43 @@ export default function AdminProductsPage() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Layers className="mr-3 h-5 w-5" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
             </Link>
@@ -256,10 +256,10 @@ export default function AdminProductsPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-12 md:mt-8">
           <div>
-            <h1 className="text-3xl font-bold">Gestão de Produtos</h1>
+            <h1 className="text-3xl font-bold text-black">Gestão de Produtos</h1>
             <p className="text-muted-foreground">Adicione, edite ou remova itens do seu cardápio</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
             <Plus className="mr-2 h-5 w-5" /> Novo Produto
           </Button>
         </div>
@@ -270,7 +270,7 @@ export default function AdminProductsPage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 placeholder="Buscar produto pelo nome..." 
-                className="pl-12 h-14 rounded-xl border-2 text-lg focus:border-primary transition-all shadow-sm"
+                className="pl-12 h-14 rounded-xl border-2 text-lg focus:border-primary transition-all shadow-sm text-black"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -310,7 +310,7 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex sm:flex-col lg:flex-row gap-2 pt-2 sm:pt-0 border-t sm:border-none">
-                      <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 hover:bg-primary hover:text-white transition-colors">
+                      <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-black hover:bg-primary hover:text-white transition-colors">
                         <Edit2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Editar</span>
                       </Button>
                       <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive hover:text-white transition-colors">
@@ -322,7 +322,7 @@ export default function AdminProductsPage() {
                 {filteredProducts?.length === 0 && (
                   <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
                     <PizzaIcon className="h-16 w-16 mx-auto mb-4 text-muted opacity-20" />
-                    <h3 className="text-xl font-bold opacity-60">Nenhum produto encontrado</h3>
+                    <h3 className="text-xl font-bold opacity-60 text-black">Nenhum produto encontrado</h3>
                     <p className="text-muted-foreground">Tente buscar por outro nome ou adicione novos itens.</p>
                   </div>
                 )}
@@ -345,7 +345,7 @@ export default function AdminProductsPage() {
                   id="name" 
                   value={formData.name} 
                   onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                  className="rounded-xl border-2 h-12 text-lg" 
+                  className="rounded-xl border-2 h-12 text-lg text-black" 
                   placeholder="Ex: Pizza de Calabresa"
                 />
               </div>
@@ -355,19 +355,19 @@ export default function AdminProductsPage() {
                   id="desc" 
                   value={formData.description} 
                   onChange={(e) => setFormData({...formData, description: e.target.value})} 
-                  className="rounded-xl border-2 h-12 text-lg" 
+                  className="rounded-xl border-2 h-12 text-lg text-black" 
                   placeholder="Ex: Molho de tomate, mussarela e calabresa"
                 />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="category" className="text-lg font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="rounded-xl h-12 border-2 text-lg">
+                  <SelectTrigger className="rounded-xl h-12 border-2 text-lg text-black">
                     <SelectValue placeholder="Selecione uma categoria" />
                   </SelectTrigger>
                   <SelectContent>
                     {categories?.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id} className="text-lg">{cat.name}</SelectItem>
+                      <SelectItem key={cat.id} value={cat.id} className="text-lg text-black">{cat.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -390,7 +390,7 @@ export default function AdminProductsPage() {
                       id="price" 
                       value={formData.price} 
                       onChange={(e) => handlePriceChange('price', e.target.value)} 
-                      className="rounded-xl h-12 pl-12 border-2 text-lg" 
+                      className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
                       placeholder="0,00"
                     />
                   </div>
@@ -405,7 +405,7 @@ export default function AdminProductsPage() {
                         id="pSmall" 
                         value={formData.priceSmall} 
                         onChange={(e) => handlePriceChange('priceSmall', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
                         placeholder="0,00"
                       />
                     </div>
@@ -418,7 +418,7 @@ export default function AdminProductsPage() {
                         id="pMedium" 
                         value={formData.priceMedium} 
                         onChange={(e) => handlePriceChange('priceMedium', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
                         placeholder="0,00"
                       />
                     </div>
@@ -431,7 +431,7 @@ export default function AdminProductsPage() {
                         id="pLarge" 
                         value={formData.priceLarge} 
                         onChange={(e) => handlePriceChange('priceLarge', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
                         placeholder="0,00"
                       />
                     </div>
@@ -446,13 +446,13 @@ export default function AdminProductsPage() {
                     id="image" 
                     value={formData.imageUrl} 
                     onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
-                    className="rounded-xl h-12 flex-1 border-2 text-lg" 
+                    className="rounded-xl h-12 flex-1 border-2 text-lg text-black" 
                     placeholder="https://suaimagem.com/foto.jpg" 
                   />
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="h-12 w-12 rounded-xl shrink-0 p-0 border-2"
+                    className="h-12 w-12 rounded-xl shrink-0 p-0 border-2 text-black"
                     onClick={() => document.getElementById('product-image-upload')?.click()}
                   >
                     <ImageIcon className="h-6 w-6 text-primary" />
@@ -482,7 +482,7 @@ export default function AdminProductsPage() {
               </div>
             </div>
             <DialogFooter className="mt-6">
-              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95">
+              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95 text-white">
                 {editingProduct ? 'Salvar Alterações' : 'Salvar Produto'}
               </Button>
             </DialogFooter>
@@ -490,44 +490,44 @@ export default function AdminProductsPage() {
         </Dialog>
 
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
-          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <LayoutDashboard className="h-5 w-5 text-blue-600" />
             <span className="text-[12px] font-black uppercase">Painel</span>
           </Link>
-          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <Layers className="h-5 w-5 text-emerald-600" />
             <span className="text-[12px] font-black uppercase">Categorias</span>
           </Link>
-          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
+          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <PizzaIcon className="h-5 w-5 text-amber-600" />
             <span className="text-[12px] font-black uppercase">Produtos</span>
           </Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
                 <Plus className="h-5 w-5 text-violet-600" />
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
               <DropdownMenuItem asChild>
-                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                   <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>

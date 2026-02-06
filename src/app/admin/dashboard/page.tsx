@@ -117,43 +117,43 @@ export default function AdminDashboard() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Layers className="mr-3 h-5 w-5" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
             </Link>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-4">
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="relative rounded-full border-2">
+                <Button variant="outline" size="icon" className="relative rounded-full border-2 text-black">
                   <Bell className="h-5 w-5" />
                   {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold animate-in zoom-in duration-300">
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
                           onClick={() => handleNotificationClick(n)}
                         >
                           <div className="flex justify-between items-start gap-2">
-                            <p className="font-bold text-sm leading-tight">{n.title}</p>
+                            <p className="font-bold text-sm leading-tight text-black">{n.title}</p>
                             <span className="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />
                           </div>
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{n.message}</p>
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
 
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
-                <p className="font-bold">{user?.email?.split('@')[0] || 'Admin'}</p>
+                <p className="font-bold text-black">{user?.email?.split('@')[0] || 'Admin'}</p>
                 <p className="text-xs text-muted-foreground">Administrador</p>
               </div>
               <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center text-white font-bold border-2 border-primary/20">
@@ -246,7 +246,7 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</p>
-                      <p className="text-2xl font-bold">{stat.value}</p>
+                      <p className="text-2xl font-bold text-black">{stat.value}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -257,12 +257,12 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 gap-8">
             <Card className="rounded-2xl border-2 flex flex-col bg-white">
               <CardHeader>
-                <CardTitle className="text-xl font-bold">Pedidos Recentes</CardTitle>
+                <CardTitle className="text-xl font-bold text-black">Pedidos Recentes</CardTitle>
               </CardHeader>
               <CardContent className="flex-1">
                 <div className="space-y-4">
                   {loadingOrders ? (
-                    <div className="flex justify-center py-8"><Loader2 className="animate-spin" /></div>
+                    <div className="flex justify-center py-8"><Loader2 className="animate-spin text-primary" /></div>
                   ) : (
                     recentOrders?.map((order) => (
                       <div key={order.id} className="flex items-center justify-between p-4 border rounded-2xl hover:bg-muted/30 transition-colors">
@@ -271,11 +271,11 @@ export default function AdminDashboard() {
                             <ShoppingBag className="h-5 w-5 text-muted-foreground" />
                           </div>
                           <div className="max-w-[120px]">
-                            <p className="font-bold truncate">{order.customerName}</p>
+                            <p className="font-bold truncate text-black">{order.customerName}</p>
                             <p className="text-xs text-muted-foreground">R$ {order.totalAmount.toFixed(2)}</p>
                           </div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px]">{order.status}</Badge>
+                        <Badge variant="secondary" className="text-[10px] text-black bg-muted">{order.status}</Badge>
                       </div>
                     ))
                   )}
@@ -295,44 +295,44 @@ export default function AdminDashboard() {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
-        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-primary min-w-[60px]">
+        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
           <LayoutDashboard className="h-5 w-5 text-blue-600" />
           <span className="text-[12px] font-black uppercase">Painel</span>
         </Link>
-        <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+        <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
           <Layers className="h-5 w-5 text-emerald-600" />
           <span className="text-[12px] font-black uppercase">Categorias</span>
         </Link>
-        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
           <PizzaIcon className="h-5 w-5 text-amber-600" />
           <span className="text-[12px] font-black uppercase">Produtos</span>
         </Link>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+            <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
               <Plus className="h-5 w-5 text-violet-600" />
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
             <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                 <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
                 <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>

@@ -186,43 +186,43 @@ export default function AdminBannersPage() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Layers className="mr-3 h-5 w-5" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
             </Link>
@@ -305,34 +305,34 @@ export default function AdminBannersPage() {
         </div>
 
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
-          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <LayoutDashboard className="h-5 w-5 text-blue-600" />
             <span className="text-[12px] font-black uppercase">Painel</span>
           </Link>
-          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <Layers className="h-5 w-5 text-emerald-600" />
             <span className="text-[12px] font-black uppercase">Categorias</span>
           </Link>
-          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <PizzaIcon className="h-5 w-5 text-amber-600" />
             <span className="text-[12px] font-black uppercase">Produtos</span>
           </Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex flex-col items-center gap-1 min-w-[60px] text-muted-foreground">
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
                 <Plus className="h-5 w-5 text-violet-600" />
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
               <DropdownMenuItem asChild>
-                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                   <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
                 </Link>
               </DropdownMenuItem>
@@ -342,7 +342,7 @@ export default function AdminBannersPage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>

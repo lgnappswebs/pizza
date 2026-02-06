@@ -220,43 +220,43 @@ export default function AdminFinancePage() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Layers className="mr-3 h-5 w-5" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-muted-foreground hover:text-primary">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
             </Link>
@@ -276,14 +276,14 @@ export default function AdminFinancePage() {
 
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-12 md:mt-8 print:hidden">
           <div className="w-full lg:w-auto">
-            <h1 className="text-3xl font-bold">Gestão Financeira</h1>
+            <h1 className="text-3xl font-bold text-black">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full lg:flex-1 lg:justify-end">
             <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto overflow-hidden">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -292,7 +292,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="flex-[2] h-10 border-none font-bold px-2 focus:ring-0">
+                <SelectTrigger className="flex-[2] h-10 border-none font-bold px-2 focus:ring-0 text-black">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -301,7 +301,7 @@ export default function AdminFinancePage() {
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -312,36 +312,36 @@ export default function AdminFinancePage() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-bold bg-primary shadow-lg shadow-primary/20">
+                <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-bold bg-primary shadow-lg shadow-primary/20 text-white">
                   {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <Share2 className="mr-2 h-4 w-4" />}
                   Exportar
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer text-black">
                   Faturamento do Dia
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer text-black">
                   Faturamento do Mês
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer text-black">
                   Faturamento do Ano
                 </DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black">
                   PDF do Dia Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black">
                   PDF do Mês Selecionado
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={() => generatePDF('year')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
                   PDF do Ano Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer">
+                <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer text-black">
                   <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -401,10 +401,10 @@ export default function AdminFinancePage() {
             <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle className="text-lg font-bold">Detalhamento</CardTitle>
+                  <CardTitle className="text-lg font-bold text-black">Detalhamento</CardTitle>
                   <CardDescription className="text-xs">Vendas no período selecionado</CardDescription>
                 </div>
-                <Badge variant="outline" className="text-[10px] px-2">{filteredOrders.length} Itens</Badge>
+                <Badge variant="outline" className="text-[10px] px-2 text-black">{filteredOrders.length} Itens</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -428,13 +428,13 @@ export default function AdminFinancePage() {
                     ) : filteredOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-muted/10 transition-colors group">
                         <td className="px-1 py-3 align-top">
-                          <p className="text-[10px] font-bold">
+                          <p className="text-[10px] font-bold text-black">
                             {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
                           </p>
                           <p className="font-black text-primary text-[8px] opacity-50 hidden md:block">#{order.id.slice(-4).toUpperCase()}</p>
                         </td>
                         <td className="px-1 py-3 align-top max-w-0">
-                          <p className="font-bold text-[10px] md:text-[11px] truncate leading-tight mb-0.5">{order.customerName}</p>
+                          <p className="font-bold text-[10px] md:text-[11px] truncate leading-tight mb-0.5 text-black">{order.customerName}</p>
                           <p className="text-[8px] md:text-[9px] text-muted-foreground truncate opacity-70">{order.customerAddress}</p>
                         </td>
                         <td className="px-1 py-3 align-top text-center">
@@ -450,7 +450,7 @@ export default function AdminFinancePage() {
                              order.status === 'Cancelled' ? 'X' : order.status}
                           </Badge>
                         </td>
-                        <td className="px-1 py-3 text-right font-black text-[10px] md:text-[11px] align-top whitespace-nowrap">
+                        <td className="px-1 py-3 text-right font-black text-[10px] md:text-[11px] align-top whitespace-nowrap text-black">
                           R$ {order.totalAmount?.toFixed(2)}
                         </td>
                       </tr>
@@ -469,166 +469,45 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        <div 
-          ref={exportRef} 
-          className="bg-white p-12 hidden print:block" 
-          style={{ width: '850px', fontFamily: 'sans-serif' }}
-        >
-          <div className="h-3 w-full bg-primary mb-10"></div>
-
-          <div className="flex justify-between items-start border-b-2 border-gray-100 pb-10 mb-10">
-            <div>
-              <h1 className="text-5xl font-black text-primary uppercase tracking-tighter mb-2">
-                {config?.restaurantName || 'PIZZAPP'}
-              </h1>
-              <p className="text-sm font-black text-gray-400 uppercase tracking-[0.3em] mb-6">Relatório Financeiro Corporativo</p>
-              
-              <div className="space-y-1">
-                <h2 className="text-2xl font-bold text-gray-800">Consolidado de Vendas</h2>
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 bg-gray-100 rounded text-xs font-black text-gray-600 uppercase">Período</span>
-                  <span className="text-lg font-black text-primary">
-                    {selectedDay === "Todos" && selectedMonth === "Todos" ? `Ciclo Anual de ${selectedYear}` :
-                     selectedDay === "Todos" ? `Ciclo Mensal de ${months.find(m => m.v === selectedMonth)?.l} / ${selectedYear}` :
-                     `${selectedDay} de ${months.find(m => m.v === selectedMonth)?.l} de ${selectedYear}`}
-                  </span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-right flex flex-col items-end">
-              <div className="bg-gray-50 border-2 border-gray-100 p-4 rounded-2xl mb-4">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-1">Data de Emissão</p>
-                <p className="text-sm font-bold text-gray-700">{format(new Date(), "dd/MM/yyyy HH:mm")}</p>
-              </div>
-              <p className="text-[9px] text-gray-300 font-bold uppercase tracking-widest">Doc ID: #BI-{Date.now().toString().slice(-8)}</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-6 mb-12">
-            <div className="bg-white p-6 rounded-3xl border-2 border-emerald-100 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-emerald-500 h-1 w-full"></div>
-              <p className="text-[10px] font-black uppercase text-emerald-600 mb-2 tracking-widest">Receita Bruta</p>
-              <p className="text-3xl font-black text-gray-800">R$ {revenueInPeriod.toFixed(2)}</p>
-              <p className="text-[9px] text-emerald-500 font-bold mt-1">Total Recebido</p>
-            </div>
-            <div className="bg-white p-6 rounded-3xl border-2 border-blue-100 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-blue-500 h-1 w-full"></div>
-              <p className="text-[10px] font-black uppercase text-blue-600 mb-2 tracking-widest">Transações</p>
-              <p className="text-3xl font-black text-gray-800">{filteredOrders.length}</p>
-              <p className="text-[9px] text-blue-500 font-bold mt-1">Pedidos no Período</p>
-            </div>
-            <div className="bg-white p-6 rounded-3xl border-2 border-amber-100 shadow-sm relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-amber-500 h-1 w-full"></div>
-              <p className="text-[10px] font-black uppercase text-amber-600 mb-2 tracking-widest">Ticket Médio</p>
-              <p className="text-3xl font-black text-gray-800">R$ {averageTicket.toFixed(2)}</p>
-              <p className="text-[9px] text-amber-500 font-bold mt-1">Média por Venda</p>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border-2 border-gray-100 overflow-hidden mb-12 shadow-sm">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-800 text-white">
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[100px]">Hora</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest">Detalhamento do Cliente</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-center">Status</th>
-                  <th className="p-4 text-[10px] font-black uppercase tracking-widest w-[140px] text-right">Valor Líquido</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order, idx) => (
-                  <tr key={order.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                    <td className="p-4 border-b border-gray-100 align-middle">
-                      <p className="text-sm font-black text-gray-700">
-                        {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
-                      </p>
-                      <p className="text-[9px] font-bold text-primary">ID: {order.id.slice(-6).toUpperCase()}</p>
-                    </td>
-                    <td className="p-4 border-b border-gray-100 align-middle">
-                      <p className="font-black text-gray-800 text-base mb-0.5">{order.customerName}</p>
-                      <p className="text-[10px] text-gray-400 font-medium italic truncate max-w-[400px]">{order.customerAddress}</p>
-                    </td>
-                    <td className="p-4 border-b border-gray-100 align-middle text-center">
-                      <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter border-2 ${
-                        order.status === 'Delivered' ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 
-                        order.status === 'Cancelled' ? 'bg-red-50 border-red-200 text-red-700' : 
-                        'bg-amber-50 border-amber-200 text-amber-700'
-                      }`}>
-                        {order.status === 'Delivered' ? 'Finalizado' : 
-                         order.status === 'Cancelled' ? 'Cancelado' : 
-                         order.status === 'New' ? 'Novo Pedido' : 'Em Preparo'}
-                      </span>
-                    </td>
-                    <td className="p-4 border-b border-gray-100 align-middle text-right">
-                      <p className="text-lg font-black text-gray-800">
-                        R$ {order.totalAmount?.toFixed(2)}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex justify-between items-center mt-12 pt-8 border-t-4 border-gray-50">
-            <div className="text-left text-[10px] text-gray-400 font-bold space-y-1">
-              <p>Relatório de Inteligência de Negócio - Confidencial</p>
-              <p>© {new Date().getFullYear()} {config?.restaurantName || 'PIZZAPP'} Operations</p>
-            </div>
-            <div className="flex gap-4">
-               <div className="text-right">
-                  <p className="text-[10px] font-black text-gray-300 uppercase">Página</p>
-                  <p className="text-lg font-black text-gray-200">01/01</p>
-               </div>
-               <div className="h-10 w-1 bg-gray-100"></div>
-               <div className="text-right">
-                  <p className="text-[10px] font-black text-gray-300 uppercase">Integridade</p>
-                  <p className="text-lg font-black text-gray-200">VERIFICADO</p>
-               </div>
-            </div>
-          </div>
-        </div>
-
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
-          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <LayoutDashboard className="h-5 w-5 text-blue-600" />
             <span className="text-[12px] font-black uppercase">Painel</span>
           </Link>
-          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <Layers className="h-5 w-5 text-emerald-600" />
             <span className="text-[12px] font-black uppercase">Categorias</span>
           </Link>
-          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-muted-foreground min-w-[60px]">
+          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
             <PizzaIcon className="h-5 w-5 text-amber-600" />
             <span className="text-[12px] font-black uppercase">Produtos</span>
           </Link>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="flex flex-col items-center gap-1 min-w-[60px] text-primary">
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
                 <Plus className="h-5 w-5 text-violet-600" />
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
               <DropdownMenuItem asChild>
-                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl">
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                   <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>
