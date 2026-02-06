@@ -80,7 +80,7 @@ export function ThemeInjected() {
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image') {
       root.style.setProperty('--background', '0 0% 100%');
-      isDark = true; // Forçamos modo de contraste para imagem
+      isDark = true; // Forçamos modo escuro inteligente para imagens personalizadas
     } else {
       isDark = false;
     }
@@ -94,9 +94,9 @@ export function ThemeInjected() {
       root.style.setProperty('--popover-foreground', '0 0% 0%');
       root.style.setProperty('--field', '0 0% 100%');
       root.style.setProperty('--field-foreground', '0 0% 0%');
-      root.style.setProperty('--input', '0 0% 80%');
-      root.style.setProperty('--border', '0 0% 100% / 30%');
-      root.style.setProperty('--muted', '0 0% 100% / 15%');
+      root.style.setProperty('--input', '0 0% 100%');
+      root.style.setProperty('--border', '0 0% 100% / 40%');
+      root.style.setProperty('--muted', '0 0% 100% / 20%');
     } else {
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--muted-foreground', '0 0% 45.1%');

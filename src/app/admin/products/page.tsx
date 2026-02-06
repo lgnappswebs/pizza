@@ -250,11 +250,11 @@ export default function AdminProductsPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-20 md:mt-16">
           <div>
             <h1 className="text-3xl font-bold text-black">Gestão de Produtos</h1>
             <p className="text-muted-foreground">Adicione, edite ou remova itens do seu cardápio</p>
@@ -270,7 +270,7 @@ export default function AdminProductsPage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input 
                 placeholder="Buscar produto pelo nome..." 
-                className="pl-12 h-14 rounded-xl border-2 text-lg focus:border-primary transition-all shadow-sm text-black"
+                className="pl-12 h-14 rounded-xl border-2 text-lg focus:border-primary transition-all shadow-sm text-black bg-white"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -310,10 +310,10 @@ export default function AdminProductsPage() {
                       </div>
                     </div>
                     <div className="flex sm:flex-col lg:flex-row gap-2 pt-2 sm:pt-0 border-t sm:border-none">
-                      <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-black hover:bg-primary hover:text-white transition-colors">
+                      <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-black hover:bg-primary hover:text-white transition-colors bg-white">
                         <Edit2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Editar</span>
                       </Button>
-                      <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive hover:text-white transition-colors">
+                      <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive hover:text-white transition-colors bg-white">
                         <Trash2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Excluir</span>
                       </Button>
                     </div>
@@ -332,7 +332,7 @@ export default function AdminProductsPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
             <DialogHeader>
               <DialogTitle className="text-3xl font-black text-primary">
                 {editingProduct ? 'Editar Produto' : 'Novo Produto'}
@@ -340,32 +340,32 @@ export default function AdminProductsPage() {
             </DialogHeader>
             <div className="grid gap-6 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="name" className="text-lg font-bold">Nome do Produto</Label>
+                <Label htmlFor="name" className="text-lg font-bold text-black">Nome do Produto</Label>
                 <Input 
                   id="name" 
                   value={formData.name} 
                   onChange={(e) => setFormData({...formData, name: e.target.value})} 
-                  className="rounded-xl border-2 h-12 text-lg text-black" 
+                  className="rounded-xl border-2 h-12 text-lg text-black bg-white" 
                   placeholder="Ex: Pizza de Calabresa"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="desc" className="text-lg font-bold">Descrição / Ingredientes</Label>
+                <Label htmlFor="desc" className="text-lg font-bold text-black">Descrição / Ingredientes</Label>
                 <Input 
                   id="desc" 
                   value={formData.description} 
                   onChange={(e) => setFormData({...formData, description: e.target.value})} 
-                  className="rounded-xl border-2 h-12 text-lg text-black" 
+                  className="rounded-xl border-2 h-12 text-lg text-black bg-white" 
                   placeholder="Ex: Molho de tomate, mussarela e calabresa"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="category" className="text-lg font-bold">Categoria</Label>
+                <Label htmlFor="category" className="text-lg font-bold text-black">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="rounded-xl h-12 border-2 text-lg text-black">
+                  <SelectTrigger className="rounded-xl h-12 border-2 text-lg text-black bg-white">
                     <SelectValue placeholder="Selecione uma categoria" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     {categories?.map((cat) => (
                       <SelectItem key={cat.id} value={cat.id} className="text-lg text-black">{cat.name}</SelectItem>
                     ))}
@@ -375,7 +375,7 @@ export default function AdminProductsPage() {
 
               <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold">Múltiplos Tamanhos</Label>
+                  <Label className="text-lg font-bold text-black">Múltiplos Tamanhos</Label>
                   <p className="text-sm text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
                 </div>
                 <Switch checked={formData.hasMultipleSizes} onCheckedChange={(v) => setFormData({...formData, hasMultipleSizes: v})} className="scale-125" />
@@ -383,14 +383,14 @@ export default function AdminProductsPage() {
 
               {!formData.hasMultipleSizes ? (
                 <div className="grid gap-2">
-                  <Label htmlFor="price" className="text-lg font-bold">Preço Único (R$)</Label>
+                  <Label htmlFor="price" className="text-lg font-bold text-black">Preço Único (R$)</Label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold text-lg">R$</span>
                     <Input 
                       id="price" 
                       value={formData.price} 
                       onChange={(e) => handlePriceChange('price', e.target.value)} 
-                      className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
+                      className="rounded-xl h-12 pl-12 border-2 text-lg text-black bg-white" 
                       placeholder="0,00"
                     />
                   </div>
@@ -398,40 +398,40 @@ export default function AdminProductsPage() {
               ) : (
                 <div className="grid grid-cols-1 gap-4 p-4 bg-muted/20 rounded-2xl border-2">
                   <div className="grid gap-2">
-                    <Label htmlFor="pSmall" className="text-base font-bold">Preço Pequena (Broto)</Label>
+                    <Label htmlFor="pSmall" className="text-base font-bold text-black">Preço Pequena (Broto)</Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pSmall" 
                         value={formData.priceSmall} 
                         onChange={(e) => handlePriceChange('priceSmall', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black bg-white" 
                         placeholder="0,00"
                       />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="pMedium" className="text-base font-bold">Preço Médio</Label>
+                    <Label htmlFor="pMedium" className="text-base font-bold text-black">Preço Médio</Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pMedium" 
                         value={formData.priceMedium} 
                         onChange={(e) => handlePriceChange('priceMedium', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black bg-white" 
                         placeholder="0,00"
                       />
                     </div>
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="pLarge" className="text-base font-bold">Preço Grande</Label>
+                    <Label htmlFor="pLarge" className="text-base font-bold text-black">Preço Grande</Label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-bold">R$</span>
                       <Input 
                         id="pLarge" 
                         value={formData.priceLarge} 
                         onChange={(e) => handlePriceChange('priceLarge', e.target.value)} 
-                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black" 
+                        className="rounded-xl h-12 pl-12 border-2 text-lg text-black bg-white" 
                         placeholder="0,00"
                       />
                     </div>
@@ -440,13 +440,13 @@ export default function AdminProductsPage() {
               )}
 
               <div className="grid gap-2">
-                <Label htmlFor="image" className="text-lg font-bold">Imagem do Produto (URL ou Galeria)</Label>
+                <Label htmlFor="image" className="text-lg font-bold text-black">Imagem do Produto (URL ou Galeria)</Label>
                 <div className="flex gap-2">
                   <Input 
                     id="image" 
                     value={formData.imageUrl} 
                     onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} 
-                    className="rounded-xl h-12 flex-1 border-2 text-lg text-black" 
+                    className="rounded-xl h-12 flex-1 border-2 text-lg text-black bg-white" 
                     placeholder="https://suaimagem.com/foto.jpg" 
                   />
                   <Button 
@@ -469,14 +469,14 @@ export default function AdminProductsPage() {
               
               <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold">Disponível na Loja</Label>
+                  <Label className="text-lg font-bold text-black">Disponível na Loja</Label>
                 </div>
                 <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} className="scale-125" />
               </div>
               
               <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold">Produto em Promoção</Label>
+                  <Label className="text-lg font-bold text-black">Produto em Promoção</Label>
                 </div>
                 <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} className="scale-125" />
               </div>
@@ -510,7 +510,7 @@ export default function AdminProductsPage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
               <DropdownMenuItem asChild>
                 <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

@@ -118,7 +118,7 @@ export default function AdminOrdersPage() {
       case 'Preparing': return <Badge className="bg-yellow-500 text-black">Em Preparo</Badge>;
       case 'Out for Delivery': return <Badge className="bg-purple-500 text-white">Saiu para Entrega</Badge>;
       case 'Delivered': return <Badge className="bg-green-500 text-white">Entregue</Badge>;
-      default: return <Badge variant="outline" className="text-black">{status}</Badge>;
+      default: return <Badge variant="outline" className="text-black border-2">{status}</Badge>;
     }
   };
 
@@ -182,11 +182,11 @@ export default function AdminOrdersPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex justify-between items-center mb-8 mt-16 md:mt-12">
+        <div className="flex justify-between items-center mb-8 mt-20 md:mt-16">
           <div>
             <h1 className="text-3xl font-bold text-black">Monitor de Pedidos</h1>
             <p className="text-muted-foreground">Acompanhe e gerencie os pedidos em tempo real</p>
@@ -256,7 +256,7 @@ export default function AdminOrdersPage() {
                       <Button 
                         variant={order.status === 'Preparing' ? 'default' : 'outline'} 
                         size="sm" 
-                        className="rounded-xl h-10 text-black border-2"
+                        className="rounded-xl h-10 text-black border-2 bg-white"
                         onClick={() => updateStatus(order.id, 'Preparing')}
                       >
                         <Timer className="h-4 w-4 mr-2" /> Preparar
@@ -264,7 +264,7 @@ export default function AdminOrdersPage() {
                       <Button 
                         variant={order.status === 'Out for Delivery' ? 'default' : 'outline'} 
                         size="sm" 
-                        className="rounded-xl h-10 text-black border-2"
+                        className="rounded-xl h-10 text-black border-2 bg-white"
                         onClick={() => updateStatus(order.id, 'Out for Delivery')}
                       >
                         <Truck className="h-4 w-4 mr-2" /> Entregar
@@ -272,7 +272,7 @@ export default function AdminOrdersPage() {
                       <Button 
                         variant={order.status === 'Delivered' ? 'default' : 'outline'} 
                         size="sm" 
-                        className="rounded-xl h-10 col-span-2 text-black border-2"
+                        className="rounded-xl h-10 col-span-2 text-black border-2 bg-white"
                         onClick={() => updateStatus(order.id, 'Delivered')}
                       >
                         <CheckCircle2 className="h-4 w-4 mr-2" /> Finalizar
@@ -296,12 +296,12 @@ export default function AdminOrdersPage() {
           <AlertDialogContent className="rounded-3xl border-2 bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
-              <AlertDialogDescription className="text-lg">
+              <AlertDialogDescription className="text-lg text-black">
                 Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita e removerá o registro do sistema financeiro.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold text-black">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Registro
               </AlertDialogAction>
@@ -331,7 +331,7 @@ export default function AdminOrdersPage() {
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
             <DropdownMenuItem asChild>
               <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

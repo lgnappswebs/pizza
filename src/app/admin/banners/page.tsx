@@ -236,16 +236,16 @@ export default function AdminBannersPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-16 md:mt-12">
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-20 md:mt-16">
           <div className="space-y-1">
             <h1 className="text-3xl sm:text-4xl font-bold">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
             <Plus className="mr-2 h-6 w-6" /> Novo Banner
           </Button>
         </div>
@@ -284,10 +284,10 @@ export default function AdminBannersPage() {
                     Texto: {getTextPositionLabel(banner.textPosition)}
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8">
+                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8 text-black border-2">
                       <Edit2 className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive hover:bg-destructive/10">
+                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive border-2 hover:bg-destructive/10">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -325,7 +325,7 @@ export default function AdminBannersPage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
               <DropdownMenuItem asChild>
                 <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
@@ -357,7 +357,7 @@ export default function AdminBannersPage() {
         </nav>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
             <DialogHeader>
               <DialogTitle className="text-3xl font-black text-primary">
                 {editingBanner ? 'Editar Banner' : 'Novo Banner'}
@@ -366,27 +366,27 @@ export default function AdminBannersPage() {
             <div className="grid gap-6 py-4">
               <div className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="title" className="text-lg font-bold flex items-center gap-2">
+                  <Label htmlFor="title" className="text-lg font-bold flex items-center gap-2 text-black">
                     <Type className="h-5 w-5 text-primary" /> Título do Banner
                   </Label>
-                  <Input id="title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Promoção de Terça" />
+                  <Input id="title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Promoção de Terça" />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="desc" className="text-lg font-bold">Descrição</Label>
-                  <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Ganhe um refri grátis" />
+                  <Label htmlFor="desc" className="text-lg font-bold text-black">Descrição</Label>
+                  <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Ganhe um refri grátis" />
                 </div>
               </div>
 
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label className="text-lg font-bold flex items-center gap-2">
+                  <Label className="text-lg font-bold flex items-center gap-2 text-black">
                     <AlignLeft className="h-5 w-5 text-primary" /> Posição do Texto
                   </Label>
                   <Select value={formData.textPosition} onValueChange={(v) => setFormData({...formData, textPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black bg-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="top-left" className="text-lg">Sup. Esquerdo</SelectItem>
                       <SelectItem value="top-center" className="text-lg">Sup. Central</SelectItem>
                       <SelectItem value="center" className="text-lg">Centralizado</SelectItem>
@@ -396,14 +396,14 @@ export default function AdminBannersPage() {
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label className="text-lg font-bold flex items-center gap-2">
+                  <Label className="text-lg font-bold flex items-center gap-2 text-black">
                     <Layout className="h-5 w-5 text-primary" /> Posição no Menu
                   </Label>
                   <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black bg-white">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="top" className="text-lg">Topo do Cardápio</SelectItem>
                       <SelectItem value="middle" className="text-lg">Meio do Cardápio</SelectItem>
                       <SelectItem value="bottom" className="text-lg">Fim do Cardápio</SelectItem>
@@ -413,14 +413,14 @@ export default function AdminBannersPage() {
               </div>
 
               <div className="grid gap-2">
-                <Label className="text-lg font-bold flex items-center gap-2">
+                <Label className="text-lg font-bold flex items-center gap-2 text-black">
                   <LinkIcon className="h-5 w-5 text-primary" /> Vincular à Categoria
                 </Label>
                 <Select value={formData.linkCategoryId} onValueChange={(v) => setFormData({...formData, linkCategoryId: v})}>
-                  <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
+                  <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black bg-white">
                     <SelectValue placeholder="Selecione uma categoria (opcional)" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     <SelectItem value="none" className="text-lg">Nenhuma (Apenas Imagem)</SelectItem>
                     {categories?.map((cat) => (
                       <SelectItem key={cat.id} value={cat.id} className="text-lg">{cat.name}</SelectItem>
@@ -430,15 +430,15 @@ export default function AdminBannersPage() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="image" className="text-lg font-bold flex items-center gap-2">
+                <Label htmlFor="image" className="text-lg font-bold flex items-center gap-2 text-black">
                   <ImageIcon className="h-5 w-5 text-primary" /> Imagem do Banner
                 </Label>
                 <div className="flex gap-2">
-                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-lg text-black" placeholder="Cole a URL ou use a galeria" />
+                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-lg text-black bg-white" placeholder="Cole a URL ou use a galeria" />
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="shrink-0 rounded-xl border-2 h-12 w-12"
+                    className="shrink-0 rounded-xl border-2 h-12 w-12 text-black"
                     onClick={() => document.getElementById('banner-upload')?.click()}
                   >
                     <ImageIcon className="h-6 w-6 text-primary" />
@@ -456,7 +456,7 @@ export default function AdminBannersPage() {
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-16 rounded-full font-black text-xl bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95">
+              <Button onClick={handleSave} className="w-full h-16 rounded-full font-black text-xl bg-primary shadow-lg shadow-primary/20 transform transition active:scale-95 text-white">
                 {editingBanner ? 'Salvar Alterações' : 'Criar Novo Banner'}
               </Button>
             </DialogFooter>

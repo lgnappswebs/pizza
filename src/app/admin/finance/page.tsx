@@ -270,11 +270,11 @@ export default function AdminFinancePage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 print:p-0 print:m-0 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95 print:hidden">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95 print:hidden">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-12 md:mt-8 print:hidden">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-20 md:mt-16 print:hidden">
           <div className="w-full lg:w-auto">
             <h1 className="text-3xl font-bold">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
@@ -283,28 +283,28 @@ export default function AdminFinancePage() {
           <div className="flex flex-wrap items-center gap-2 w-full lg:flex-1 lg:justify-end">
             <div className="flex items-center gap-1 bg-white p-1.5 rounded-2xl border-2 shadow-sm w-full lg:w-auto overflow-hidden">
               <Select value={selectedDay} onValueChange={setSelectedDay}>
-                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black bg-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {days.map(d => <SelectItem key={d} value={d}>{d}</SelectItem>)}
                 </SelectContent>
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="flex-[2] h-10 border-none font-bold px-2 focus:ring-0 text-black">
+                <SelectTrigger className="flex-[2] h-10 border-none font-bold px-2 focus:ring-0 text-black bg-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {months.map(m => <SelectItem key={m.v} value={m.v}>{m.l}</SelectItem>)}
                 </SelectContent>
               </Select>
               <span className="text-muted-foreground">/</span>
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black">
+                <SelectTrigger className="flex-1 h-10 border-none font-bold px-2 focus:ring-0 text-black bg-white">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {years.map(y => <SelectItem key={y} value={y}>{y}</SelectItem>)}
                 </SelectContent>
               </Select>
@@ -317,7 +317,7 @@ export default function AdminFinancePage() {
                   Exportar
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl bg-white">
                 <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
                 <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer text-black">
                   Faturamento do Dia
@@ -404,7 +404,7 @@ export default function AdminFinancePage() {
                   <CardTitle className="text-lg font-bold text-black">Detalhamento</CardTitle>
                   <CardDescription className="text-xs">Vendas no período selecionado</CardDescription>
                 </div>
-                <Badge variant="outline" className="text-[10px] px-2 text-black">{filteredOrders.length} Itens</Badge>
+                <Badge variant="outline" className="text-[10px] px-2 text-black border-2">{filteredOrders.length} Itens</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
@@ -490,7 +490,7 @@ export default function AdminFinancePage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
               <DropdownMenuItem asChild>
                 <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

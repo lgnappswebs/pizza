@@ -272,16 +272,16 @@ export default function AdminCategoriesPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 pb-32 md:pb-8 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-16 md:mt-12">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-20 md:mt-16">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
             <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
             <Plus className="mr-2 h-5 w-5" /> Nova Categoria
           </Button>
         </div>
@@ -295,7 +295,7 @@ export default function AdminCategoriesPage() {
             ) : (
               <div className="grid grid-cols-1 gap-3 md:gap-4">
                 {categories?.map((category) => (
-                  <div key={category.id} className="flex items-center justify-between p-3 md:p-4 border rounded-2xl hover:bg-muted/30 transition-colors gap-2">
+                  <div key={category.id} className="flex items-center justify-between p-3 md:p-4 border-2 rounded-2xl hover:bg-muted/30 transition-colors gap-2 bg-white">
                     <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
                       <div className="h-8 w-8 md:h-10 md:w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold shrink-0 text-sm md:text-base">
                         {category.order}
@@ -308,7 +308,7 @@ export default function AdminCategoriesPage() {
                           </div>
                           <div className="flex items-center gap-1.5">
                             <span className="text-[10px] uppercase font-black text-muted-foreground/60 hidden sm:inline">Sub:</span>
-                            <Badge variant="secondary" className="text-[10px] md:text-xs font-bold truncate max-w-[150px] bg-muted">
+                            <Badge variant="secondary" className="text-[10px] md:text-xs font-bold truncate max-w-[150px] bg-muted border-none text-black">
                               {category.subName || 'Geral'}
                             </Badge>
                           </div>
@@ -316,14 +316,14 @@ export default function AdminCategoriesPage() {
                       </div>
                     </div>
                     <div className="flex gap-1.5 md:gap-2 shrink-0">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-black">
+                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-black border-2">
                         <Edit2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
                       <Button 
                         variant="outline" 
                         size="icon" 
                         onClick={() => handleDeleteClick(category)} 
-                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive hover:bg-destructive/10"
+                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive border-2 hover:bg-destructive/10"
                       >
                         <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
@@ -341,7 +341,7 @@ export default function AdminCategoriesPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
             <DialogHeader>
               <DialogTitle className="text-3xl font-black text-primary">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
@@ -349,11 +349,11 @@ export default function AdminCategoriesPage() {
             </DialogHeader>
             <div className="grid gap-6 py-6">
               <div className="grid gap-3">
-                <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2">
+                <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2 text-black">
                   <FolderTree className="h-5 w-5 text-primary" /> Grupo Principal
                 </Label>
                 <p className="text-xs text-muted-foreground -mt-2">Define o grupo no cardápio (ex: Pizzas, Bebidas, Sobremesas)</p>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Pizzas" />
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Pizzas" />
                 
                 <div className="space-y-2 mt-1">
                   <Collapsible open={isMainSuggestionsOpen} onOpenChange={setIsMainSuggestionsOpen} className="w-full">
@@ -370,7 +370,7 @@ export default function AdminCategoriesPage() {
                           <Badge 
                             key={suggestion} 
                             variant="secondary" 
-                            className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted"
+                            className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted bg-white text-black"
                             onClick={() => addNameSuggestion(suggestion)}
                           >
                             {suggestion}
@@ -383,11 +383,11 @@ export default function AdminCategoriesPage() {
               </div>
               
               <div className="grid gap-2 border-t pt-4">
-                <Label htmlFor="subName" className="text-lg font-bold flex items-center gap-2">
+                <Label htmlFor="subName" className="text-lg font-bold flex items-center gap-2 text-black">
                   <Tags className="h-5 w-5 text-primary" /> Subcategoria / Variação
                 </Label>
                 <p className="text-xs text-muted-foreground -mt-1">Diferencia os tipos dentro do grupo (ex: Salgadas, Doces, Sucos)</p>
-                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Salgadas" />
+                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Salgadas" />
                 
                 <Collapsible open={isSuggestionsOpen} onOpenChange={setIsSuggestionsOpen} className="w-full mt-2">
                   <CollapsibleTrigger asChild>
@@ -407,7 +407,7 @@ export default function AdminCategoriesPage() {
                               <Badge 
                                 key={suggestion} 
                                 variant="secondary" 
-                                className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1 px-3 rounded-full text-[11px]"
+                                className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1 px-3 rounded-full text-[11px] bg-white text-black border-2"
                                 onClick={() => addSubSuggestion(suggestion)}
                               >
                                 {suggestion}
@@ -425,13 +425,13 @@ export default function AdminCategoriesPage() {
                 <Label htmlFor="order" className="text-lg font-bold text-black">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
                    <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
-                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" />
+                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" />
                 </div>
                 <p className="text-sm text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
               </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg transform transition active:scale-95">
+              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary shadow-lg transform transition active:scale-95 text-white">
                 {editingCategory ? 'Salvar Alterações' : 'Criar Categoria'}
               </Button>
             </DialogFooter>
@@ -442,13 +442,13 @@ export default function AdminCategoriesPage() {
           <AlertDialogContent className="rounded-3xl border-2 bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
-              <AlertDialogDescription className="text-lg">
+              <AlertDialogDescription className="text-lg text-black">
                 Tem certeza que deseja excluir a categoria <strong>"{categoryToDelete?.name} - {categoryToDelete?.subName || 'Geral'}"</strong>? 
                 Esta ação não pode ser desfeita e pode afetar a exibição de produtos vinculados.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold text-black">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Categoria
               </AlertDialogAction>
@@ -478,7 +478,7 @@ export default function AdminCategoriesPage() {
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
             <DropdownMenuItem asChild>
               <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

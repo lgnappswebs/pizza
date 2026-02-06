@@ -264,11 +264,11 @@ export default function AdminSettingsPage() {
       </aside>
 
       <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-32 relative">
-        <Link href="/admin/dashboard" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <Link href="/admin/dashboard" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="mb-8 text-center md:text-left mt-16 md:mt-12">
+        <div className="mb-8 text-center md:text-left mt-20 md:mt-16">
           <h1 className="text-3xl font-black md:text-2xl lg:text-3xl">Personalizar Aplicativo</h1>
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
@@ -290,7 +290,7 @@ export default function AdminSettingsPage() {
                     placeholder="Ex: PizzApp"
                     value={form.restaurantName} 
                     onChange={(e) => setForm({...form, restaurantName: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
                 
@@ -311,7 +311,7 @@ export default function AdminSettingsPage() {
                     placeholder="Ex: Pizza"
                     value={form.logoIconName} 
                     onChange={(e) => setForm({...form, logoIconName: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
 
@@ -323,11 +323,11 @@ export default function AdminSettingsPage() {
                       placeholder="https://suaimagem.com/logo.png"
                       value={form.logoImageUrl} 
                       onChange={(e) => setForm({...form, logoImageUrl: e.target.value})}
-                      className="rounded-xl h-14 flex-1 border-2 text-lg text-black"
+                      className="rounded-xl h-14 flex-1 border-2 text-lg text-black bg-white"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-14 rounded-xl border-2 px-6 text-black"
+                      className="h-14 rounded-xl border-2 px-6 text-black bg-white"
                       onClick={() => document.getElementById('logo-upload')?.click()}
                     >
                       <ImageIcon className="h-6 w-6 text-primary" />
@@ -343,7 +343,7 @@ export default function AdminSettingsPage() {
                     placeholder="(00) 00000-0000"
                     value={form.whatsappNumber} 
                     onChange={(e) => setForm({...form, whatsappNumber: handlePhoneMask(e.target.value)})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
 
@@ -356,7 +356,7 @@ export default function AdminSettingsPage() {
                       placeholder="0,00"
                       value={form.deliveryFee} 
                       onChange={(e) => setForm({...form, deliveryFee: formatCurrency(e.target.value)})}
-                      className="rounded-xl h-14 pl-14 border-2 text-lg text-black"
+                      className="rounded-xl h-14 pl-14 border-2 text-lg text-black bg-white"
                     />
                   </div>
                 </div>
@@ -390,7 +390,7 @@ export default function AdminSettingsPage() {
                   placeholder="Ex: Aberto das 18h às 23h30"
                   value={form.openingHoursText} 
                   onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
-                  className="rounded-xl h-14 border-2 text-lg text-black"
+                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                 />
               </div>
 
@@ -401,7 +401,7 @@ export default function AdminSettingsPage() {
                   placeholder="Ex: Estamos fechados agora. Volte em breve!"
                   value={form.closedMessage} 
                   onChange={(e) => setForm({...form, closedMessage: e.target.value})}
-                  className="rounded-2xl min-h-[120px] border-2 text-lg text-black"
+                  className="rounded-2xl min-h-[120px] border-2 text-lg text-black bg-white"
                 />
               </div>
             </CardContent>
@@ -422,7 +422,7 @@ export default function AdminSettingsPage() {
                     placeholder="Nosso Cardápio"
                     value={form.menuTitle} 
                     onChange={(e) => setForm({...form, menuTitle: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
                 <div className="space-y-2">
@@ -432,7 +432,7 @@ export default function AdminSettingsPage() {
                     placeholder="Escolha suas pizzas favoritas e monte seu pedido"
                     value={form.menuSubtitle} 
                     onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
                 <div className="space-y-2">
@@ -442,7 +442,7 @@ export default function AdminSettingsPage() {
                     placeholder="Pizza quentinha, sabor inesquecível 🍕🔥"
                     value={form.heroBannerText} 
                     onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
                 <div className="space-y-2">
@@ -453,11 +453,11 @@ export default function AdminSettingsPage() {
                       placeholder="https://suaimagem.com/banner-pizza.jpg"
                       value={form.heroBannerImageUrl} 
                       onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
-                      className="rounded-xl h-14 flex-1 border-2 text-lg text-black"
+                      className="rounded-xl h-14 flex-1 border-2 text-lg text-black bg-white"
                     />
                     <Button 
                       variant="outline" 
-                      className="h-14 rounded-xl border-2 px-6 text-black"
+                      className="h-14 rounded-xl border-2 px-6 text-black bg-white"
                       onClick={() => document.getElementById('banner-hero-upload')?.click()}
                     >
                       <ImageIcon className="h-6 w-6 text-primary" />
@@ -485,7 +485,7 @@ export default function AdminSettingsPage() {
                           type="text" 
                           value={form.primaryColor} 
                           onChange={(e) => setForm({...form, primaryColor: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black"
+                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
                         />
                       </div>
                     </div>
@@ -503,7 +503,7 @@ export default function AdminSettingsPage() {
                           type="text" 
                           value={form.secondaryColor} 
                           onChange={(e) => setForm({...form, secondaryColor: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black"
+                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
                         />
                       </div>
                     </div>
@@ -517,18 +517,18 @@ export default function AdminSettingsPage() {
                     onValueChange={(v) => setForm({...form, appBackgroundType: v})}
                     className="grid gap-4"
                   >
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
                       <RadioGroupItem value="pattern" id="bg-pattern" />
                       <div className="flex-1 cursor-pointer">
                         <Label htmlFor="bg-pattern" className="font-bold block text-black">Padrão Pizzaria (Ícones)</Label>
                         <p className="text-[10px] text-muted-foreground">Aplica um fundo com textura leve na cor principal do app.</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
                       <RadioGroupItem value="color" id="bg-color" />
                       <Label htmlFor="bg-color" className="flex-1 cursor-pointer font-bold text-black">Cor Sólida</Label>
                     </div>
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30">
+                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
                       <RadioGroupItem value="image" id="bg-image" />
                       <Label htmlFor="bg-image" className="flex-1 cursor-pointer font-bold text-black">Imagem Personalizada</Label>
                     </div>
@@ -546,7 +546,7 @@ export default function AdminSettingsPage() {
                         type="text" 
                         value={form.backgroundColor} 
                         onChange={(e) => setForm({...form, backgroundColor: e.target.value})}
-                        className="rounded-xl h-14 flex-1 border-2 font-mono text-black"
+                        className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
                       />
                     </div>
                   )}
@@ -558,11 +558,11 @@ export default function AdminSettingsPage() {
                           placeholder="URL da Imagem"
                           value={form.appBackgroundImageUrl} 
                           onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 text-black"
+                          className="rounded-xl h-14 flex-1 border-2 text-black bg-white"
                         />
                         <Button 
                           variant="outline" 
-                          className="h-14 rounded-xl border-2 px-6 text-black"
+                          className="h-14 rounded-xl border-2 px-6 text-black bg-white"
                           onClick={() => document.getElementById('bg-upload')?.click()}
                         >
                           <ImageIcon className="h-6 w-6 text-primary" />
@@ -590,7 +590,7 @@ export default function AdminSettingsPage() {
                   placeholder="Rua das Pizzas, 123"
                   value={form.address} 
                   onChange={(e) => setForm({...form, address: e.target.value})}
-                  className="rounded-xl h-14 border-2 text-lg text-black"
+                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                 />
               </div>
 
@@ -602,7 +602,7 @@ export default function AdminSettingsPage() {
                     placeholder="(00) 00000-0000"
                     value={form.contactPhone} 
                     onChange={(e) => setForm({...form, contactPhone: handlePhoneMask(e.target.value)})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
                 <div className="space-y-2">
@@ -612,7 +612,7 @@ export default function AdminSettingsPage() {
                     placeholder="contato@suapizzaria.com"
                     value={form.contactEmail} 
                     onChange={(e) => setForm({...form, contactEmail: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black"
+                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                   />
                 </div>
               </div>
@@ -624,22 +624,22 @@ export default function AdminSettingsPage() {
                   placeholder="Olá! Gostaria de tirar uma dúvida."
                   value={form.whatsappAutoMessage} 
                   onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
-                  className="rounded-xl h-14 border-2 text-lg text-black"
+                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold text-black"><Instagram className="h-5 w-5" /> Instagram URL</Label>
-                  <Input placeholder="Ex: instagram.com/suapizzaria" value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black" />
+                  <Input placeholder="Ex: instagram.com/suapizzaria" value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold text-black"><Facebook className="h-5 w-5" /> Facebook URL</Label>
-                  <Input placeholder="Ex: facebook.com/suapizzaria" value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black" />
+                  <Input placeholder="Ex: facebook.com/suapizzaria" value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
                 </div>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-2 text-lg font-bold text-black"><Music2 className="h-5 w-5" /> TikTok URL</Label>
-                  <Input placeholder="Ex: tiktok.com/@suapizzaria" value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black" />
+                  <Input placeholder="Ex: tiktok.com/@suapizzaria" value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
                 </div>
               </div>
             </CardContent>
@@ -679,7 +679,7 @@ export default function AdminSettingsPage() {
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4">
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
             <DropdownMenuItem asChild>
               <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
