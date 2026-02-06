@@ -393,7 +393,8 @@ export default function AdminFinancePage() {
             <CardContent className="p-4 pt-0">
               <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
             </CardContent>
-          </div>
+          </Card>
+        </div>
 
         <div className="grid grid-cols-1 gap-8 print:hidden">
           <Card className="rounded-2xl border-2 overflow-hidden shadow-sm bg-white">
