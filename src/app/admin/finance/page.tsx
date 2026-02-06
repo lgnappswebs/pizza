@@ -276,7 +276,7 @@ export default function AdminFinancePage() {
 
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-20 md:mt-16 print:hidden">
           <div className="w-full lg:w-auto">
-            <h1 className="text-3xl font-bold">Gestão Financeira</h1>
+            <h1 className="text-3xl font-bold text-black">Gestão Financeira</h1>
             <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
           </div>
 
