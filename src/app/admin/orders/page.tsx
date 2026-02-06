@@ -293,7 +293,7 @@ export default function AdminOrdersPage() {
         )}
 
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <AlertDialogContent className="rounded-3xl border-2">
+          <AlertDialogContent className="rounded-3xl border-2 bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
               <AlertDialogDescription className="text-lg">
@@ -301,7 +301,7 @@ export default function AdminOrdersPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Registro
               </AlertDialogAction>

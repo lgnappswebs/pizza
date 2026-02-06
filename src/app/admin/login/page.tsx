@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -49,7 +50,7 @@ export default function AdminLoginPage() {
         <ArrowLeft className="h-5 w-5" /> Voltar ao Início
       </Link>
       
-      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0">
+      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0 bg-white">
         <CardHeader className="text-center space-y-4">
           <div className="mx-auto bg-primary/10 p-4 rounded-full w-fit">
             <ShieldAlert className="h-12 w-12 text-primary" />
@@ -70,7 +71,7 @@ export default function AdminLoginPage() {
                 id="email" 
                 type="email" 
                 placeholder="admin@pizzapp.com" 
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl text-black"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -82,13 +83,13 @@ export default function AdminLoginPage() {
                 id="password" 
                 type="password" 
                 placeholder="••••••••" 
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl text-black"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary">
+            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary text-white">
               {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <LogIn className="mr-2 h-6 w-6" />}
               Entrar no Painel
             </Button>

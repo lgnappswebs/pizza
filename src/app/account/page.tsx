@@ -7,11 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { User, MapPin, Loader2, Save as SaveIcon } from 'lucide-react';
+import { User, MapPin, Loader2, Save as SaveIcon, ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useUser, useFirestore, useDoc, useMemoFirebase, setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import Link from 'next/link';
 
 export default function AccountPage() {
   const { user, isUserLoading } = useUser();
@@ -90,8 +91,12 @@ export default function AccountPage() {
   return (
     <>
       <Header />
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto space-y-8 mt-6 md:mt-10">
+      <main className="container mx-auto px-4 py-8 relative">
+        <Link href="/menu" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
+        </Link>
+
+        <div className="max-w-3xl mx-auto space-y-8 mt-24 md:mt-20">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
@@ -104,7 +109,7 @@ export default function AccountPage() {
 
           <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
             <CardHeader className="bg-primary/5 border-b">
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-black">
                 <User className="h-5 w-5 text-primary" /> Perfil e Contato
               </CardTitle>
             </CardHeader>
@@ -116,7 +121,7 @@ export default function AccountPage() {
                     id="name" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
                 <div className="space-y-2">
@@ -125,7 +130,7 @@ export default function AccountPage() {
                     id="phone" 
                     value={formData.phone}
                     onChange={handlePhoneChange}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
               </div>
@@ -134,7 +139,7 @@ export default function AccountPage() {
 
           <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
             <CardHeader className="bg-primary/5 border-b">
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-black">
                 <MapPin className="h-5 w-5 text-primary" /> Meu Endereço Padrão
               </CardTitle>
               <CardDescription>Estes dados serão usados para facilitar sua entrega</CardDescription>
@@ -147,7 +152,7 @@ export default function AccountPage() {
                     id="address" 
                     value={formData.address}
                     onChange={(e) => setFormData({...formData, address: e.target.value})}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
                 <div className="space-y-2">
@@ -156,7 +161,7 @@ export default function AccountPage() {
                     id="number" 
                     value={formData.number}
                     onChange={(e) => setFormData({...formData, number: e.target.value})}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
                 <div className="space-y-2">
@@ -165,7 +170,7 @@ export default function AccountPage() {
                     id="neighborhood" 
                     value={formData.neighborhood}
                     onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
@@ -174,7 +179,7 @@ export default function AccountPage() {
                     id="complement" 
                     value={formData.complement}
                     onChange={(e) => setFormData({...formData, complement: e.target.value})}
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                   />
                 </div>
               </div>

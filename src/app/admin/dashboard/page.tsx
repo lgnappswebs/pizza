@@ -17,7 +17,8 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Wallet,
-  Plus
+  Plus,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -166,7 +167,7 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto pb-32 md:pb-0">
+      <main className="flex-1 overflow-auto pb-32 md:pb-0 relative">
         <header className="bg-white border-b h-20 flex items-center justify-between px-8 sticky top-0 z-20">
           <h1 className="text-2xl font-bold">Painel de Controle</h1>
           <div className="flex items-center gap-4">
@@ -183,7 +184,7 @@ export default function AdminDashboard() {
               </PopoverTrigger>
               <PopoverContent className="w-80 p-0 rounded-2xl shadow-2xl overflow-hidden border-2" align="end">
                 <div className="p-4 border-b bg-muted/30 flex justify-between items-center">
-                  <h3 className="font-bold text-lg">Notificações</h3>
+                  <h3 className="font-bold text-lg text-black">Notificações</h3>
                   {unreadCount > 0 && (
                     <Button variant="ghost" size="sm" className="text-[10px] h-7 px-2 font-bold" onClick={markAllAsRead}>
                       Limpar todas

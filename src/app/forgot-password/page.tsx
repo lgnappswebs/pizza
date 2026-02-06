@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -23,11 +24,12 @@ export default function ForgotPasswordPage() {
     
     try {
       await initiatePasswordReset(auth, email);
-      setSent(true);
+      setSent(sent);
       toast({
         title: "E-mail enviado!",
         description: "Verifique sua caixa de entrada para redefinir a senha."
       });
+      setSent(true);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -41,11 +43,11 @@ export default function ForgotPasswordPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
-      <Link href="/login" className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+      <Link href="/login" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       
-      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0">
+      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0 bg-white">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-black text-primary">Recuperar Senha</CardTitle>
           <CardDescription>Enviaremos um link para você criar uma nova senha</CardDescription>
@@ -61,7 +63,7 @@ export default function ForgotPasswordPage() {
                 <p className="text-muted-foreground">Confira sua caixa de entrada (e o spam) para o e-mail: <strong>{email}</strong></p>
               </div>
               <Link href="/login">
-                <Button className="w-full h-12 rounded-full font-bold bg-primary">
+                <Button className="w-full h-12 rounded-full font-bold bg-primary text-white">
                   Voltar para o Login
                 </Button>
               </Link>
@@ -74,13 +76,13 @@ export default function ForgotPasswordPage() {
                   id="email" 
                   type="email" 
                   placeholder="seu@email.com" 
-                  className="h-12 rounded-xl"
+                  className="h-12 rounded-xl text-black"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
-              <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary">
+              <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary text-white">
                 {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <Mail className="mr-2 h-6 w-6" />}
                 Enviar Link
               </Button>

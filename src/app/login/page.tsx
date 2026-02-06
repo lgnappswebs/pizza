@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -59,11 +60,11 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
-      <Link href="/" className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+      <Link href="/" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Início
       </Link>
       
-      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0">
+      <Card className="w-full max-w-md rounded-3xl border-2 shadow-xl mt-12 md:mt-0 bg-white">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-black text-primary">
             {config?.restaurantName || 'Entrar'}
@@ -78,7 +79,7 @@ export default function LoginPage() {
                 id="email" 
                 type="email" 
                 placeholder="seu@email.com" 
-                className="h-12 rounded-xl"
+                className="h-12 rounded-xl text-black"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -96,7 +97,7 @@ export default function LoginPage() {
                   id="password" 
                   type={showPassword ? "text" : "password"} 
                   placeholder="••••••••" 
-                  className="h-12 rounded-xl pr-10"
+                  className="h-12 rounded-xl pr-10 text-black"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -110,7 +111,7 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary">
+            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary text-white">
               {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <LogIn className="mr-2 h-6 w-6" />}
               Entrar
             </Button>
@@ -119,7 +120,7 @@ export default function LoginPage() {
           <div className="text-center space-y-4">
             <p className="text-sm text-muted-foreground">Ainda não tem uma conta?</p>
             <Link href="/register">
-              <Button variant="outline" className="w-full h-12 rounded-full font-bold">
+              <Button variant="outline" className="w-full h-12 rounded-full font-bold text-black border-2">
                 <UserPlus className="mr-2 h-5 w-5" /> Criar nova conta
               </Button>
             </Link>

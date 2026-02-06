@@ -80,7 +80,9 @@ export function ThemeInjected() {
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image') {
       root.style.setProperty('--background', '0 0% 100%');
-      isDark = true;
+      isDark = true; // Forçamos modo de contraste para imagem
+    } else {
+      isDark = false;
     }
 
     if (isDark) {
@@ -121,7 +123,7 @@ export function ThemeInjected() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
           style={{ 
             backgroundImage: `url(${config.appBackgroundImageUrl})`,
-            opacity: 0.2
+            opacity: 0.4
           }}
         ></div>
       )}

@@ -353,7 +353,7 @@ export default function AdminCategoriesPage() {
                   <FolderTree className="h-5 w-5 text-primary" /> Grupo Principal
                 </Label>
                 <p className="text-xs text-muted-foreground -mt-2">Define o grupo no cardápio (ex: Pizzas, Bebidas, Sobremesas)</p>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Pizzas" />
+                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Pizzas" />
                 
                 <div className="space-y-2 mt-1">
                   <Collapsible open={isMainSuggestionsOpen} onOpenChange={setIsMainSuggestionsOpen} className="w-full">
@@ -387,7 +387,7 @@ export default function AdminCategoriesPage() {
                   <Tags className="h-5 w-5 text-primary" /> Subcategoria / Variação
                 </Label>
                 <p className="text-xs text-muted-foreground -mt-1">Diferencia os tipos dentro do grupo (ex: Salgadas, Doces, Sucos)</p>
-                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Salgadas" />
+                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Salgadas" />
                 
                 <Collapsible open={isSuggestionsOpen} onOpenChange={setIsSuggestionsOpen} className="w-full mt-2">
                   <CollapsibleTrigger asChild>
@@ -422,10 +422,10 @@ export default function AdminCategoriesPage() {
               </div>
 
               <div className="grid gap-2 border-t pt-4">
-                <Label htmlFor="order" className="text-lg font-bold">Ordem de Exibição</Label>
+                <Label htmlFor="order" className="text-lg font-bold text-black">Ordem de Exibição</Label>
                 <div className="flex items-center gap-2">
                    <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
-                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg" />
+                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" />
                 </div>
                 <p className="text-sm text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
               </div>
@@ -439,7 +439,7 @@ export default function AdminCategoriesPage() {
         </Dialog>
 
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <AlertDialogContent className="rounded-3xl border-2">
+          <AlertDialogContent className="rounded-3xl border-2 bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
               <AlertDialogDescription className="text-lg">
@@ -448,7 +448,7 @@ export default function AdminCategoriesPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Categoria
               </AlertDialogAction>

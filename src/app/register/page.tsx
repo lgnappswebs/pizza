@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -114,19 +115,19 @@ export default function RegisterPage() {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 py-20 relative">
-      <Link href="/login" className="absolute top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+      <Link href="/login" className="absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-5 w-5" /> Voltar ao Login
       </Link>
       
-      <Card className="w-full max-w-2xl rounded-3xl border-2 shadow-xl overflow-hidden mt-12 md:mt-0">
+      <Card className="w-full max-w-2xl rounded-3xl border-2 shadow-xl overflow-hidden mt-12 md:mt-0 bg-white">
         <CardHeader className="text-center bg-primary/5 pb-8 border-b">
           <CardTitle className="text-4xl font-black text-primary">Cadastro</CardTitle>
-          <CardDescription className="text-lg">Complete seus dados para facilitar seus pedidos</CardDescription>
+          <CardDescription>Complete seus dados para facilitar seus pedidos</CardDescription>
         </CardHeader>
         <CardContent className="pt-8">
           <form onSubmit={handleRegister} className="space-y-8">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2 text-black">
                 <User className="h-5 w-5 text-primary" /> Dados Pessoais
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,7 +136,7 @@ export default function RegisterPage() {
                   <Input 
                     id="name" 
                     placeholder="Seu nome" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     required
@@ -146,7 +147,7 @@ export default function RegisterPage() {
                   <Input 
                     id="phone" 
                     placeholder="(00) 00000-0000" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.phone}
                     onChange={handlePhoneChange}
                     required
@@ -158,7 +159,7 @@ export default function RegisterPage() {
                     id="email" 
                     type="email" 
                     placeholder="seu@email.com" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                     required
@@ -168,7 +169,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2 text-black">
                 <MapPin className="h-5 w-5 text-primary" /> Endereço de Entrega
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -177,7 +178,7 @@ export default function RegisterPage() {
                   <Input 
                     id="address" 
                     placeholder="Ex: Rua das Flores" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.address}
                     onChange={(e) => setFormData({...formData, address: e.target.value})}
                     required
@@ -188,7 +189,7 @@ export default function RegisterPage() {
                   <Input 
                     id="number" 
                     placeholder="123" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.number}
                     onChange={(e) => setFormData({...formData, number: e.target.value})}
                     required
@@ -199,7 +200,7 @@ export default function RegisterPage() {
                   <Input 
                     id="neighborhood" 
                     placeholder="Ex: Centro" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.neighborhood}
                     onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
                     required
@@ -210,7 +211,7 @@ export default function RegisterPage() {
                   <Input 
                     id="complement" 
                     placeholder="Ex: Apartamento 12, Bloco B" 
-                    className="h-12 rounded-xl"
+                    className="h-12 rounded-xl text-black"
                     value={formData.complement}
                     onChange={(e) => setFormData({...formData, complement: e.target.value})}
                   />
@@ -219,7 +220,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2">
+              <h3 className="text-xl font-bold flex items-center gap-2 border-b pb-2 text-black">
                 <Lock className="h-5 w-5 text-primary" /> Segurança
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -230,7 +231,7 @@ export default function RegisterPage() {
                       id="password" 
                       type={showPassword ? "text" : "password"} 
                       placeholder="No mínimo 6 caracteres" 
-                      className="h-12 rounded-xl pr-10"
+                      className="h-12 rounded-xl pr-10 text-black"
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
                       required
@@ -252,7 +253,7 @@ export default function RegisterPage() {
                       id="confirmPassword" 
                       type={showConfirmPassword ? "text" : "password"} 
                       placeholder="Repita a senha" 
-                      className="h-12 rounded-xl pr-10"
+                      className="h-12 rounded-xl pr-10 text-black"
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                       required
@@ -270,7 +271,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full h-16 rounded-full text-2xl font-black bg-primary shadow-xl shadow-primary/30 transform transition active:scale-95">
+            <Button type="submit" disabled={loading} className="w-full h-16 rounded-full text-2xl font-black bg-primary shadow-xl shadow-primary/30 transform transition active:scale-95 text-white">
               {loading ? <Loader2 className="h-8 w-8 animate-spin mr-2" /> : <UserPlus className="mr-2 h-8 w-8" />}
               Finalizar Cadastro
             </Button>

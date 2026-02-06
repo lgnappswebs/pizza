@@ -369,11 +369,11 @@ export default function AdminBannersPage() {
                   <Label htmlFor="title" className="text-lg font-bold flex items-center gap-2">
                     <Type className="h-5 w-5 text-primary" /> Título do Banner
                   </Label>
-                  <Input id="title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Promoção de Terça" />
+                  <Input id="title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Promoção de Terça" />
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="desc" className="text-lg font-bold">Descrição</Label>
-                  <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg" placeholder="Ex: Ganhe um refri grátis" />
+                  <Input id="desc" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black" placeholder="Ex: Ganhe um refri grátis" />
                 </div>
               </div>
 
@@ -383,7 +383,7 @@ export default function AdminBannersPage() {
                     <AlignLeft className="h-5 w-5 text-primary" /> Posição do Texto
                   </Label>
                   <Select value={formData.textPosition} onValueChange={(v) => setFormData({...formData, textPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg">
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -400,7 +400,7 @@ export default function AdminBannersPage() {
                     <Layout className="h-5 w-5 text-primary" /> Posição no Menu
                   </Label>
                   <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg">
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -417,7 +417,7 @@ export default function AdminBannersPage() {
                   <LinkIcon className="h-5 w-5 text-primary" /> Vincular à Categoria
                 </Label>
                 <Select value={formData.linkCategoryId} onValueChange={(v) => setFormData({...formData, linkCategoryId: v})}>
-                  <SelectTrigger className="rounded-xl border-2 h-12 text-lg">
+                  <SelectTrigger className="rounded-xl border-2 h-12 text-lg text-black">
                     <SelectValue placeholder="Selecione uma categoria (opcional)" />
                   </SelectTrigger>
                   <SelectContent>
@@ -434,7 +434,7 @@ export default function AdminBannersPage() {
                   <ImageIcon className="h-5 w-5 text-primary" /> Imagem do Banner
                 </Label>
                 <div className="flex gap-2">
-                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-lg" placeholder="Cole a URL ou use a galeria" />
+                  <Input id="image" value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-lg text-black" placeholder="Cole a URL ou use a galeria" />
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -449,7 +449,7 @@ export default function AdminBannersPage() {
 
               <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold">Exibir no App</Label>
+                  <Label className="text-lg font-bold text-black">Exibir no App</Label>
                   <p className="text-sm text-muted-foreground">O banner aparecerá no cardápio</p>
                 </div>
                 <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} className="scale-125" />
