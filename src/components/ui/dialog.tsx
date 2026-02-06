@@ -44,13 +44,16 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      {/* Camada de fundo com imagem (opcional, injetada via CSS var) */}
+      {/* Camada de fundo sólida e nítida que preenche 100% da área */}
+      <div className="absolute inset-0 z-[-2] bg-card opacity-100 pointer-events-none" />
+      
+      {/* Camada de imagem de fundo com 20% de opacidade */}
       <div 
         className="absolute inset-0 z-[-1] opacity-20 bg-cover bg-center bg-no-repeat pointer-events-none" 
         style={{ backgroundImage: 'var(--app-bg-image)' }}
       />
       
-      {/* Container de rolagem interno para garantir que o fundo cubra tudo */}
+      {/* Container de rolagem interno */}
       <div className="flex-1 overflow-y-auto max-h-[90vh] p-6 relative z-10 custom-scrollbar">
         {children}
       </div>

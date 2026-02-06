@@ -286,7 +286,7 @@ export default function AdminCategoriesPage() {
           </Button>
         </div>
 
-        <Card className="rounded-2xl border-2">
+        <Card className="rounded-2xl border-2 bg-white">
           <CardContent className="p-3 md:p-6">
             {isLoading ? (
               <div className="flex justify-center py-12">

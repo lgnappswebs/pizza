@@ -257,7 +257,7 @@ export default function AdminBannersPage() {
             </div>
           ) : (
             banners?.map((banner) => (
-              <Card key={banner.id} className="rounded-2xl border-2 overflow-hidden group">
+              <Card key={banner.id} className="rounded-2xl border-2 overflow-hidden group bg-white">
                 <div className="aspect-video relative overflow-hidden bg-muted">
                   <img src={banner.imageUrl} alt="Banner" className="object-cover w-full h-full" />
                   <div className="absolute inset-0 bg-black/20 flex flex-col p-4">

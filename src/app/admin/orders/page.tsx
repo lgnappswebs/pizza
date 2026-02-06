@@ -200,7 +200,7 @@ export default function AdminOrdersPage() {
         ) : (
           <div className="grid grid-cols-1 gap-6">
             {orders?.map((order) => (
-              <Card key={order.id} className="rounded-2xl border-2 overflow-hidden hover:shadow-md transition-shadow">
+              <Card key={order.id} className="rounded-2xl border-2 overflow-hidden hover:shadow-md transition-shadow bg-white">
                 <div className="flex flex-col md:flex-row">
                   <div className="p-6 flex-1 space-y-6">
                     <div className="flex justify-between items-start">

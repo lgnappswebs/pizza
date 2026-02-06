@@ -264,7 +264,7 @@ export default function AdminProductsPage() {
           </Button>
         </div>
 
-        <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden">
+        <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden bg-white">
           <CardHeader className="bg-muted/10 pb-6 border-b">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />

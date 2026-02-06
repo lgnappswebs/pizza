@@ -93,7 +93,7 @@ export default function AccountPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-8 mt-6 md:mt-10">
           <div className="flex items-center gap-4">
-            <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-white text-2xl font-black">
+            <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-2xl font-black">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -102,7 +102,7 @@ export default function AccountPage() {
             </div>
           </div>
 
-          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden">
+          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
             <CardHeader className="bg-primary/5 border-b">
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5 text-primary" /> Perfil e Contato
@@ -132,7 +132,7 @@ export default function AccountPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden">
+          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
             <CardHeader className="bg-primary/5 border-b">
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-primary" /> Meu Endereço Padrão
@@ -184,7 +184,7 @@ export default function AccountPage() {
           <Button 
             onClick={handleSave}
             disabled={loading}
-            className="w-full h-16 rounded-full text-2xl font-black bg-primary shadow-xl shadow-primary/30 transform transition active:scale-95"
+            className="w-full h-16 rounded-full text-2xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/30 transform transition active:scale-95"
           >
             {loading ? <Loader2 className="h-8 w-8 animate-spin mr-2" /> : <SaveIcon className="mr-2 h-8 w-8" />}
             Salvar Alterações

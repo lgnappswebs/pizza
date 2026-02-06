@@ -273,8 +273,8 @@ export default function AdminSettingsPage() {
           <p className="text-muted-foreground text-base md:text-lg">Personalize a identidade, regras e visual da sua pizzaria</p>
         </div>
 
-        <div className="max-w-4xl space-y-8 pb-20">
-          <Card className="rounded-3xl border-2 shadow-sm">
+        <div className="max-w-4xl mx-auto space-y-8 pb-20">
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
                 <Store className="h-7 w-7 text-primary" /> Configurações Gerais
@@ -364,7 +364,7 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm">
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-yellow-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
                 <Clock className="h-7 w-7 text-yellow-600" /> Status da Loja
@@ -407,7 +407,7 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm">
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-blue-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
                 <Palette className="h-7 w-7 text-blue-600" /> Aparência e Cores
@@ -576,7 +576,7 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm">
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-green-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black">
                 <MessageSquare className="h-7 w-7 text-green-600" /> Contato e Redes Sociais
