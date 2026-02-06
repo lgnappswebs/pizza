@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { 
@@ -397,7 +397,7 @@ export default function AdminFinancePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 print:hidden">
-          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm">
+          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm bg-white">
             <CardHeader className="border-b bg-muted/10 p-4">
               <div className="flex justify-between items-center">
                 <div>

@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { 
   LayoutDashboard, 
@@ -239,7 +239,7 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
               <Link key={idx} href={stat.href}>
-                <Card className="border-2 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer active:scale-95 transform transition duration-200">
+                <Card className="border-2 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer active:scale-95 transform transition duration-200 bg-white">
                   <CardContent className="p-6 flex items-center gap-4">
                     <div className={`p-3 rounded-2xl bg-muted/50 ${stat.color}`}>
                       <stat.icon className="h-8 w-8" />
@@ -255,7 +255,7 @@ export default function AdminDashboard() {
           </div>
 
           <div className="grid grid-cols-1 gap-8">
-            <Card className="rounded-2xl border-2 flex flex-col">
+            <Card className="rounded-2xl border-2 flex flex-col bg-white">
               <CardHeader>
                 <CardTitle className="text-xl font-bold">Pedidos Recentes</CardTitle>
               </CardHeader>

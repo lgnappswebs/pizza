@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { 
@@ -284,7 +284,7 @@ export default function AdminProductsPage() {
             ) : (
               <div className="grid grid-cols-1 gap-4 md:gap-6">
                 {filteredProducts?.map((product) => (
-                  <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all gap-4 group">
+                  <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all gap-4 group bg-white">
                     <div className="flex items-start gap-4 flex-1 min-w-0">
                       <div className="h-20 w-20 relative rounded-xl overflow-hidden bg-muted border shrink-0">
                         <img src={product.imageUrl} alt={product.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500" />
@@ -320,7 +320,7 @@ export default function AdminProductsPage() {
                   </div>
                 ))}
                 {filteredProducts?.length === 0 && (
-                  <div className="text-center py-20 bg-muted/10 rounded-3xl border-2 border-dashed">
+                  <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
                     <PizzaIcon className="h-16 w-16 mx-auto mb-4 text-muted opacity-20" />
                     <h3 className="text-xl font-bold opacity-60">Nenhum produto encontrado</h3>
                     <p className="text-muted-foreground">Tente buscar por outro nome ou adicione novos itens.</p>
