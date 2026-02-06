@@ -80,7 +80,7 @@ export function ThemeInjected() {
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image') {
       root.style.setProperty('--background', '0 0% 100%');
-      isDark = true; // Forçamos modo escuro inteligente para imagens personalizadas
+      isDark = true; // Imagem personalizada força lógica de contraste escuro inteligente
     } else {
       isDark = false;
     }
@@ -113,12 +113,14 @@ export function ThemeInjected() {
 
   }, [config]);
 
+  const showOverlay = config?.appBackgroundType === 'image' && config.appBackgroundImageUrl;
+
   return (
     <div className="fixed inset-0 pointer-events-none z-0">
       {config?.appBackgroundType === 'pattern' && (
         <div className="absolute inset-0 bg-food-pattern opacity-[0.05]"></div>
       )}
-      {config?.appBackgroundType === 'image' && config.appBackgroundImageUrl && (
+      {showOverlay && (
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500" 
           style={{ 
