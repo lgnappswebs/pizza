@@ -12,7 +12,6 @@ import {
   Pizza as PizzaIcon, 
   Loader2, 
   Search, 
-  Clock, 
   X, 
   Filter,
   Beer,
@@ -21,7 +20,7 @@ import {
   Utensils,
   Salad,
   LayoutGrid,
-  ChevronUp
+  Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,7 +78,6 @@ export default function MenuPage() {
       const aLow = a.trim().toLowerCase();
       const bLow = b.trim().toLowerCase();
       
-      // FORÇAR PIZZAS EM PRIMEIRO
       const isAPizza = aLow.includes('pizza');
       const isBPizza = bLow.includes('pizza');
       
@@ -96,7 +94,6 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (mainNames.length > 0) {
-      // Forçar Pizzas como selecionado se for o primeiro carregamento
       if (activeCategory === 'loading' || !activeCategory) {
         const pizzaName = mainNames.find(n => {
           const low = n.trim().toLowerCase();
@@ -105,7 +102,6 @@ export default function MenuPage() {
         setActiveCategory(pizzaName || mainNames[0]);
       }
       
-      // Reset scroll horizontal no mobile
       const resetScroll = () => {
         if (scrollRef.current) {
           scrollRef.current.scrollLeft = 0;
@@ -113,7 +109,6 @@ export default function MenuPage() {
       };
       
       resetScroll();
-      // Múltiplas tentativas para garantir o reset após renderização
       setTimeout(resetScroll, 100);
       setTimeout(resetScroll, 500);
     }
@@ -148,7 +143,7 @@ export default function MenuPage() {
     });
   }, [products, searchTerm]);
 
-  const isAdmin = user && user.email === 'lgngregorio@icloud.com';
+  const isAdmin = user && (user.email === 'lgngregorio@icloud.com' || user.email === 'admin@pizzapp.com');
 
   const handleTabClick = (name: string) => {
     if (activeCategory === name) {
@@ -217,12 +212,12 @@ export default function MenuPage() {
           </div>
 
           <div className="max-w-xl mx-auto mb-12 relative group">
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 h-6 w-6 text-muted-foreground group-focus-within:text-primary transition-colors flex items-center justify-center">
-              <Search className="h-6 w-6" />
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 md:h-6 md:w-6 text-muted-foreground group-focus-within:text-primary transition-colors flex items-center justify-center pointer-events-none">
+              <Search className="h-full w-full" />
             </div>
             <Input 
-              placeholder="O que você quer saborear hoje?" 
-              className="h-16 pl-14 pr-12 rounded-full border-2 border-muted-foreground/20 focus:border-primary focus:ring-0 shadow-lg text-lg font-medium transition-all"
+              placeholder="O que deseja saborear hoje?" 
+              className="h-14 md:h-16 pl-12 md:pl-14 pr-12 rounded-full border-2 border-muted-foreground/20 focus:border-primary focus:ring-0 shadow-lg text-sm sm:text-base md:text-lg font-medium transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -232,7 +227,7 @@ export default function MenuPage() {
                 className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-destructive p-1 rounded-full hover:bg-muted transition-all"
                 title="Limpar busca"
               >
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5 md:h-6 md:w-6" />
               </button>
             )}
           </div>
