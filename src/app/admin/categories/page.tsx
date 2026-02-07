@@ -342,8 +342,8 @@ export default function AdminCategoriesPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
-            <DialogHeader>
-              <DialogTitle className="text-3xl font-black text-primary">
+            <DialogHeader className="pt-10 sm:text-center">
+              <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
               </DialogTitle>
             </DialogHeader>

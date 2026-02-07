@@ -338,8 +338,8 @@ export default function AdminProductsPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
-            <DialogHeader>
-              <DialogTitle className="text-3xl font-black text-primary">
+            <DialogHeader className="pt-10 sm:text-center">
+              <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingProduct ? 'Editar Produto' : 'Novo Produto'}
               </DialogTitle>
             </DialogHeader>

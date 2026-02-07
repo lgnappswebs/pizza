@@ -257,7 +257,7 @@ export default function AdminBannersPage() {
             </div>
           ) : (
             banners?.map((banner) => (
-              <Card key={banner.id} className="rounded-2xl border-2 overflow-hidden group bg-white">
+              <Card className="rounded-2xl border-2 overflow-hidden group bg-white" key={banner.id}>
                 <div className="aspect-video relative overflow-hidden bg-muted">
                   <img src={banner.imageUrl} alt="Banner" className="object-cover w-full h-full" />
                   <div className="absolute inset-0 bg-black/20 flex flex-col p-4">
@@ -358,8 +358,8 @@ export default function AdminBannersPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
-            <DialogHeader>
-              <DialogTitle className="text-3xl font-black text-primary">
+            <DialogHeader className="pt-10 sm:text-center">
+              <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingBanner ? 'Editar Banner' : 'Novo Banner'}
               </DialogTitle>
             </DialogHeader>
