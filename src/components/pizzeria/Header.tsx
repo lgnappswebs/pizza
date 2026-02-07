@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from 'next/link';
@@ -27,7 +26,7 @@ export function Header() {
   const logoPlaceholder = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
   const { user } = useUser();
   const auth = useAuth();
-  const firestore = useFirestore();
+  const firestore = useFirebase().firestore;
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
@@ -56,14 +55,14 @@ export function Header() {
     ? (LucideIcons as any)[config.logoIconName] 
     : LucideIcons.Pizza;
 
-  if (loadingConfigs) return <header className="h-20 w-full border-b bg-background/95"></header>;
+  if (loadingConfigs) return <header className="h-28 w-full border-b bg-background/95"></header>;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-20 items-center justify-between">
+      <div className="container mx-auto px-4 flex h-28 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="relative w-10 h-10 md:w-12 md:h-12 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white">
+            <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
               {config?.logoImageUrl ? (
                 <Image 
                   src={config.logoImageUrl} 
@@ -72,7 +71,7 @@ export function Header() {
                   className="object-cover"
                 />
               ) : config?.showLogoIcon ? (
-                <LogoIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+                <LogoIcon className="h-8 w-8 md:h-10 md:w-10 text-primary" />
               ) : (
                 <Image 
                   src={logoPlaceholder?.imageUrl || ''} 
@@ -82,9 +81,14 @@ export function Header() {
                 />
               )}
             </div>
-            <span className="text-xl md:text-2xl font-black font-headline text-primary whitespace-nowrap min-w-[50px]">
-              {config?.restaurantName || ""}
-            </span>
+            <div className="flex flex-col">
+              <span className="text-2xl md:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
+                {config?.restaurantName || ""}
+              </span>
+              <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 hidden sm:block">
+                O Sabor Original
+              </span>
+            </div>
           </Link>
         </div>
 
@@ -93,15 +97,15 @@ export function Header() {
             <Button variant="ghost" size="icon" className="md:hidden h-12 w-12 rounded-full text-primary">
               <UtensilsCrossed className="h-7 w-7" />
             </Button>
-            <Button variant="ghost" className="hidden md:flex font-bold text-lg">Cardápio</Button>
+            <Button variant="ghost" className="hidden md:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl">Cardápio</Button>
           </Link>
           
           <Link href="/checkout">
-            <Button className="relative rounded-full h-12 w-12 md:w-auto md:px-6 bg-primary hover:bg-primary/90 text-white font-bold transition-transform hover:scale-105 active:scale-95 flex items-center justify-center">
+            <Button className="relative rounded-full h-14 w-14 md:w-auto md:px-8 bg-primary hover:bg-primary/90 text-white font-black transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-xl shadow-primary/20">
               <ShoppingBasket className="h-7 w-7 md:mr-2" />
-              <span className="hidden md:inline text-lg">Pedido</span>
+              <span className="hidden md:inline text-xl">Pedido</span>
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-xs font-bold border-2 border-background">
+                <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-xs font-black border-2 border-background shadow-md">
                   {itemCount}
                 </span>
               )}
@@ -111,34 +115,34 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" className="rounded-full h-12 w-12 border-2">
-                  <User className="h-7 w-7 text-primary" />
+                <Button variant="outline" size="icon" className="rounded-full h-14 w-14 border-2 border-primary/20 bg-white hover:bg-primary/5 transition-all">
+                  <User className="h-8 w-8 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl">
-                <DropdownMenuLabel className="font-bold flex flex-col gap-1">
-                  <span className="text-xs text-muted-foreground">Olá,</span>
-                  <span className="truncate">{customerName}</span>
+              <DropdownMenuContent align="end" className="w-64 rounded-[2rem] p-3 shadow-2xl border-2">
+                <DropdownMenuLabel className="font-bold flex flex-col gap-1 p-4">
+                  <span className="text-xs text-muted-foreground uppercase font-black tracking-widest">Olá,</span>
+                  <span className="truncate text-lg font-black">{customerName}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/account" className="cursor-pointer flex items-center h-10 rounded-xl">
-                    <User className="mr-2 h-4 w-4" /> Minha Conta
+                  <Link href="/account" className="cursor-pointer flex items-center h-12 rounded-2xl font-bold hover:bg-primary/5 text-black">
+                    <User className="mr-3 h-5 w-5 text-primary" /> Minha Conta
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer flex items-center h-10 rounded-xl">
-                  <LogOut className="mr-2 h-4 w-4" />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer flex items-center h-12 rounded-2xl font-bold hover:bg-destructive/5 mt-1">
+                  <LogOut className="mr-3 h-5 w-5" />
                   Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <Link href="/login">
-              <Button variant="outline" size="icon" className="md:hidden h-12 w-12 rounded-full border-2 text-primary">
+              <Button variant="outline" size="icon" className="md:hidden h-14 w-14 rounded-full border-2 text-primary bg-white">
                 <LogIn className="h-7 w-7" />
               </Button>
-              <Button variant="outline" className="hidden md:flex rounded-full h-12 px-6 font-bold border-2 text-base">
+              <Button variant="outline" className="hidden md:flex rounded-full h-14 px-8 font-black border-2 border-primary/20 text-lg hover:bg-primary/5 bg-white text-black transition-all">
                 Entrar
               </Button>
             </Link>

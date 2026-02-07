@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -92,94 +91,94 @@ export default function AccountPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8 relative">
-        <Link href="/menu" className="fixed top-24 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-          <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
+        <Link href="/menu" className="fixed top-32 left-4 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-2xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-6 w-6" /> Voltar ao Cardápio
         </Link>
 
-        <div className="max-w-3xl mx-auto space-y-8 mt-24 md:mt-20">
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-2xl font-black">
+        <div className="max-w-3xl mx-auto space-y-10 mt-32 md:mt-28">
+          <div className="flex items-center gap-6">
+            <div className="h-20 w-20 md:h-24 md:w-24 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-3xl md:text-4xl font-black shadow-xl">
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 className="text-3xl font-black text-foreground">Minha Conta</h1>
-              <p className="text-muted-foreground">{user?.email}</p>
+              <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tight">Minha Conta</h1>
+              <p className="text-xl text-muted-foreground font-medium">{user?.email}</p>
             </div>
           </div>
 
-          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
-            <CardHeader className="bg-primary/5 border-b">
-              <CardTitle className="flex items-center gap-2 text-black">
-                <User className="h-5 w-5 text-primary" /> Perfil e Contato
+          <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
+            <CardHeader className="bg-primary/5 border-b p-8">
+              <CardTitle className="flex items-center gap-3 text-2xl font-black text-black">
+                <User className="h-7 w-7 text-primary" /> Perfil e Contato
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <CardContent className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nome Completo</Label>
+                  <Label htmlFor="name" className="text-lg font-bold text-black">Nome Completo</Label>
                   <Input 
                     id="name" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">WhatsApp</Label>
+                  <Label htmlFor="phone" className="text-lg font-bold text-black">WhatsApp</Label>
                   <Input 
                     id="phone" 
                     value={formData.phone}
                     onChange={handlePhoneChange}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-xl overflow-hidden bg-white">
-            <CardHeader className="bg-primary/5 border-b">
-              <CardTitle className="flex items-center gap-2 text-black">
-                <MapPin className="h-5 w-5 text-primary" /> Meu Endereço Padrão
+          <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
+            <CardHeader className="bg-primary/5 border-b p-8">
+              <CardTitle className="flex items-center gap-3 text-2xl font-black text-black">
+                <MapPin className="h-7 w-7 text-primary" /> Meu Endereço Padrão
               </CardTitle>
-              <CardDescription>Estes dados serão usados para facilitar sua entrega</CardDescription>
+              <CardDescription className="text-lg font-medium text-muted-foreground">Estes dados serão usados para facilitar sua entrega</CardDescription>
             </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="address">Rua / Logradouro</Label>
+                  <Label htmlFor="address" className="text-lg font-bold text-black">Rua / Logradouro</Label>
                   <Input 
                     id="address" 
                     value={formData.address}
                     onChange={(e) => setFormData({...formData, address: e.target.value})}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="number">Número</Label>
+                  <Label htmlFor="number" className="text-lg font-bold text-black">Número</Label>
                   <Input 
                     id="number" 
                     value={formData.number}
                     onChange={(e) => setFormData({...formData, number: e.target.value})}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="neighborhood">Bairro</Label>
+                  <Label htmlFor="neighborhood" className="text-lg font-bold text-black">Bairro</Label>
                   <Input 
                     id="neighborhood" 
                     value={formData.neighborhood}
                     onChange={(e) => setFormData({...formData, neighborhood: e.target.value})}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="complement">Complemento</Label>
+                  <Label htmlFor="complement" className="text-lg font-bold text-black">Complemento</Label>
                   <Input 
                     id="complement" 
                     value={formData.complement}
                     onChange={(e) => setFormData({...formData, complement: e.target.value})}
-                    className="h-12 rounded-xl text-black"
+                    className="h-14 rounded-2xl text-lg font-bold text-black bg-white border-2"
                   />
                 </div>
               </div>
@@ -189,9 +188,9 @@ export default function AccountPage() {
           <Button 
             onClick={handleSave}
             disabled={loading}
-            className="w-full h-16 rounded-full text-2xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/30 transform transition active:scale-95"
+            className="w-full h-20 rounded-full text-2xl font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/30 transform transition hover:scale-[1.02] active:scale-95"
           >
-            {loading ? <Loader2 className="h-8 w-8 animate-spin mr-2" /> : <SaveIcon className="mr-2 h-8 w-8" />}
+            {loading ? <Loader2 className="h-10 w-10 animate-spin mr-3" /> : <SaveIcon className="mr-3 h-8 w-8" />}
             Salvar Alterações
           </Button>
         </div>

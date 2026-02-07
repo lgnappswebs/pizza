@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -187,37 +186,37 @@ export default function CheckoutPage() {
     <>
       <Header />
       <main className="container mx-auto px-4 py-8 relative">
-        <Link href="/menu" className="fixed top-24 left-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-          <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
+        <Link href="/menu" className="fixed top-32 left-4 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-white/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-2xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-6 w-6" /> Voltar ao Cardápio
         </Link>
 
         {items.length === 0 ? (
-          <div className="py-20 text-center space-y-6 mt-20">
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
+          <div className="py-20 text-center space-y-6 mt-32">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl text-muted-foreground">
               <Trash2 className="h-12 w-12" />
             </div>
-            <h2 className="text-3xl font-bold text-foreground">Seu pedido está vazio</h2>
-            <p className="text-muted-foreground text-lg">Que tal escolher uma pizza deliciosa agora?</p>
+            <h2 className="text-3xl font-black text-foreground">Seu pedido está vazio</h2>
+            <p className="text-muted-foreground text-lg font-medium">Que tal escolher uma pizza deliciosa agora?</p>
             <Link href="/menu">
-              <Button className="rounded-full h-14 px-10 text-xl font-bold bg-primary text-white">
+              <Button className="rounded-full h-16 px-12 text-2xl font-black bg-primary text-white shadow-xl shadow-primary/20">
                 Ver Cardápio
               </Button>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-24 md:mt-20">
-            <div className="space-y-6">
-              <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
-                <CardHeader className="bg-primary/5 border-b py-4">
-                  <CardTitle className="text-xl md:text-2xl font-black flex items-center gap-2 text-black">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-32 md:mt-28">
+            <div className="space-y-8">
+              <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
+                <CardHeader className="bg-primary/5 border-b py-6 px-8">
+                  <CardTitle className="text-2xl md:text-3xl font-black flex items-center gap-3 text-black">
                     Meu Pedido
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
                   <div className="divide-y">
                     {items.map((item) => (
-                      <div key={item.id} className="flex gap-3 md:gap-4 p-4 hover:bg-muted/20 transition-colors items-center">
-                        <div className="relative h-16 w-16 md:h-20 md:w-20 rounded-xl overflow-hidden shrink-0 shadow-sm border">
+                      <div key={item.id} className="flex gap-4 md:gap-6 p-6 hover:bg-muted/20 transition-colors items-center">
+                        <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-2xl overflow-hidden shrink-0 shadow-lg border-2 border-white">
                           <Image 
                             src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
                             alt={item.name} 
@@ -228,42 +227,42 @@ export default function CheckoutPage() {
                         <div className="flex-1 min-w-0 flex flex-col justify-between">
                           <div>
                             <div className="flex justify-between items-start gap-2">
-                              <h4 className="font-bold text-sm md:text-lg truncate leading-tight text-black">{item.name}</h4>
-                              <span className="font-bold text-primary text-sm md:text-lg shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                              <h4 className="font-black text-lg md:text-2xl truncate leading-tight text-black">{item.name}</h4>
+                              <span className="font-black text-primary text-lg md:text-2xl shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
                             </div>
-                            <p className="text-[10px] md:text-sm text-muted-foreground mt-0.5">
+                            <p className="text-xs md:text-base font-bold text-muted-foreground mt-1">
                               {item.size} {item.crust && item.crust !== 'Tradicional' ? `• Borda ${item.crust}` : '• S/ Borda'}
                             </p>
-                            {item.notes && <p className="text-[9px] md:text-xs text-primary/70 italic mt-1 line-clamp-1">Obs: {item.notes}</p>}
+                            {item.notes && <p className="text-[10px] md:text-sm text-primary/70 font-bold italic mt-2 line-clamp-1 bg-primary/5 px-2 py-1 rounded-lg">Obs: {item.notes}</p>}
                           </div>
                           
-                          <div className="flex items-center justify-between mt-3">
-                            <div className="flex items-center gap-1 md:gap-2 bg-muted p-1 rounded-full border border-muted-foreground/10">
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-full border-2 border-muted-foreground/10">
                               <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-6 w-6 md:h-8 md:w-8 rounded-full hover:bg-white transition-colors"
+                                className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all"
                                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               >
-                                <span className="text-lg">-</span>
+                                <span className="text-xl font-black">-</span>
                               </Button>
-                              <span className="font-black text-xs md:text-base w-5 md:w-8 text-center text-black">{item.quantity}</span>
+                              <span className="font-black text-sm md:text-xl w-6 md:w-10 text-center text-black">{item.quantity}</span>
                               <Button 
                                 variant="ghost" 
                                 size="icon" 
-                                className="h-6 w-6 md:h-8 md:w-8 rounded-full hover:bg-white transition-colors"
+                                className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all"
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               >
-                                <span className="text-lg">+</span>
+                                <span className="text-xl font-black">+</span>
                               </Button>
                             </div>
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-full"
+                              className="h-10 w-10 text-destructive hover:bg-destructive/10 rounded-full transition-colors"
                               onClick={() => removeItem(item.id)}
                             >
-                              <Trash2 className="h-4 w-4 md:h-5 md:w-5" />
+                              <Trash2 className="h-5 w-5 md:h-6 md:w-6" />
                             </Button>
                           </div>
                         </div>
@@ -271,18 +270,18 @@ export default function CheckoutPage() {
                     ))}
                   </div>
 
-                  <div className="p-6 bg-primary/5 border-t-2 border-dashed space-y-3">
-                    <div className="flex justify-between items-center text-sm md:text-lg">
-                      <span className="text-muted-foreground font-medium">Subtotal</span>
-                      <span className="font-bold text-black">R$ {total.toFixed(2)}</span>
+                  <div className="p-8 bg-primary/5 border-t-4 border-dashed space-y-4">
+                    <div className="flex justify-between items-center text-lg md:text-xl font-bold">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="text-black">R$ {total.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between items-center text-sm md:text-lg">
-                      <span className="text-muted-foreground font-medium">Taxa de Entrega</span>
-                      <span className={cn("font-bold", deliveryFee > 0 ? "text-primary" : "text-green-600")}>
+                    <div className="flex justify-between items-center text-lg md:text-xl font-bold">
+                      <span className="text-muted-foreground">Taxa de Entrega</span>
+                      <span className={cn(deliveryFee > 0 ? "text-primary" : "text-green-600")}>
                         {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
                       </span>
                     </div>
-                    <div className="flex justify-between items-center text-2xl md:text-4xl font-black text-green-600 pt-4">
+                    <div className="flex justify-between items-center text-3xl md:text-5xl font-black text-green-600 pt-6">
                       <span>Total</span>
                       <span className="drop-shadow-sm">R$ {(total + deliveryFee).toFixed(2)}</span>
                     </div>
@@ -291,78 +290,78 @@ export default function CheckoutPage() {
               </Card>
             </div>
 
-            <div className="space-y-6">
-              <Card className="rounded-3xl border-2 shadow-sm bg-white">
-                <CardHeader className="py-4 border-b">
-                  <CardTitle className="text-xl md:text-2xl font-black text-black">Dados de Entrega</CardTitle>
+            <div className="space-y-8">
+              <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white">
+                <CardHeader className="py-6 px-8 border-b">
+                  <CardTitle className="text-2xl md:text-3xl font-black text-black">Dados de Entrega</CardTitle>
                   {user && !loadingProfile && (
-                    <p className="text-xs text-green-600 font-bold flex items-center gap-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse" />
-                      Endereço carregado da sua conta!
+                    <p className="text-xs text-green-600 font-black flex items-center gap-2 mt-1">
+                      <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />
+                      ENDEREÇO CARREGADO AUTOMATICAMENTE
                     </p>
                   )}
                 </CardHeader>
-                <CardContent className="space-y-6 pt-6">
+                <CardContent className="space-y-8 pt-8 px-8">
                   {loadingProfile ? (
-                    <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
+                    <div className="flex justify-center py-16"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>
                   ) : (
                     <>
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
-                          <User className="h-5 w-5 text-primary" /> Nome Completo
+                      <div className="space-y-3">
+                        <Label htmlFor="name" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
+                          <User className="h-6 w-6 text-primary" /> Nome Completo
                         </Label>
                         <Input 
                           id="name" 
                           placeholder="Como devemos te chamar?" 
-                          className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2 text-black"
+                          className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
                           value={form.name}
                           onChange={(e) => setForm({...form, name: e.target.value})}
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
-                          <Phone className="h-5 w-5 text-primary" /> Telefone / WhatsApp
+                      <div className="space-y-3">
+                        <Label htmlFor="phone" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
+                          <Phone className="h-6 w-6 text-primary" /> Telefone / WhatsApp
                         </Label>
                         <Input 
                           id="phone" 
                           placeholder="(00) 00000-0000" 
-                          className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2 text-black"
+                          className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
                           value={form.phone}
                           onChange={(e) => setForm({...form, phone: e.target.value})}
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="address" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
-                          <MapPin className="h-5 w-5 text-primary" /> Endereço (Rua e Número)
+                      <div className="space-y-3">
+                        <Label htmlFor="address" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
+                          <MapPin className="h-6 w-6 text-primary" /> Endereço (Rua e Número)
                         </Label>
                         <Input 
                           id="address" 
                           placeholder="Ex: Rua das Pizzas, 123" 
-                          className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2 text-black"
+                          className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
                           value={form.address}
                           onChange={(e) => setForm({...form, address: e.target.value})}
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="neighborhood" className="text-base md:text-lg font-bold text-black">Bairro</Label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <Label htmlFor="neighborhood" className="text-lg md:text-xl font-black text-black">Bairro</Label>
                           <Input 
                             id="neighborhood" 
                             placeholder="Ex: Centro" 
-                            className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2 text-black"
+                            className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
                             value={form.neighborhood}
                             onChange={(e) => setForm({...form, neighborhood: e.target.value})}
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="complement" className="text-base md:text-lg font-bold text-black">Complemento</Label>
+                        <div className="space-y-3">
+                          <Label htmlFor="complement" className="text-lg md:text-xl font-black text-black">Complemento</Label>
                           <Input 
                             id="complement" 
                             placeholder="Ex: Ap 42" 
-                            className="h-12 md:h-14 rounded-xl text-base md:text-lg border-2 text-black"
+                            className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
                             value={form.complement}
                             onChange={(e) => setForm({...form, complement: e.target.value})}
                           />
@@ -375,11 +374,11 @@ export default function CheckoutPage() {
                     onClick={handleSendToWhatsApp}
                     disabled={loading || (config && !config.isStoreOpen)}
                     className={cn(
-                      "w-full h-16 md:h-20 rounded-full text-white text-xl md:text-2xl font-black shadow-xl flex items-center justify-center gap-3 transform transition hover:scale-[1.02] active:scale-95 mt-6",
-                      config && !config.isStoreOpen ? 'bg-muted text-muted-foreground' : 'bg-primary shadow-primary/30'
+                      "w-full h-20 md:h-24 rounded-full text-white text-2xl md:text-3xl font-black shadow-2xl flex items-center justify-center gap-4 transform transition hover:scale-[1.02] active:scale-95 mt-10",
+                      config && !config.isStoreOpen ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary shadow-primary/30'
                     )}
                   >
-                    {loading ? <Loader2 className="h-8 w-8 animate-spin" /> : <Send className="h-7 w-7 md:h-8 md:w-8" />}
+                    {loading ? <Loader2 className="h-10 w-10 animate-spin" /> : <Send className="h-8 w-8 md:h-10 md:w-10" />}
                     {config && !config.isStoreOpen ? 'Pizzaria Fechada' : loading ? 'Processando...' : 'Finalizar Pedido'}
                   </Button>
                 </CardContent>
