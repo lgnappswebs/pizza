@@ -445,6 +445,18 @@ export default function AdminBannersPage() {
                   </Button>
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
+                {formData.imageUrl && (
+                  <div className="mt-2 relative aspect-video rounded-2xl overflow-hidden border-2 border-dashed border-muted-foreground/30 flex items-center justify-center bg-muted/10 group">
+                    <img src={formData.imageUrl} alt="Preview" className="object-contain w-full h-full" />
+                    <div className="absolute top-2 right-2 bg-black/50 text-white px-2 py-1 rounded-lg text-[10px] font-bold">Pré-visualização</div>
+                    <button 
+                      onClick={() => setFormData({...formData, imageUrl: ''})}
+                      className="absolute top-2 left-2 bg-destructive/80 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
