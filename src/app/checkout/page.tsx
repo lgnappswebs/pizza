@@ -181,11 +181,11 @@ export default function CheckoutPage() {
 
   return (
     <main className="container mx-auto px-4 py-8 relative">
-      <Link href="/menu" className="fixed top-4 left-4 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-2xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-        <ArrowLeft className="h-6 w-6" /> Voltar ao Cardápio
+      <Link href="/menu" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+        <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
       </Link>
 
-      <div className="max-w-4xl mx-auto mt-20 mb-12 text-center space-y-2">
+      <div className="max-w-4xl mx-auto mt-12 mb-12 text-center space-y-2">
         <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter">Finalizar Pedido</h1>
         <p className="text-lg md:text-xl text-muted-foreground font-medium">Confira seu carrinho e informe os dados para entrega</p>
       </div>
