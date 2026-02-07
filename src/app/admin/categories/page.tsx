@@ -341,7 +341,7 @@ export default function AdminCategoriesPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white border-2">
             <DialogHeader className="pt-10 sm:text-center">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
