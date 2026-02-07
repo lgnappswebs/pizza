@@ -32,6 +32,11 @@
         "isPromotion": {
           "type": "boolean"
         },
+        "promotionSize": {
+          "type": "string",
+          "enum": ["all", "small", "medium", "large"],
+          "description": "Which size is on promotion if hasMultipleSizes is true."
+        },
         "hasMultipleSizes": {
           "type": "boolean"
         },

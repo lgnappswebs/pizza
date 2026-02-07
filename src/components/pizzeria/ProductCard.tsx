@@ -21,6 +21,7 @@ interface ProductCardProps {
   imageUrl: string;
   category: string;
   isPromotion?: boolean;
+  promotionSize?: string;
   hasMultipleSizes?: boolean;
   priceSmall?: number;
   priceMedium?: number;
@@ -44,6 +45,7 @@ export function ProductCard({
   imageUrl, 
   category, 
   isPromotion,
+  promotionSize = 'all',
   hasMultipleSizes,
   priceSmall,
   priceMedium,
@@ -71,6 +73,17 @@ export function ProductCard({
 
   const getPrice = () => {
     return getBasePrice() + getCrustPrice();
+  };
+
+  const isCurrentSizeOnPromotion = () => {
+    if (!isPromotion) return false;
+    if (!hasMultipleSizes || promotionSize === 'all') return true;
+    
+    if (promotionSize === 'small' && size === 'Pequena') return true;
+    if (promotionSize === 'medium' && size === 'Média') return true;
+    if (promotionSize === 'large' && size === 'Grande') return true;
+    
+    return false;
   };
 
   // Preço original para exibir quando em promoção (acréscimo de 25%)
@@ -129,7 +142,7 @@ export function ProductCard({
         <div className="flex justify-between items-start gap-2">
           <h3 className="text-xl md:text-2xl font-black font-headline leading-tight text-black">{name}</h3>
           <div className="flex flex-col items-end shrink-0">
-            {isPromotion && (
+            {isCurrentSizeOnPromotion() && (
               <span className="text-sm md:text-base text-muted-foreground/60 line-through font-bold">
                 R$ {getOriginalPrice().toFixed(2)}
               </span>
@@ -162,7 +175,7 @@ export function ProductCard({
                 <div className="flex justify-between items-start gap-4">
                   <DialogTitle className="text-3xl md:text-4xl font-black text-foreground tracking-tighter flex-1 leading-tight">{name}</DialogTitle>
                   <div className="text-right shrink-0 flex flex-col items-end">
-                    {isPromotion && (
+                    {isCurrentSizeOnPromotion() && (
                       <p className="text-base text-muted-foreground/60 line-through font-bold">R$ {getOriginalPrice().toFixed(2)}</p>
                     )}
                     <p className="text-4xl md:text-5xl font-black text-primary leading-tight tracking-tighter">R$ {getPrice().toFixed(2)}</p>
@@ -175,14 +188,23 @@ export function ProductCard({
 
               {hasMultipleSizes && (
                 <div className="space-y-4">
-                  <Label className="text-xl font-black text-foreground">Escolha o Tamanho</Label>
+                  <div className="flex justify-between items-end">
+                    <Label className="text-xl font-black text-foreground">Escolha o Tamanho</Label>
+                    {isPromotion && promotionSize !== 'all' && (
+                      <Badge variant="outline" className="border-primary text-primary text-[10px] font-black uppercase">
+                        {promotionSize === 'small' ? 'Oferta na Broto' : promotionSize === 'medium' ? 'Oferta na Média' : 'Oferta na Grande'}
+                      </Badge>
+                    )}
+                  </div>
                   <RadioGroup value={size} onValueChange={setSize} className="grid grid-cols-3 gap-3">
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Pequena" id="broto" className="sr-only" />
                       <Label htmlFor="broto" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-base">Pequena</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceSmall || price) * 1.25).toFixed(2)}</span>}
+                          {(promotionSize === 'all' || promotionSize === 'small') && isPromotion && (
+                            <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceSmall || price) * 1.25).toFixed(2)}</span>
+                          )}
                           <span className="text-sm font-black opacity-80">R$ {priceSmall?.toFixed(2)}</span>
                         </div>
                       </Label>
@@ -192,7 +214,9 @@ export function ProductCard({
                       <Label htmlFor="media" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Média' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-base">Média</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceMedium || price) * 1.25).toFixed(2)}</span>}
+                          {(promotionSize === 'all' || promotionSize === 'medium') && isPromotion && (
+                            <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceMedium || price) * 1.25).toFixed(2)}</span>
+                          )}
                           <span className="text-sm font-black opacity-80">R$ {priceMedium?.toFixed(2)}</span>
                         </div>
                       </Label>
@@ -202,7 +226,9 @@ export function ProductCard({
                       <Label htmlFor="grande" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-base">Grande</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceLarge || price) * 1.25).toFixed(2)}</span>}
+                          {(promotionSize === 'all' || promotionSize === 'large') && isPromotion && (
+                            <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceLarge || price) * 1.25).toFixed(2)}</span>
+                          )}
                           <span className="text-sm font-black opacity-80">R$ {priceLarge?.toFixed(2)}</span>
                         </div>
                       </Label>
@@ -282,7 +308,7 @@ export function ProductCard({
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-xs font-black uppercase tracking-[0.2em] opacity-80">Confirmar Pedido</span>
                   <div className="flex items-center gap-3">
-                    {isPromotion && (
+                    {isCurrentSizeOnPromotion() && (
                       <span className="text-base line-through opacity-50 font-bold">R$ {(getOriginalPrice() * quantity).toFixed(2)}</span>
                     )}
                     <span className="text-3xl md:text-4xl font-black tracking-tighter">R$ {(getPrice() * quantity).toFixed(2)}</span>

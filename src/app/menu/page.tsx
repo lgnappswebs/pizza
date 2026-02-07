@@ -274,6 +274,7 @@ export default function MenuPage() {
                       imageUrl={product.imageUrl}
                       category={product.categoryId}
                       isPromotion={product.isPromotion}
+                      promotionSize={product.promotionSize}
                       hasMultipleSizes={product.hasMultipleSizes}
                       priceSmall={product.priceSmall}
                       priceMedium={product.priceMedium}
@@ -408,6 +409,7 @@ export default function MenuPage() {
                               imageUrl={product.imageUrl}
                               category={product.categoryId}
                               isPromotion={product.isPromotion}
+                              promotionSize={product.promotionSize}
                               hasMultipleSizes={product.hasMultipleSizes}
                               priceSmall={product.priceSmall}
                               priceMedium={product.priceMedium}

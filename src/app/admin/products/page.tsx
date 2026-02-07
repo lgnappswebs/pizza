@@ -17,7 +17,8 @@ import {
   Image as ImageIcon,
   ExternalLink,
   Wallet,
-  ArrowLeft
+  ArrowLeft,
+  Percent
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -76,6 +77,7 @@ export default function AdminProductsPage() {
     imageUrl: '',
     isAvailable: true,
     isPromotion: false,
+    promotionSize: 'all',
     hasMultipleSizes: false,
     priceSmall: '',
     priceMedium: '',
@@ -128,6 +130,7 @@ export default function AdminProductsPage() {
         imageUrl: product.imageUrl,
         isAvailable: product.isAvailable,
         isPromotion: product.isPromotion || false,
+        promotionSize: product.promotionSize || 'all',
         hasMultipleSizes: product.hasMultipleSizes || false,
         priceSmall: product.priceSmall ? formatCurrency((product.priceSmall * 100).toFixed(0)) : '',
         priceMedium: product.priceMedium ? formatCurrency((product.priceMedium * 100).toFixed(0)) : '',
@@ -143,6 +146,7 @@ export default function AdminProductsPage() {
         imageUrl: '',
         isAvailable: true,
         isPromotion: false,
+        promotionSize: 'all',
         hasMultipleSizes: false,
         priceSmall: '',
         priceMedium: '',
@@ -474,11 +478,33 @@ export default function AdminProductsPage() {
                 <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} className="scale-125" />
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
-                <div className="space-y-0.5">
-                  <Label className="text-lg font-bold text-black">Produto em Promoção</Label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
+                  <div className="space-y-0.5">
+                    <Label className="text-lg font-bold text-black flex items-center gap-2">
+                      <Percent className="h-5 w-5 text-primary" /> Produto em Promoção
+                    </Label>
+                  </div>
+                  <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} className="scale-125" />
                 </div>
-                <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} className="scale-125" />
+
+                {formData.isPromotion && formData.hasMultipleSizes && (
+                  <div className="grid gap-2 p-4 bg-primary/5 rounded-xl border-2 border-dashed border-primary/20 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <Label htmlFor="promotionSize" className="text-base font-bold text-black">Tamanho em Promoção</Label>
+                    <Select value={formData.promotionSize} onValueChange={(v) => setFormData({...formData, promotionSize: v})}>
+                      <SelectTrigger className="rounded-xl h-12 border-2 text-lg text-black bg-white">
+                        <SelectValue placeholder="Selecione o tamanho" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="all" className="text-lg text-black">Todos os Tamanhos</SelectItem>
+                        <SelectItem value="small" className="text-lg text-black">Apenas Pequena (Broto)</SelectItem>
+                        <SelectItem value="medium" className="text-lg text-black">Apenas Média</SelectItem>
+                        <SelectItem value="large" className="text-lg text-black">Apenas Grande</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-[10px] text-muted-foreground font-medium italic">Selecione se o desconto vale para todos ou apenas um tamanho específico.</p>
+                  </div>
+                )}
               </div>
             </div>
             <DialogFooter className="mt-6">
