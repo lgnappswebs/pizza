@@ -147,7 +147,7 @@ export function ProductCard({
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] border-none p-0 overflow-hidden">
+          <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] border-none p-0 overflow-hidden">
             <div className="relative aspect-video w-full">
               <Image src={imageUrl} alt={name} fill className="object-cover" />
               {isPromotion && (
@@ -241,7 +241,7 @@ export function ProductCard({
                   placeholder="Ex: Sem cebola, bem passada, s/ gergelim..." 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="rounded-2xl min-h-[120px] border-2 bg-white sólido text-black font-medium placeholder:text-muted-foreground"
+                  className="rounded-2xl min-h-[120px] border-2 bg-[hsl(var(--field))] text-[hsl(var(--field-foreground))] font-medium placeholder:text-muted-foreground"
                 />
               </div>
 

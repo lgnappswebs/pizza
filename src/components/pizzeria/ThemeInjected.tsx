@@ -80,7 +80,7 @@ export function ThemeInjected() {
       isDark = getLuminance(config.backgroundColor) < 0.5;
     } else if (config.appBackgroundType === 'image') {
       root.style.setProperty('--background', '0 0% 100%');
-      isDark = true; // Imagem força lógica de contraste inteligente
+      isDark = false; // Imagem sobre branco geralmente é light theme
     } else {
       isDark = false;
     }
@@ -109,6 +109,11 @@ export function ThemeInjected() {
       root.style.setProperty('--input', '0 0% 89.8%');
       root.style.setProperty('--border', '0 0% 89.8%');
       root.style.setProperty('--muted', '0 0% 96.1%');
+      
+      // Reseta fundo para branco apenas se não estiver em modo cor
+      if (config.appBackgroundType !== 'color') {
+        root.style.setProperty('--background', '0 0% 100%');
+      }
     }
 
     if (config.appBackgroundImageUrl) {
