@@ -206,43 +206,43 @@ export default function AdminProductsPage() {
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
+              <LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
+              <PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <Layers className="mr-3 h-5 w-5" /> Categorias
+              <Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <Package className="mr-3 h-5 w-5" /> Pedidos
+              <Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <Wallet className="mr-3 h-5 w-5" /> Financeiro
+              <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <ImageIcon className="mr-3 h-5 w-5" /> Banners
+              <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-              <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
+              <SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
               <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
-                <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
+                <ExternalLink className="mr-3 h-5 w-5 text-primary" /> Ver Cardápio
               </Button>
             </Link>
           </div>
@@ -588,7 +588,6 @@ export default function AdminProductsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </nav>
-      </main>
-    </div>
-  );
-}
+      </div>
+    );
+  }
