@@ -60,7 +60,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 min-h-28 flex flex-col justify-center">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-4 gap-4">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between py-4 gap-4">
         
         {/* Lado Esquerdo: Logo e Título */}
         <div className="flex items-center gap-2">
@@ -96,18 +96,18 @@ export function Header() {
         </div>
 
         {/* Lado Direito: Navegação (Stack no mobile, Linha no desktop) */}
-        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full md:w-auto border-t md:border-none border-primary/5 pt-4 md:pt-0">
+        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full lg:w-auto border-t lg:border-none border-primary/5 pt-4 lg:pt-0">
           <Link href="/menu">
-            <Button variant="ghost" size="icon" className="md:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
+            <Button variant="ghost" size="icon" className="lg:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
               <UtensilsCrossed className="h-8 w-8" />
             </Button>
-            <Button variant="ghost" className="hidden md:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl text-foreground">Cardápio</Button>
+            <Button variant="ghost" className="hidden lg:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl text-foreground">Cardápio</Button>
           </Link>
           
           <Link href="/checkout">
-            <Button className="relative rounded-full h-14 w-14 md:w-auto md:px-8 bg-primary hover:bg-primary/90 text-white font-black transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-xl shadow-primary/20">
-              <ShoppingBasket className="h-8 w-8 md:h-7 md:w-7 md:mr-2" />
-              <span className="hidden md:inline text-xl">Pedido</span>
+            <Button className="relative rounded-full h-14 w-14 lg:w-auto lg:px-8 bg-primary hover:bg-primary/90 text-white font-black transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-xl shadow-primary/20">
+              <ShoppingBasket className="h-8 w-8 lg:h-7 lg:w-7 lg:mr-2" />
+              <span className="hidden lg:inline text-xl">Pedido</span>
               {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-xs font-black border-2 border-background shadow-md">
                   {itemCount}
@@ -143,10 +143,10 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Link href="/login">
-              <Button variant="outline" size="icon" className="md:hidden h-14 w-14 rounded-full border-2 text-primary bg-white">
+              <Button variant="outline" size="icon" className="lg:hidden h-14 w-14 rounded-full border-2 text-primary bg-white">
                 <LogIn className="h-8 w-8" />
               </Button>
-              <Button variant="outline" className="hidden md:flex rounded-full h-14 px-8 font-black border-2 border-primary/20 text-lg hover:bg-primary/5 bg-white text-black transition-all">
+              <Button variant="outline" className="hidden lg:flex rounded-full h-14 px-8 font-black border-2 border-primary/20 text-lg hover:bg-primary/5 bg-white text-black transition-all">
                 Entrar
               </Button>
             </Link>

@@ -141,7 +141,7 @@ export default function CheckoutPage() {
 
   if (isSuccess) {
     return (
-      <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-[70vh] relative">
+      <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen relative">
         <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-50 shadow-2xl p-8 md:p-12 text-center space-y-8 animate-in zoom-in-95 duration-500 bg-white">
           <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
             <CheckCircle2 className="h-16 w-16 text-green-600" />
@@ -185,8 +185,13 @@ export default function CheckoutPage() {
         <ArrowLeft className="h-6 w-6" /> Voltar ao Cardápio
       </Link>
 
+      <div className="max-w-4xl mx-auto mt-20 md:mt-24 mb-12 text-center space-y-2">
+        <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter">Finalizar Pedido</h1>
+        <p className="text-lg md:text-xl text-muted-foreground font-medium">Confira seu carrinho e informe os dados para entrega</p>
+      </div>
+
       {items.length === 0 ? (
-        <div className="py-20 text-center space-y-6 mt-20">
+        <div className="py-20 text-center space-y-6">
           <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl text-muted-foreground">
             <Trash2 className="h-12 w-12" />
           </div>
@@ -199,7 +204,7 @@ export default function CheckoutPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-20 md:mt-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-8">
             <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
               <CardHeader className="bg-primary/5 border-b py-6 px-8">

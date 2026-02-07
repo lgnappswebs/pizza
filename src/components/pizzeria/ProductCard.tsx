@@ -142,7 +142,7 @@ export function ProductCard({
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] border-none p-0">
+          <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] border-none p-0 overflow-hidden">
             <div className="relative aspect-video w-full">
               <Image src={imageUrl} alt={name} fill className="object-cover" />
               {isPromotion && (
@@ -152,7 +152,7 @@ export function ProductCard({
               )}
             </div>
             
-            <div className="p-6 space-y-8">
+            <div className="p-6 space-y-8 flex-1">
               <div className="space-y-2">
                 <div className="flex justify-between items-start gap-4">
                   <DialogTitle className="text-3xl font-black text-foreground tracking-tight flex-1">{name}</DialogTitle>
