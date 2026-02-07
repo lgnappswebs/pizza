@@ -14,15 +14,18 @@ import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, u
 import { collection, doc, serverTimestamp } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [waLink, setWaLink] = useState('');
+  const [waSent, setWaSent] = useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
   const { toast } = useToast();
+  const router = useRouter();
   
   const [form, setForm] = useState({
     name: '',
@@ -123,6 +126,7 @@ export default function CheckoutPage() {
       
       setWaLink(whatsappUrl);
       setIsSuccess(true);
+      setWaSent(true); // Marca como enviado automaticamente
       clearCart();
 
       toast({
@@ -153,29 +157,62 @@ export default function CheckoutPage() {
           <div className="space-y-4">
             <h2 className="text-4xl md:text-5xl font-black text-green-700 tracking-tighter">Pedido Gravado!</h2>
             <p className="text-xl text-muted-foreground font-medium max-w-md mx-auto">
-              Para que sua pizza comece a ser preparada, você <span className="text-primary font-black underline">PRECISA</span> enviar o pedido pelo WhatsApp abaixo.
+              {waSent 
+                ? "Seu pedido já está com a gente! Agora é só aguardar o preparo e a entrega."
+                : "Para que sua pizza comece a ser preparada, você PRECISA enviar o pedido pelo WhatsApp abaixo."
+              }
             </p>
           </div>
 
-          <div className="bg-primary/5 p-6 rounded-3xl border-2 border-dashed border-primary/20 text-left space-y-3">
-            <p className="font-black text-lg text-primary flex items-center gap-2">
-              <AlertCircle className="h-6 w-6" /> PASSO OBRIGATÓRIO:
+          <div className={cn(
+            "p-6 rounded-3xl border-2 border-dashed text-left space-y-3 transition-colors duration-500",
+            waSent ? "bg-green-50 border-green-200" : "bg-primary/5 border-primary/20"
+          )}>
+            <p className={cn("font-black text-lg flex items-center gap-2", waSent ? "text-green-700" : "text-primary")}>
+              {waSent ? <CheckCircle2 className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
+              {waSent ? "ENVIADO PARA O WHATSAPP" : "PASSO OBRIGATÓRIO:"}
             </p>
             <p className="text-muted-foreground font-bold">
-              Se a conversa do WhatsApp não abriu automaticamente, clique no botão verde abaixo. Só começamos a preparar após recebermos sua mensagem.
+              {waSent 
+                ? "O envio foi iniciado. Se por algum motivo o WhatsApp não abriu, use o link de ajuda abaixo."
+                : "Se a conversa do WhatsApp não abriu automaticamente, clique no botão verde abaixo. Só começamos a preparar após recebermos sua mensagem."
+              }
             </p>
           </div>
 
-          <Button 
-            onClick={() => window.open(waLink, '_blank')}
-            className="w-full h-24 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-2xl shadow-[#25D366]/30 transform transition hover:scale-[1.02] active:scale-95 flex flex-col items-center justify-center leading-tight gap-1"
-          >
-            <div className="flex items-center gap-3">
-              <Send className="h-8 w-8" />
-              <span>ENVIAR AGORA</span>
-            </div>
-            <span className="text-xs opacity-80 font-bold uppercase tracking-widest">(Clique para confirmar no WhatsApp)</span>
-          </Button>
+          <div className="space-y-4 w-full">
+            <Button 
+              onClick={() => {
+                if (waSent) {
+                  router.push('/menu');
+                } else {
+                  window.open(waLink, '_blank');
+                  setWaSent(true);
+                }
+              }}
+              className={cn(
+                "w-full h-24 rounded-full text-white text-2xl font-black shadow-2xl transform transition hover:scale-[1.02] active:scale-95 flex flex-col items-center justify-center leading-tight gap-1",
+                waSent ? "bg-primary shadow-primary/30" : "bg-[#25D366] shadow-[#25D366]/30"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                {waSent ? <CheckCircle2 className="h-8 w-8" /> : <Send className="h-8 w-8" />}
+                <span>{waSent ? 'FINALIZAR PEDIDO' : 'ENVIAR AGORA'}</span>
+              </div>
+              <span className="text-xs opacity-80 font-bold uppercase tracking-widest">
+                {waSent ? '(Voltar ao Cardápio)' : '(Clique para confirmar no WhatsApp)'}
+              </span>
+            </Button>
+
+            {waSent && (
+              <button 
+                onClick={() => window.open(waLink, '_blank')}
+                className="text-primary font-bold text-sm underline opacity-70 hover:opacity-100 block mx-auto transition-opacity"
+              >
+                Não abriu o WhatsApp? Tentar enviar novamente
+              </button>
+            )}
+          </div>
 
           <Link href="/menu" className="block text-muted-foreground font-bold text-lg hover:text-primary transition-colors">
             Voltar ao Cardápio
