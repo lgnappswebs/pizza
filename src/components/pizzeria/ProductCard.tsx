@@ -99,7 +99,7 @@ export function ProductCard({
   };
 
   return (
-    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white">
+    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-card">
       <CardHeader 
         className="p-0 relative aspect-[4/3] overflow-hidden cursor-pointer"
         onClick={() => setOpen(true)}
@@ -122,7 +122,7 @@ export function ProductCard({
         onClick={() => setOpen(true)}
       >
         <div className="flex justify-between items-start gap-2">
-          <h3 className="text-xl font-black font-headline leading-tight text-black">{name}</h3>
+          <h3 className="text-xl font-black font-headline leading-tight text-foreground">{name}</h3>
           <div className="flex flex-col items-end shrink-0">
             {isPromotion && (
               <span className="text-[10px] md:text-xs text-muted-foreground line-through font-bold opacity-70">
@@ -142,7 +142,7 @@ export function ProductCard({
               Adicionar
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] max-h-[95vh] overflow-y-auto p-0 border-none">
+          <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] border-none p-0">
             <div className="relative aspect-video w-full">
               <Image src={imageUrl} alt={name} fill className="object-cover" />
               {isPromotion && (
@@ -154,7 +154,15 @@ export function ProductCard({
             
             <div className="p-6 space-y-8">
               <div className="space-y-2">
-                <DialogTitle className="text-3xl font-black text-black tracking-tight">{name}</DialogTitle>
+                <div className="flex justify-between items-start gap-4">
+                  <DialogTitle className="text-3xl font-black text-foreground tracking-tight flex-1">{name}</DialogTitle>
+                  {isPromotion && (
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-muted-foreground line-through font-bold opacity-70">R$ {(getPrice() * 1.25).toFixed(2)}</p>
+                      <p className="text-xl font-black text-primary leading-none">R$ {getPrice().toFixed(2)}</p>
+                    </div>
+                  )}
+                </div>
                 <p className="text-muted-foreground font-medium leading-relaxed">
                   {description}
                 </p>
@@ -162,25 +170,25 @@ export function ProductCard({
 
               {hasMultipleSizes && (
                 <div className="space-y-4">
-                  <Label className="text-xl font-black text-black">Tamanho</Label>
+                  <Label className="text-xl font-black text-foreground">Tamanho</Label>
                   <RadioGroup value={size} onValueChange={setSize} className="grid grid-cols-3 gap-3">
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Pequena" id="broto" className="sr-only" />
-                      <Label htmlFor="broto" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white hover:border-primary/50 text-black'}`}>
+                      <Label htmlFor="broto" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-sm">Pequena</span>
                         <span className="text-[10px] font-bold opacity-70">R$ {priceSmall?.toFixed(2)}</span>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Média" id="media" className="sr-only" />
-                      <Label htmlFor="media" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Média' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white hover:border-primary/50 text-black'}`}>
+                      <Label htmlFor="media" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Média' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-sm">Média</span>
                         <span className="text-[10px] font-bold opacity-70">R$ {priceMedium?.toFixed(2)}</span>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Grande" id="grande" className="sr-only" />
-                      <Label htmlFor="grande" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white hover:border-primary/50 text-black'}`}>
+                      <Label htmlFor="grande" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
                         <span className="block font-black text-sm">Grande</span>
                         <span className="text-[10px] font-bold opacity-70">R$ {priceLarge?.toFixed(2)}</span>
                       </Label>
@@ -190,7 +198,7 @@ export function ProductCard({
               )}
 
               <div className="space-y-4">
-                <Label className="text-xl font-black text-black">Borda Recheada</Label>
+                <Label className="text-xl font-black text-foreground">Borda Recheada</Label>
                 <RadioGroup value={crust} onValueChange={setCrust} className="grid grid-cols-2 gap-3">
                   {CRUST_OPTIONS.map((option) => (
                     <div key={option.name} className="flex flex-col items-center">
@@ -200,7 +208,7 @@ export function ProductCard({
                         className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all flex flex-col ${
                           crust === option.name 
                             ? 'border-primary bg-primary/10 text-primary shadow-md' 
-                            : 'border-muted bg-white hover:border-primary/50 text-black'
+                            : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'
                         }`}
                       >
                         <span className="font-black text-sm">{option.label}</span>
@@ -214,12 +222,12 @@ export function ProductCard({
               </div>
 
               <div className="space-y-4">
-                <Label className="text-xl font-black text-black">Observações</Label>
+                <Label className="text-xl font-black text-foreground">Observações</Label>
                 <Textarea 
                   placeholder="Ex: Sem cebola, bem passada, s/ gergelim..." 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="rounded-2xl min-h-[100px] border-2 bg-white text-black font-medium"
+                  className="rounded-2xl min-h-[100px] border-2 bg-white/50 text-foreground font-medium placeholder:text-muted-foreground"
                 />
               </div>
 
@@ -228,7 +236,7 @@ export function ProductCard({
                   type="button"
                   variant="outline" 
                   size="icon" 
-                  className="h-14 w-14 rounded-full border-2 bg-white text-primary hover:bg-primary hover:text-white"
+                  className="h-14 w-14 rounded-full border-2 bg-background text-primary hover:bg-primary hover:text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     setQuantity(Math.max(1, quantity - 1));
@@ -237,14 +245,14 @@ export function ProductCard({
                   <Minus className="h-8 w-8" />
                 </Button>
                 <div className="text-center">
-                  <span className="text-4xl font-black block text-black">{quantity}</span>
-                  <span className="text-[10px] uppercase font-black opacity-40 text-black">Qtd</span>
+                  <span className="text-4xl font-black block text-foreground">{quantity}</span>
+                  <span className="text-[10px] uppercase font-black opacity-40 text-foreground">Qtd</span>
                 </div>
                 <Button 
                   type="button"
                   variant="outline" 
                   size="icon" 
-                  className="h-14 w-14 rounded-full border-2 bg-white text-primary hover:bg-primary hover:text-white"
+                  className="h-14 w-14 rounded-full border-2 bg-background text-primary hover:bg-primary hover:text-white"
                   onClick={(e) => {
                     e.stopPropagation();
                     setQuantity(quantity + 1);
@@ -255,10 +263,17 @@ export function ProductCard({
               </div>
             </div>
 
-            <div className="p-6 bg-white border-t sticky bottom-0 z-20">
+            <div className="p-6 border-t sticky bottom-0 z-20 bg-background/80 backdrop-blur-md">
               <Button onClick={handleAddToCart} className="w-full h-20 rounded-full text-2xl font-black bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/30 text-white transform transition active:scale-95 flex flex-col justify-center leading-tight">
-                <span className="text-sm font-bold opacity-80">Confirmar Pedido</span>
-                <span>R$ {(getPrice() * quantity).toFixed(2)}</span>
+                <div className="flex flex-col items-center gap-0.5">
+                  <span className="text-sm font-bold opacity-80">Confirmar Pedido</span>
+                  <div className="flex items-center gap-2">
+                    {isPromotion && (
+                      <span className="text-xs line-through opacity-60">R$ {((getPrice() * 1.25) * quantity).toFixed(2)}</span>
+                    )}
+                    <span className="text-2xl">R$ {(getPrice() * quantity).toFixed(2)}</span>
+                  </div>
+                </div>
               </Button>
             </div>
           </DialogContent>
