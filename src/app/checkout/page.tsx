@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
@@ -118,13 +118,16 @@ export default function CheckoutPage() {
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
       
+      // Abre o WhatsApp automaticamente
+      window.open(whatsappUrl, '_blank');
+      
       setWaLink(whatsappUrl);
       setIsSuccess(true);
       clearCart();
 
       toast({
         title: "🚀 Pedido Realizado!",
-        description: "Seu pedido foi processado com sucesso em nosso sistema.",
+        description: "Redirecionando para o WhatsApp para confirmar seu pedido.",
       });
 
     } catch (error) {
@@ -142,33 +145,36 @@ export default function CheckoutPage() {
   if (isSuccess) {
     return (
       <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen relative">
-        <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-50 shadow-2xl p-8 md:p-12 text-center space-y-8 animate-in zoom-in-95 duration-500 bg-white">
+        <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-100 shadow-2xl p-8 md:p-12 text-center space-y-8 animate-in zoom-in-95 duration-500 bg-white">
           <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
             <CheckCircle2 className="h-16 w-16 text-green-600" />
           </div>
           
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-black text-green-700 tracking-tighter">Pedido Realizado!</h2>
+            <h2 className="text-4xl md:text-5xl font-black text-green-700 tracking-tighter">Pedido Gravado!</h2>
             <p className="text-xl text-muted-foreground font-medium max-w-md mx-auto">
-              Seu pedido foi processado com sucesso e já está sendo preparado pela nossa equipe.
+              Para que sua pizza comece a ser preparada, você <span className="text-primary font-black underline">PRECISA</span> enviar o pedido pelo WhatsApp abaixo.
             </p>
           </div>
 
-          <div className="bg-muted/30 p-6 rounded-3xl border-2 border-dashed text-left space-y-3">
-            <p className="font-bold text-lg text-primary flex items-center gap-2">
-              <Send className="h-5 w-5" /> Importante:
+          <div className="bg-primary/5 p-6 rounded-3xl border-2 border-dashed border-primary/20 text-left space-y-3">
+            <p className="font-black text-lg text-primary flex items-center gap-2">
+              <AlertCircle className="h-6 w-6" /> PASSO OBRIGATÓRIO:
             </p>
-            <p className="text-muted-foreground font-medium">
-              Clique no botão abaixo para enviar o detalhamento do seu pedido via WhatsApp. Isso agiliza o seu atendimento e garante que recebamos sua localização correta.
+            <p className="text-muted-foreground font-bold">
+              Se a conversa do WhatsApp não abriu automaticamente, clique no botão verde abaixo. Só começamos a preparar após recebermos sua mensagem.
             </p>
           </div>
 
           <Button 
             onClick={() => window.open(waLink, '_blank')}
-            className="w-full h-20 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-xl shadow-[#25D366]/30 transform transition hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3"
+            className="w-full h-24 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-2xl font-black shadow-2xl shadow-[#25D366]/30 transform transition hover:scale-[1.02] active:scale-95 flex flex-col items-center justify-center leading-tight gap-1"
           >
-            <Send className="h-8 w-8" />
-            Enviar pelo WhatsApp
+            <div className="flex items-center gap-3">
+              <Send className="h-8 w-8" />
+              <span>ENVIAR AGORA</span>
+            </div>
+            <span className="text-xs opacity-80 font-bold uppercase tracking-widest">(Clique para confirmar no WhatsApp)</span>
           </Button>
 
           <Link href="/menu" className="block text-muted-foreground font-bold text-lg hover:text-primary transition-colors">
@@ -186,13 +192,13 @@ export default function CheckoutPage() {
       </Link>
 
       <div className="max-w-4xl mx-auto mt-12 mb-12 text-center space-y-2">
-        <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter">Finalizar Pedido</h1>
-        <p className="text-lg md:text-xl text-muted-foreground font-medium">Confira seu carrinho e informe os dados para entrega</p>
+        <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter text-black">Finalizar Pedido</h1>
+        <p className="text-lg md:text-xl text-muted-foreground font-medium">Seu pedido será enviado automaticamente para o nosso WhatsApp</p>
       </div>
 
       {items.length === 0 ? (
         <div className="py-20 text-center space-y-6">
-          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl text-muted-foreground">
+          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl text-muted-foreground border-2">
             <Trash2 className="h-12 w-12" />
           </div>
           <h2 className="text-3xl font-black text-foreground">Seu pedido está vazio</h2>
@@ -241,7 +247,7 @@ export default function CheckoutPage() {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all"
+                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-black"
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             >
                               <span className="text-xl font-black">-</span>
@@ -250,7 +256,7 @@ export default function CheckoutPage() {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all"
+                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-black"
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             >
                               <span className="text-xl font-black">+</span>
@@ -374,12 +380,21 @@ export default function CheckoutPage() {
                   onClick={handleSendToWhatsApp}
                   disabled={loading || (config && !config.isStoreOpen)}
                   className={cn(
-                    "w-full h-20 md:h-24 rounded-full text-white text-2xl md:text-3xl font-black shadow-2xl flex items-center justify-center gap-4 transform transition hover:scale-[1.02] active:scale-95 mt-10",
+                    "w-full h-20 md:h-24 rounded-full text-white text-2xl md:text-3xl font-black shadow-2xl flex flex-col items-center justify-center transform transition hover:scale-[1.02] active:scale-95 mt-10",
                     config && !config.isStoreOpen ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary shadow-primary/30'
                   )}
                 >
-                  {loading ? <Loader2 className="h-10 w-10 animate-spin" /> : <Send className="h-8 w-8 md:h-10 md:w-10" />}
-                  {config && !config.isStoreOpen ? 'Pizzaria Fechada' : loading ? 'Processando...' : 'Finalizar Pedido'}
+                  {loading ? (
+                    <Loader2 className="h-10 w-10 animate-spin" />
+                  ) : (
+                    <div className="flex flex-col items-center leading-tight">
+                      <div className="flex items-center gap-4">
+                        <Send className="h-8 w-8 md:h-10 md:w-10" />
+                        <span>{config && !config.isStoreOpen ? 'Pizzaria Fechada' : 'Finalizar e Enviar'}</span>
+                      </div>
+                      <span className="text-xs opacity-80 font-bold uppercase tracking-widest mt-1">(Redireciona para o WhatsApp)</span>
+                    </div>
+                  )}
                 </Button>
               </CardContent>
             </Card>
