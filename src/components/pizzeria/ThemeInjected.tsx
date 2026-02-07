@@ -86,11 +86,8 @@ export function ThemeInjected() {
     }
 
     if (isDark) {
-      // Quando o fundo for escuro, as fontes externas ficam BRANCAS
       root.style.setProperty('--foreground', '0 0% 100%');
       root.style.setProperty('--muted-foreground', '0 0% 90%');
-      
-      // Mas os CARDS e CAMPOS permanecem BRANCOS SÓLIDOS com texto PRETO
       root.style.setProperty('--card', '0 0% 100%');
       root.style.setProperty('--card-foreground', '0 0% 3.9%');
       root.style.setProperty('--popover', '0 0% 100%');
@@ -101,7 +98,6 @@ export function ThemeInjected() {
       root.style.setProperty('--border', '0 0% 100% / 40%');
       root.style.setProperty('--muted', '0 0% 100% / 20%');
     } else {
-      // Modo claro padrão
       root.style.setProperty('--foreground', '0 0% 3.9%');
       root.style.setProperty('--muted-foreground', '0 0% 45.1%');
       root.style.setProperty('--card', '0 0% 100%');

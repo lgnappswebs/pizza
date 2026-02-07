@@ -206,10 +206,6 @@ export default function AdminFinancePage() {
   ];
   const years = ["2024", "2025", "2026"];
 
-  if (isUserLoading || !user) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
-  }
-
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0 print:hidden">
@@ -391,7 +387,7 @@ export default function AdminFinancePage() {
               <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Média p/ pedido</p>
+              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Média por pedido</p>
             </CardContent>
           </Card>
         </div>

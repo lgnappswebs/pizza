@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn } from 'lucide-react';
+import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Pizza as PizzaIconDefault } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -54,13 +54,15 @@ export function Header() {
 
   const LogoIcon = config?.logoIconName && (LucideIcons as any)[config.logoIconName] 
     ? (LucideIcons as any)[config.logoIconName] 
-    : LucideIcons.Pizza;
+    : PizzaIconDefault;
 
   if (loadingConfigs) return <header className="h-28 w-full border-b bg-background/95"></header>;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-28 flex items-center">
-      <div className="container mx-auto px-4 flex h-full items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 min-h-28 md:h-28 flex flex-col justify-center">
+      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-4 md:py-0 gap-4 md:gap-0">
+        
+        {/* Lado Esquerdo: Logo e Título */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
@@ -93,17 +95,18 @@ export function Header() {
           </Link>
         </div>
 
-        <nav className="flex items-center gap-2 md:gap-4">
+        {/* Lado Direito: Navegação (Repositioned below title on mobile) */}
+        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full md:w-auto border-t border-primary/5 pt-4 md:pt-0 md:border-none">
           <Link href="/menu">
-            <Button variant="ghost" size="icon" className="md:hidden h-12 w-12 rounded-full text-primary">
-              <UtensilsCrossed className="h-7 w-7" />
+            <Button variant="ghost" size="icon" className="md:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
+              <UtensilsCrossed className="h-8 w-8" />
             </Button>
             <Button variant="ghost" className="hidden md:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl text-foreground">Cardápio</Button>
           </Link>
           
           <Link href="/checkout">
             <Button className="relative rounded-full h-14 w-14 md:w-auto md:px-8 bg-primary hover:bg-primary/90 text-white font-black transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-xl shadow-primary/20">
-              <ShoppingBasket className="h-7 w-7 md:mr-2" />
+              <ShoppingBasket className="h-8 w-8 md:h-7 md:w-7 md:mr-2" />
               <span className="hidden md:inline text-xl">Pedido</span>
               {itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-xs font-black border-2 border-background shadow-md">
@@ -141,7 +144,7 @@ export function Header() {
           ) : (
             <Link href="/login">
               <Button variant="outline" size="icon" className="md:hidden h-14 w-14 rounded-full border-2 text-primary bg-white">
-                <LogIn className="h-7 w-7" />
+                <LogIn className="h-8 w-8" />
               </Button>
               <Button variant="outline" className="hidden md:flex rounded-full h-14 px-8 font-black border-2 border-primary/20 text-lg hover:bg-primary/5 bg-white text-black transition-all">
                 Entrar
