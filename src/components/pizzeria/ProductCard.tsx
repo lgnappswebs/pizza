@@ -99,7 +99,7 @@ export function ProductCard({
   };
 
   return (
-    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-card">
+    <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-primary/20 bg-white">
       <CardHeader 
         className="p-0 relative aspect-[4/3] overflow-hidden cursor-pointer"
         onClick={() => setOpen(true)}
@@ -122,7 +122,7 @@ export function ProductCard({
         onClick={() => setOpen(true)}
       >
         <div className="flex justify-between items-start gap-2">
-          <h3 className="text-xl font-black font-headline leading-tight text-foreground">{name}</h3>
+          <h3 className="text-xl font-black font-headline leading-tight text-black">{name}</h3>
           <div className="flex flex-col items-end shrink-0">
             {isPromotion && (
               <span className="text-[10px] md:text-xs text-muted-foreground line-through font-bold opacity-70">
@@ -227,7 +227,7 @@ export function ProductCard({
                   placeholder="Ex: Sem cebola, bem passada, s/ gergelim..." 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="rounded-2xl min-h-[100px] border-2 bg-white/50 text-foreground font-medium placeholder:text-muted-foreground"
+                  className="rounded-2xl min-h-[120px] border-2 bg-white/50 text-foreground font-medium placeholder:text-muted-foreground"
                 />
               </div>
 

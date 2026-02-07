@@ -88,7 +88,7 @@ export function Header() {
               <span className="text-2xl md:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
                 {config?.restaurantName || ""}
               </span>
-              <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1 hidden sm:block">
+              <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
                 O Sabor Original
               </span>
             </div>
