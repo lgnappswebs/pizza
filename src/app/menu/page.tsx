@@ -217,7 +217,7 @@ export default function MenuPage() {
             </div>
             <Input 
               placeholder="O que deseja saborear hoje?" 
-              className="h-14 md:h-16 pl-12 md:pl-14 pr-12 rounded-full border-2 border-muted-foreground/20 focus:border-primary focus:ring-0 shadow-lg text-sm sm:text-base md:text-lg font-medium transition-all"
+              className="h-14 md:h-16 pl-12 md:pl-14 pr-12 rounded-full border-2 border-muted-foreground/20 focus:border-primary focus:ring-0 shadow-lg text-lg sm:text-xl md:text-2xl font-black transition-all"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
