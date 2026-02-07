@@ -294,12 +294,15 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 
-                <div className="flex items-center justify-between p-6 bg-muted/30 rounded-2xl border-2 border-dashed">
+                <div 
+                  className="flex items-center justify-between p-6 bg-muted/30 rounded-2xl border-2 border-dashed cursor-pointer hover:bg-muted/40 transition-all active:scale-[0.99]"
+                  onClick={() => setForm({...form, showLogoIcon: !form.showLogoIcon})}
+                >
                   <div className="space-y-0.5">
-                    <Label className="text-lg font-bold text-black">Exibir Ícone no Logo</Label>
+                    <Label className="text-lg font-bold text-black cursor-pointer">Exibir Ícone no Logo</Label>
                     <p className="text-sm text-muted-foreground">Define se um ícone aparece ao lado do nome.</p>
                   </div>
-                  <Switch checked={form.showLogoIcon} onCheckedChange={(v) => setForm({...form, showLogoIcon: v})} className="scale-125" />
+                  <Switch checked={form.showLogoIcon} className="scale-125 pointer-events-none" />
                 </div>
 
                 <div className="space-y-2">
@@ -371,15 +374,17 @@ export default function AdminSettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-6 bg-yellow-50 rounded-2xl border-2 border-yellow-200">
+              <div 
+                className="flex items-center justify-between p-6 bg-yellow-50 rounded-2xl border-2 border-yellow-200 cursor-pointer hover:bg-yellow-100/50 transition-all active:scale-[0.99]"
+                onClick={() => setForm({...form, isStoreOpen: !form.isStoreOpen})}
+              >
                 <div className="space-y-1">
-                  <Label className="text-xl font-black text-yellow-800">Loja Aberta?</Label>
+                  <Label className="text-xl font-black text-yellow-800 cursor-pointer">Loja Aberta?</Label>
                   <p className="text-sm text-yellow-700">Marque para permitir que os clientes façam pedidos.</p>
                 </div>
                 <Switch 
-                  className="scale-150 data-[state=checked]:bg-green-500"
+                  className="scale-150 data-[state=checked]:bg-green-500 pointer-events-none"
                   checked={form.isStoreOpen} 
-                  onCheckedChange={(v) => setForm({...form, isStoreOpen: v})} 
                 />
               </div>
 

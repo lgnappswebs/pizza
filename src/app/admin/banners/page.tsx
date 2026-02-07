@@ -459,12 +459,15 @@ export default function AdminBannersPage() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed cursor-pointer hover:bg-muted/40 transition-all active:scale-[0.99]"
+                onClick={() => setFormData({...formData, isActive: !formData.isActive})}
+              >
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold text-black">Exibir no App</Label>
+                  <Label className="text-lg font-bold text-black cursor-pointer">Exibir no App</Label>
                   <p className="text-sm text-muted-foreground">O banner aparecerá no cardápio</p>
                 </div>
-                <Switch checked={formData.isActive} onCheckedChange={(v) => setFormData({...formData, isActive: v})} className="scale-125" />
+                <Switch checked={formData.isActive} className="scale-125 pointer-events-none" />
               </div>
             </div>
             <DialogFooter>

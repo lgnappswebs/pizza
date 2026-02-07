@@ -378,12 +378,15 @@ export default function AdminProductsPage() {
                 </Select>
               </div>
 
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed">
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed cursor-pointer hover:bg-muted/40 transition-all active:scale-[0.99]"
+                onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}
+              >
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold text-black">Múltiplos Tamanhos</Label>
+                  <Label className="text-lg font-bold text-black cursor-pointer">Múltiplos Tamanhos</Label>
                   <p className="text-sm text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
                 </div>
-                <Switch checked={formData.hasMultipleSizes} onCheckedChange={(v) => setFormData({...formData, hasMultipleSizes: v})} className="scale-125" />
+                <Switch checked={formData.hasMultipleSizes} className="scale-125 pointer-events-none" />
               </div>
 
               {!formData.hasMultipleSizes ? (
@@ -484,21 +487,27 @@ export default function AdminProductsPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 cursor-pointer hover:bg-muted/40 transition-all active:scale-[0.99]"
+                onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}
+              >
                 <div className="space-y-0.5">
-                  <Label className="text-lg font-bold text-black">Disponível na Loja</Label>
+                  <Label className="text-lg font-bold text-black cursor-pointer">Disponível na Loja</Label>
                 </div>
-                <Switch checked={formData.isAvailable} onCheckedChange={(v) => setFormData({...formData, isAvailable: v})} className="scale-125" />
+                <Switch checked={formData.isAvailable} className="scale-125 pointer-events-none" />
               </div>
               
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2">
+                <div 
+                  className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 cursor-pointer hover:bg-muted/40 transition-all active:scale-[0.99]"
+                  onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}
+                >
                   <div className="space-y-0.5">
-                    <Label className="text-lg font-bold text-black flex items-center gap-2">
+                    <Label className="text-lg font-bold text-black flex items-center gap-2 cursor-pointer">
                       <Percent className="h-5 w-5 text-primary" /> Produto em Promoção
                     </Label>
                   </div>
-                  <Switch checked={formData.isPromotion} onCheckedChange={(v) => setFormData({...formData, isPromotion: v})} className="scale-125" />
+                  <Switch checked={formData.isPromotion} className="scale-125 pointer-events-none" />
                 </div>
 
                 {formData.isPromotion && formData.hasMultipleSizes && (
