@@ -88,14 +88,14 @@ export function Header() {
               <span className="text-4xl md:text-4xl lg:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
                 {config?.restaurantName || "PizzApp"}
               </span>
-              <span className="text-xs lg:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
+              <span className="text-sm lg:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
                 O Sabor Original
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Navegação: Em telas maiores fica na mesma linha, em menores forma uma segunda linha */}
+        {/* Navegação: No desktop à direita, no mobile em linha dedicada abaixo */}
         <nav className="flex items-center justify-center lg:justify-end gap-6 md:gap-4 w-full lg:w-auto border-t lg:border-none border-primary/5 pt-4 lg:pt-0">
           <Link href="/menu">
             <Button variant="ghost" size="icon" className="lg:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
