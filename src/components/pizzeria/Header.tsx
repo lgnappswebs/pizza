@@ -64,8 +64,8 @@ export function Header() {
         
         {/* Lado Esquerdo: Logo e Título */}
         <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
+          <Link href="/" className="flex items-center space-x-3">
+            <div className="relative w-16 h-16 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
               {config?.logoImageUrl ? (
                 <Image 
                   src={config.logoImageUrl} 
@@ -74,7 +74,7 @@ export function Header() {
                   className="object-cover"
                 />
               ) : config?.showLogoIcon ? (
-                <LogoIcon className="h-8 w-8 md:h-10 md:w-10 text-primary" />
+                <LogoIcon className="h-10 w-10 md:h-10 md:w-10 text-primary" />
               ) : (
                 <Image 
                   src={logoPlaceholder?.imageUrl || ''} 
@@ -85,10 +85,10 @@ export function Header() {
               )}
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl md:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
+              <span className="text-4xl md:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
                 {config?.restaurantName || "PizzApp"}
               </span>
-              <span className="text-[10px] md:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
+              <span className="text-sm md:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
                 O Sabor Original
               </span>
             </div>

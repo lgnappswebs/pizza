@@ -465,7 +465,6 @@ export default function AdminFinancePage() {
           </Card>
         </div>
 
-        {/* Elemento oculto para exportação */}
         <div ref={exportRef} style={{ display: 'none' }} className="p-10 bg-white">
            <div className="flex justify-between items-center mb-10 border-b-4 border-primary pb-6">
               <div>
