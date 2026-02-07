@@ -73,6 +73,11 @@ export function ProductCard({
     return getBasePrice() + getCrustPrice();
   };
 
+  // Preço original para exibir quando em promoção (acréscimo de 25%)
+  const getOriginalPrice = () => {
+    return getPrice() * 1.25;
+  };
+
   const handleAddToCart = () => {
     const finalPrice = getPrice();
     addItem({
@@ -126,7 +131,7 @@ export function ProductCard({
           <div className="flex flex-col items-end shrink-0">
             {isPromotion && (
               <span className="text-[10px] md:text-xs text-muted-foreground line-through font-bold opacity-70">
-                R$ {(getPrice() * 1.25).toFixed(2)}
+                R$ {getOriginalPrice().toFixed(2)}
               </span>
             )}
             <span className="text-xl font-black text-primary">R$ {getPrice().toFixed(2)}</span>
@@ -158,7 +163,7 @@ export function ProductCard({
                   <DialogTitle className="text-3xl font-black text-foreground tracking-tight flex-1">{name}</DialogTitle>
                   <div className="text-right shrink-0 flex flex-col items-end">
                     {isPromotion && (
-                      <p className="text-xs text-muted-foreground line-through font-bold opacity-70">R$ {(getPrice() * 1.25).toFixed(2)}</p>
+                      <p className="text-xs text-muted-foreground line-through font-bold opacity-70">R$ {getOriginalPrice().toFixed(2)}</p>
                     )}
                     <p className="text-xl font-black text-primary leading-none">R$ {getPrice().toFixed(2)}</p>
                   </div>
@@ -273,12 +278,12 @@ export function ProductCard({
             </div>
 
             <div className="p-6 border-t sticky bottom-0 z-20 bg-background/80 backdrop-blur-md">
-              <Button onClick={handleAddToCart} className="w-full h-20 rounded-full text-2xl font-black bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/30 text-white transform transition active:scale-95 flex flex-col justify-center leading-tight">
+              <Button onClick={handleAddToCart} className="w-full h-20 rounded-full text-2xl font-black bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/40 text-white transform transition active:scale-95 flex flex-col justify-center leading-tight">
                 <div className="flex flex-col items-center gap-0.5">
                   <span className="text-sm font-bold opacity-80">Confirmar Pedido</span>
                   <div className="flex items-center gap-2">
                     {isPromotion && (
-                      <span className="text-xs line-through opacity-60">R$ {((getPrice() * 1.25) * quantity).toFixed(2)}</span>
+                      <span className="text-xs line-through opacity-60">R$ {(getOriginalPrice() * quantity).toFixed(2)}</span>
                     )}
                     <span className="text-2xl">R$ {(getPrice() * quantity).toFixed(2)}</span>
                   </div>
