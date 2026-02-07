@@ -387,7 +387,7 @@ export default function AdminFinancePage() {
               <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Média por pedido</p>
+              <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
             </CardContent>
           </Card>
         </div>

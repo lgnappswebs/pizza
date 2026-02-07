@@ -60,9 +60,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 min-h-28 flex flex-col justify-center">
-      <div className="container mx-auto px-4 flex flex-col items-center justify-between py-4 gap-4">
+      <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-4 gap-4">
         
-        {/* Lado Superior: Logo e Título */}
+        {/* Lado Esquerdo: Logo e Título */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
@@ -95,8 +95,8 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Lado Inferior: Navegação (Sempre abaixo no mobile e desktop) */}
-        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full md:w-auto border-t border-primary/5 pt-4 md:pt-0 md:border-none">
+        {/* Lado Direito: Navegação (Stack no mobile, Linha no desktop) */}
+        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full md:w-auto border-t md:border-none border-primary/5 pt-4 md:pt-0">
           <Link href="/menu">
             <Button variant="ghost" size="icon" className="md:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
               <UtensilsCrossed className="h-8 w-8" />
