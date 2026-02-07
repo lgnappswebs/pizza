@@ -117,8 +117,8 @@ export function ProductCard({
           data-ai-hint="pizza"
         />
         {isPromotion && (
-          <Badge className="absolute top-4 right-4 bg-secondary text-secondary-foreground font-black px-3 py-1 text-sm rounded-full shadow-lg border-2 border-white/20">
-            OFERTA 🔥
+          <Badge className="absolute top-4 left-4 bg-secondary text-secondary-foreground font-black px-3 py-1 text-sm rounded-full shadow-lg border-2 border-white/20">
+            PROMOÇÃO 🔥
           </Badge>
         )}
       </CardHeader>
@@ -151,7 +151,7 @@ export function ProductCard({
             <div className="relative aspect-video w-full shrink-0">
               <Image src={imageUrl} alt={name} fill className="object-cover" />
               {isPromotion && (
-                <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground font-black px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/30 text-sm">
+                <div className="absolute top-4 left-4 bg-secondary text-secondary-foreground font-black px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/30 text-sm">
                   PROMOÇÃO 🔥
                 </div>
               )}
