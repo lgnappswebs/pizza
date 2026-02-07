@@ -78,10 +78,8 @@ export function ThemeInjected() {
     if (config.appBackgroundType === 'color' && config.backgroundColor) {
       root.style.setProperty('--background', hexToHsl(config.backgroundColor));
       isDark = getLuminance(config.backgroundColor) < 0.5;
-    } else if (config.appBackgroundType === 'image') {
-      root.style.setProperty('--background', '0 0% 100%');
-      isDark = false; // Imagem sobre branco geralmente é light theme
     } else {
+      root.style.setProperty('--background', '0 0% 100%');
       isDark = false;
     }
 
@@ -109,11 +107,6 @@ export function ThemeInjected() {
       root.style.setProperty('--input', '0 0% 89.8%');
       root.style.setProperty('--border', '0 0% 89.8%');
       root.style.setProperty('--muted', '0 0% 96.1%');
-      
-      // Reseta fundo para branco apenas se não estiver em modo cor
-      if (config.appBackgroundType !== 'color') {
-        root.style.setProperty('--background', '0 0% 100%');
-      }
     }
 
     if (config.appBackgroundImageUrl) {
@@ -121,6 +114,10 @@ export function ThemeInjected() {
     } else {
       root.style.removeProperty('--app-bg-image');
     }
+
+    // Variáveis de opacidade para sincronização com modais
+    root.style.setProperty('--app-pattern-opacity', config.appBackgroundType === 'pattern' ? '0.05' : '0');
+    root.style.setProperty('--app-image-opacity', config.appBackgroundType === 'image' ? '0.4' : '0');
 
   }, [config]);
 

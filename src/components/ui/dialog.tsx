@@ -44,16 +44,22 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
-      {/* Camada de fundo sólida do tema do app */}
+      {/* Camada de fundo sólida: Herda exatamente a cor de fundo do app definida no ThemeInjected */}
       <div className="absolute inset-0 z-[-3] bg-background pointer-events-none" />
       
-      {/* Camada de padrão (food pattern) padrão do app */}
-      <div className="absolute inset-0 z-[-2] bg-food-pattern opacity-[0.05] pointer-events-none" />
-      
-      {/* Camada de imagem de fundo com 40% de opacidade (mesmo padrão ThemeInjected) */}
+      {/* Camada de padrão: Sincronizada com a opacidade configurada no ThemeInjected */}
       <div 
-        className="absolute inset-0 z-[-1] opacity-40 bg-cover bg-center bg-no-repeat pointer-events-none transition-opacity duration-500" 
-        style={{ backgroundImage: 'var(--app-bg-image)' }}
+        className="absolute inset-0 z-[-2] bg-food-pattern pointer-events-none transition-opacity duration-500" 
+        style={{ opacity: 'var(--app-pattern-opacity, 0)' }}
+      />
+      
+      {/* Camada de imagem: Sincronizada com a imagem e opacidade configuradas no ThemeInjected */}
+      <div 
+        className="absolute inset-0 z-[-1] bg-cover bg-center bg-no-repeat pointer-events-none transition-opacity duration-500" 
+        style={{ 
+          backgroundImage: 'var(--app-bg-image)',
+          opacity: 'var(--app-image-opacity, 0)'
+        }}
       />
       
       {/* Container de rolagem interno sem padding fixo para permitir conteúdo full-bleed */}

@@ -148,7 +148,7 @@ export function ProductCard({
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] border-none p-0 overflow-hidden">
-            <div className="relative aspect-video w-full">
+            <div className="relative aspect-video w-full shrink-0">
               <Image src={imageUrl} alt={name} fill className="object-cover" />
               {isPromotion && (
                 <div className="absolute top-4 right-4 bg-secondary text-secondary-foreground font-black px-4 py-1.5 rounded-full shadow-2xl border-2 border-white/30 text-sm">
