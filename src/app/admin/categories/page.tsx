@@ -133,7 +133,7 @@ export default function AdminCategoriesPage() {
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
 
-  const { data: categories, isLoading } = useCollection(categoriesQuery);
+  const { data: categories, isLoading: isLoadingCats } = useCollection(categoriesQuery);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
@@ -288,7 +288,7 @@ export default function AdminCategoriesPage() {
 
         <Card className="rounded-2xl border-2 bg-white">
           <CardContent className="p-3 md:p-6">
-            {isLoading ? (
+            {isLoadingCats ? (
               <div className="flex justify-center py-12">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
               </div>
@@ -316,14 +316,14 @@ export default function AdminCategoriesPage() {
                       </div>
                     </div>
                     <div className="flex gap-1.5 md:gap-2 shrink-0">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-black border-2">
+                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-black border-2 bg-white">
                         <Edit2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
                       <Button 
                         variant="outline" 
                         size="icon" 
                         onClick={() => handleDeleteClick(category)} 
-                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive border-2 hover:bg-destructive/10"
+                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive border-2 hover:bg-destructive/10 bg-white"
                       >
                         <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                       </Button>
@@ -341,7 +341,7 @@ export default function AdminCategoriesPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white border-2">
+          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto border-2">
             <DialogHeader className="pt-10 sm:text-center">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
@@ -448,7 +448,7 @@ export default function AdminCategoriesPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Categoria
               </AlertDialogAction>
@@ -478,7 +478,7 @@ export default function AdminCategoriesPage() {
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
             <DropdownMenuItem asChild>
               <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

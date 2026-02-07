@@ -301,7 +301,7 @@ export default function AdminOrdersPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2">Cancelar</AlertDialogCancel>
+              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
                 Sim, Excluir Registro
               </AlertDialogAction>
@@ -331,7 +331,7 @@ export default function AdminOrdersPage() {
               <span className="text-[12px] font-black uppercase">Mais</span>
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
+          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
             <DropdownMenuItem asChild>
               <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos

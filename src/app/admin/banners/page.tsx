@@ -85,7 +85,7 @@ export default function AdminBannersPage() {
   const categoriesQuery = useMemoFirebase(() => collection(firestore, 'categorias'), [firestore]);
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   
-  const { data: banners, isLoading } = useCollection(bannersQuery);
+  const { data: banners, isLoading: loadingBanners } = useCollection(bannersQuery);
   const { data: categories } = useCollection(categoriesQuery);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
@@ -251,7 +251,7 @@ export default function AdminBannersPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {isLoading ? (
+          {loadingBanners ? (
             <div className="col-span-full flex justify-center py-12">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
@@ -284,10 +284,10 @@ export default function AdminBannersPage() {
                     Texto: {getTextPositionLabel(banner.textPosition)}
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8 text-black border-2">
+                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8 text-black border-2 bg-white">
                       <Edit2 className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive border-2 hover:bg-destructive/10">
+                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive border-2 hover:bg-destructive/10 bg-white">
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -295,7 +295,7 @@ export default function AdminBannersPage() {
               </Card>
             ))
           )}
-          {!isLoading && banners?.length === 0 && (
+          {!loadingBanners && banners?.length === 0 && (
             <div className="col-span-full text-center py-20 bg-white rounded-3xl border-2 border-dashed">
               <ImageIcon className="h-16 w-16 mx-auto mb-4 text-muted" />
               <h3 className="text-xl font-bold">Nenhum banner</h3>
@@ -325,7 +325,7 @@ export default function AdminBannersPage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
               <DropdownMenuItem asChild>
                 <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
@@ -357,7 +357,7 @@ export default function AdminBannersPage() {
         </nav>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white border-2">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2">
             <DialogHeader className="pt-10 sm:text-center">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingBanner ? 'Editar Banner' : 'Novo Banner'}
@@ -387,11 +387,11 @@ export default function AdminBannersPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      <SelectItem value="top-left" className="text-lg">Sup. Esquerdo</SelectItem>
-                      <SelectItem value="top-center" className="text-lg">Sup. Central</SelectItem>
-                      <SelectItem value="center" className="text-lg">Centralizado</SelectItem>
-                      <SelectItem value="bottom-left" className="text-lg">Inf. Esquerdo</SelectItem>
-                      <SelectItem value="bottom-center" className="text-lg">Inf. Central</SelectItem>
+                      <SelectItem value="top-left" className="text-lg text-black">Sup. Esquerdo</SelectItem>
+                      <SelectItem value="top-center" className="text-lg text-black">Sup. Central</SelectItem>
+                      <SelectItem value="center" className="text-lg text-black">Centralizado</SelectItem>
+                      <SelectItem value="bottom-left" className="text-lg text-black">Inf. Esquerdo</SelectItem>
+                      <SelectItem value="bottom-center" className="text-lg text-black">Inf. Central</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -404,9 +404,9 @@ export default function AdminBannersPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
-                      <SelectItem value="top" className="text-lg">Topo do Cardápio</SelectItem>
-                      <SelectItem value="middle" className="text-lg">Meio do Cardápio</SelectItem>
-                      <SelectItem value="bottom" className="text-lg">Fim do Cardápio</SelectItem>
+                      <SelectItem value="top" className="text-lg text-black">Topo do Cardápio</SelectItem>
+                      <SelectItem value="middle" className="text-lg text-black">Meio do Cardápio</SelectItem>
+                      <SelectItem value="bottom" className="text-lg text-black">Fim do Cardápio</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -421,9 +421,9 @@ export default function AdminBannersPage() {
                     <SelectValue placeholder="Selecione uma categoria (opcional)" />
                   </SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem value="none" className="text-lg">Nenhuma (Apenas Imagem)</SelectItem>
+                    <SelectItem value="none" className="text-lg text-black">Nenhuma (Apenas Imagem)</SelectItem>
                     {categories?.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id} className="text-lg">{cat.name}</SelectItem>
+                      <SelectItem key={cat.id} value={cat.id} className="text-lg text-black">{cat.name}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -438,7 +438,7 @@ export default function AdminBannersPage() {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="shrink-0 rounded-xl border-2 h-12 w-12 text-black"
+                    className="shrink-0 rounded-xl border-2 h-12 w-12 text-black bg-white"
                     onClick={() => document.getElementById('banner-upload')?.click()}
                   >
                     <ImageIcon className="h-6 w-6 text-primary" />

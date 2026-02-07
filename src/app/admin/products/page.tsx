@@ -337,7 +337,7 @@ export default function AdminProductsPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto bg-white border-2">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2">
             <DialogHeader className="pt-10 sm:text-center">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingProduct ? 'Editar Produto' : 'Novo Produto'}
@@ -460,7 +460,7 @@ export default function AdminProductsPage() {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="h-12 w-12 rounded-xl shrink-0 p-0 border-2 text-black"
+                    className="h-12 w-12 rounded-xl shrink-0 p-0 border-2 text-black bg-white"
                     onClick={() => document.getElementById('product-image-upload')?.click()}
                   >
                     <ImageIcon className="h-6 w-6 text-primary" />
@@ -558,7 +558,7 @@ export default function AdminProductsPage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
               <DropdownMenuItem asChild>
                 <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
