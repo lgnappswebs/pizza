@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
@@ -219,43 +220,43 @@ export default function AdminFinancePage() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <LayoutDashboard className="mr-3 h-5 w-5" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <PizzaIcon className="mr-3 h-5 w-5" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Layers className="mr-3 h-5 w-5" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Package className="mr-3 h-5 w-5" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground">
+            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <Wallet className="mr-3 h-5 w-5" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <SettingsIcon className="mr-3 h-5 w-5" /> Personalizar App
             </Button>
           </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
-              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-foreground hover:text-primary">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
                 <ExternalLink className="mr-3 h-5 w-5" /> Ver Cardápio
               </Button>
             </Link>
@@ -275,8 +276,8 @@ export default function AdminFinancePage() {
 
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 mt-20 md:mt-16 print:hidden">
           <div className="w-full lg:w-auto">
-            <h1 className="text-3xl font-bold text-foreground">Gestão Financeira</h1>
-            <p className="text-muted-foreground text-sm">Relatórios detalhados de faturamento</p>
+            <h1 className="text-3xl font-black text-foreground">Gestão Financeira</h1>
+            <p className="text-muted-foreground font-medium">Relatórios detalhados de faturamento</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 w-full lg:flex-1 lg:justify-end">
@@ -311,36 +312,36 @@ export default function AdminFinancePage() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-bold bg-primary shadow-lg shadow-primary/20 text-white">
+                <Button className="rounded-full h-11 flex-1 lg:flex-none px-6 font-black bg-primary shadow-lg shadow-primary/20 text-white transform transition hover:scale-[1.02] active:scale-95">
                   {isGeneratingPDF ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : <Share2 className="mr-2 h-4 w-4" />}
                   Exportar
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl bg-white">
-                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Compartilhar Texto</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer text-black">
+              <DropdownMenuContent align="end" className="w-64 rounded-2xl p-2 shadow-2xl bg-white border-2">
+                <DropdownMenuLabel className="font-black text-[10px] uppercase text-muted-foreground px-2 py-1 tracking-widest">Compartilhar Texto</DropdownMenuLabel>
+                <DropdownMenuItem onSelect={() => handleShareText('day')} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   Faturamento do Dia
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer text-black">
+                <DropdownMenuItem onSelect={() => handleShareText('month')} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   Faturamento do Mês
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer text-black">
+                <DropdownMenuItem onSelect={() => handleShareText('year')} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   Faturamento do Ano
                 </DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 
-                <DropdownMenuLabel className="font-bold text-xs uppercase text-muted-foreground px-2 py-1">Documentos em PDF</DropdownMenuLabel>
-                <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black">
+                <DropdownMenuLabel className="font-black text-[10px] uppercase text-muted-foreground px-2 py-1 tracking-widest">Documentos em PDF</DropdownMenuLabel>
+                <DropdownMenuItem onSelect={() => generatePDF('day')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   PDF do Dia Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black">
+                <DropdownMenuItem onSelect={() => generatePDF('month')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   PDF do Mês Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => generatePDF('year')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-bold">
+                <DropdownMenuItem onSelect={() => generatePDF('year')} disabled={isGeneratingPDF} className="h-10 rounded-xl cursor-pointer text-primary font-black">
                   PDF do Ano Selecionado
                 </DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer text-black">
+                <DropdownMenuItem onSelect={() => setTimeout(() => window.print(), 500)} className="h-10 rounded-xl cursor-pointer text-black font-bold">
                   <Printer className="mr-2 h-4 w-4" /> Imprimir Relatório
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -349,115 +350,115 @@ export default function AdminFinancePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 print:hidden">
-          <Card className="rounded-3xl border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
+          <Card className="rounded-[2rem] border-2 shadow-sm bg-emerald-600 text-white overflow-hidden relative">
             <div className="absolute top-0 right-0 p-3 opacity-20">
               <DollarSign className="h-12 w-12" />
             </div>
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="text-white/80 font-bold uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
+              <CardDescription className="text-white/80 font-black uppercase tracking-wider text-[9px]">Faturamento Hoje ({format(today, "dd/MM")})</CardDescription>
               <CardTitle className="text-2xl font-black">R$ {revenueToday.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] font-medium opacity-80">Atualizado em tempo real</p>
+              <p className="text-[9px] font-bold opacity-80 uppercase tracking-widest">Tempo Real</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+          <Card className="rounded-[2rem] border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
+              <CardDescription className="font-black uppercase tracking-wider text-[9px] text-muted-foreground">Período Selecionado</CardDescription>
               <CardTitle className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-medium">
+              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">
                 {selectedDay}/{selectedMonth === "Todos" ? "Ano" : selectedMonth}/{selectedYear}
               </p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+          <Card className="rounded-[2rem] border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Pedidos Período</CardDescription>
+              <CardDescription className="font-black uppercase tracking-wider text-[9px] text-muted-foreground">Pedidos Período</CardDescription>
               <CardTitle className="text-2xl font-black text-blue-600">{filteredOrders.length}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-medium">{deliveredInPeriod.length} entregues</p>
+              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">{deliveredInPeriod.length} entregues</p>
             </CardContent>
           </Card>
 
-          <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
+          <Card className="rounded-[2rem] border-2 shadow-sm overflow-hidden bg-white">
             <CardHeader className="pb-2 p-4">
-              <CardDescription className="font-bold uppercase tracking-wider text-[9px] text-muted-foreground">Ticket Médio</CardDescription>
+              <CardDescription className="font-black uppercase tracking-wider text-[9px] text-muted-foreground">Ticket Médio</CardDescription>
               <CardTitle className="text-2xl font-black text-amber-600">R$ {averageTicket.toFixed(2)}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
-              <p className="text-[9px] text-muted-foreground font-medium">Média por pedido</p>
+              <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest">Média p/ pedido</p>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 gap-8 print:hidden">
-          <Card className="rounded-2xl border-2 overflow-hidden shadow-sm bg-white">
-            <CardHeader className="border-b bg-muted/10 p-4">
+          <Card className="rounded-[2rem] border-2 overflow-hidden shadow-sm bg-white">
+            <CardHeader className="border-b bg-muted/10 p-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <CardTitle className="text-lg font-bold text-black">Detalhamento</CardTitle>
-                  <CardDescription className="text-xs">Vendas no período selecionado</CardDescription>
+                  <CardTitle className="text-xl font-black text-black uppercase tracking-tight">Detalhamento de Vendas</CardTitle>
+                  <CardDescription className="text-sm font-medium">Lista completa do período selecionado</CardDescription>
                 </div>
-                <Badge variant="outline" className="text-[10px] px-2 text-black border-2">{filteredOrders.length} Itens</Badge>
+                <Badge variant="outline" className="text-xs px-4 py-1 rounded-full text-black border-2 font-black">{filteredOrders.length} PEDIDOS</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full overflow-hidden">
-                <table className="w-full text-left table-fixed">
-                  <thead className="bg-muted/30 text-[9px] uppercase font-bold text-muted-foreground border-b">
+              <div className="w-full overflow-x-auto">
+                <table className="w-full text-left table-fixed min-w-[600px]">
+                  <thead className="bg-muted/30 text-[10px] uppercase font-black text-muted-foreground border-b tracking-widest">
                     <tr>
-                      <th className="px-1 py-3 w-[50px] md:w-[80px]">Hora</th>
-                      <th className="px-1 py-3">Cliente</th>
-                      <th className="px-1 py-3 w-[50px] md:w-[70px] text-center">Status</th>
-                      <th className="px-1 py-3 text-right w-[75px] md:w-[100px]">Valor</th>
+                      <th className="px-6 py-4 w-[100px]">Hora</th>
+                      <th className="px-6 py-4">Cliente / Endereço</th>
+                      <th className="px-6 py-4 w-[120px] text-center">Status</th>
+                      <th className="px-6 py-4 text-right w-[150px]">Valor Total</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {isLoading ? (
                       <tr>
-                        <td colSpan={4} className="text-center py-12">
-                          <Loader2 className="animate-spin h-6 w-6 mx-auto text-primary" />
+                        <td colSpan={4} className="text-center py-20">
+                          <Loader2 className="animate-spin h-10 w-10 mx-auto text-primary" />
                         </td>
                       </tr>
                     ) : filteredOrders.map((order) => (
                       <tr key={order.id} className="hover:bg-muted/10 transition-colors group">
-                        <td className="px-1 py-3 align-top">
-                          <p className="text-[10px] font-bold text-black">
+                        <td className="px-6 py-4 align-top">
+                          <p className="text-sm font-black text-black">
                             {order.createdAt?.seconds ? format(new Date(order.createdAt.seconds * 1000), "HH:mm") : '--:--'}
                           </p>
-                          <p className="font-black text-primary text-[8px] opacity-50 hidden md:block">#{order.id.slice(-4).toUpperCase()}</p>
+                          <p className="font-black text-primary text-[10px] opacity-50">#{order.id.slice(-4).toUpperCase()}</p>
                         </td>
-                        <td className="px-1 py-3 align-top max-w-0">
-                          <p className="font-bold text-[10px] md:text-[11px] truncate leading-tight mb-0.5 text-black">{order.customerName}</p>
-                          <p className="text-[8px] md:text-[9px] text-muted-foreground truncate opacity-70">{order.customerAddress}</p>
+                        <td className="px-6 py-4 align-top">
+                          <p className="font-black text-sm leading-tight mb-1 text-black">{order.customerName}</p>
+                          <p className="text-[11px] text-muted-foreground truncate opacity-80 font-medium">{order.customerAddress}</p>
                         </td>
-                        <td className="px-1 py-3 align-top text-center">
-                          <Badge variant="outline" className={`text-[7px] md:text-[8px] h-3.5 md:h-4 px-1 uppercase font-black tracking-tighter ${
-                            order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600' : 
-                            order.status === 'Cancelled' ? 'border-red-500 text-red-600' : 
-                            'border-amber-500 text-amber-600'
+                        <td className="px-6 py-4 align-top text-center">
+                          <Badge variant="outline" className={`text-[10px] px-3 py-0.5 uppercase font-black tracking-widest rounded-full ${
+                            order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600 bg-emerald-50' : 
+                            order.status === 'Cancelled' ? 'border-red-500 text-red-600 bg-red-50' : 
+                            'border-amber-500 text-amber-600 bg-amber-50'
                           }`}>
                             {order.status === 'New' ? 'Novo' : 
-                             order.status === 'Preparing' ? 'Prep' : 
-                             order.status === 'Out for Delivery' ? 'Ent' : 
-                             order.status === 'Delivered' ? 'Ok' : 
-                             order.status === 'Cancelled' ? 'X' : order.status}
+                             order.status === 'Preparing' ? 'Preparando' : 
+                             order.status === 'Out for Delivery' ? 'Entrega' : 
+                             order.status === 'Delivered' ? 'Finalizado' : 
+                             order.status === 'Cancelled' ? 'Cancelado' : order.status}
                           </Badge>
                         </td>
-                        <td className="px-1 py-3 text-right font-black text-[10px] md:text-[11px] align-top whitespace-nowrap text-black">
+                        <td className="px-6 py-4 text-right font-black text-base align-top whitespace-nowrap text-black">
                           R$ {order.totalAmount?.toFixed(2)}
                         </td>
                       </tr>
                     ))}
                     {!isLoading && filteredOrders.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="text-center py-12 text-muted-foreground text-xs italic">
-                          Sem pedidos nesta data.
+                        <td colSpan={4} className="text-center py-24 text-muted-foreground italic font-medium">
+                          Nenhum pedido registrado nesta data.
                         </td>
                       </tr>
                     )}
@@ -466,6 +467,56 @@ export default function AdminFinancePage() {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Elemento oculto para exportação */}
+        <div ref={exportRef} style={{ display: 'none' }} className="p-10 bg-white">
+           <div className="flex justify-between items-center mb-10 border-b-4 border-primary pb-6">
+              <div>
+                <h1 className="text-4xl font-black text-primary uppercase tracking-tighter">{config?.restaurantName || "PIZZAPP"}</h1>
+                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Relatório Financeiro Profissional</p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs font-black uppercase text-muted-foreground">Gerado em</p>
+                <p className="font-bold">{format(new Date(), "dd/MM/yyyy HH:mm")}</p>
+              </div>
+           </div>
+
+           <div className="grid grid-cols-3 gap-6 mb-10">
+              <div className="p-6 bg-muted/20 rounded-3xl border-2">
+                <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Período</p>
+                <p className="text-xl font-black text-black">{selectedDay}/{selectedMonth}/{selectedYear}</p>
+              </div>
+              <div className="p-6 bg-muted/20 rounded-3xl border-2">
+                <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Total Pedidos</p>
+                <p className="text-xl font-black text-black">{filteredOrders.length}</p>
+              </div>
+              <div className="p-6 bg-primary/10 rounded-3xl border-2 border-primary/20">
+                <p className="text-[10px] font-black uppercase text-primary mb-1">Faturamento Bruto</p>
+                <p className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</p>
+              </div>
+           </div>
+
+           <table className="w-full text-left">
+              <thead>
+                <tr className="bg-primary text-white font-black text-xs uppercase tracking-widest">
+                  <th className="p-4 rounded-tl-xl">Hora</th>
+                  <th className="p-4">Cliente</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4 text-right rounded-tr-xl">Valor</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y border-x border-b">
+                {filteredOrders.map(o => (
+                  <tr key={o.id}>
+                    <td className="p-4 text-sm font-bold">{o.createdAt?.seconds ? format(new Date(o.createdAt.seconds * 1000), "HH:mm") : '--:--'}</td>
+                    <td className="p-4 text-sm font-medium">{o.customerName}</td>
+                    <td className="p-4 text-[10px] font-black uppercase">{o.status}</td>
+                    <td className="p-4 text-right font-black">R$ {o.totalAmount?.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+           </table>
         </div>
 
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
@@ -489,30 +540,30 @@ export default function AdminFinancePage() {
                 <span className="text-[12px] font-black uppercase">Mais</span>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white">
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
               <DropdownMenuItem asChild>
-                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-black">
                   <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
                 </Link>
               </DropdownMenuItem>
