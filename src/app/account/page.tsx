@@ -89,11 +89,11 @@ export default function AccountPage() {
 
   return (
     <main className="container mx-auto px-4 py-8 relative">
-      <Link href="/menu" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-2xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+      <Link href="/menu" className="fixed top-4 left-4 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-5 py-3 rounded-full shadow-2xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
         <ArrowLeft className="h-6 w-6" /> Voltar ao Cardápio
       </Link>
 
-      <div className="max-w-3xl mx-auto space-y-10 mt-20 md:mt-24">
+      <div className="max-w-3xl mx-auto space-y-10 mt-20">
         <div className="flex items-center gap-6">
           <div className="h-20 w-20 md:h-24 md:w-24 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-3xl md:text-4xl font-black shadow-xl">
             {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}

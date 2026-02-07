@@ -65,7 +65,7 @@ export function Header() {
         {/* Lado Esquerdo: Logo e Título */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="relative w-16 h-16 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
+            <div className="relative w-16 h-16 md:w-20 md:h-20 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
               {config?.logoImageUrl ? (
                 <Image 
                   src={config.logoImageUrl} 
@@ -74,7 +74,7 @@ export function Header() {
                   className="object-cover"
                 />
               ) : config?.showLogoIcon ? (
-                <LogoIcon className="h-10 w-10 md:h-10 md:w-10 text-primary" />
+                <LogoIcon className="h-10 w-10 md:h-12 md:w-12 text-primary" />
               ) : (
                 <Image 
                   src={logoPlaceholder?.imageUrl || ''} 
