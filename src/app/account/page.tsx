@@ -102,7 +102,7 @@ export default function AccountPage() {
               {user?.displayName?.charAt(0) || user?.email?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 className="text-3xl font-black">Minha Conta</h1>
+              <h1 className="text-3xl font-black text-foreground">Minha Conta</h1>
               <p className="text-muted-foreground">{user?.email}</p>
             </div>
           </div>

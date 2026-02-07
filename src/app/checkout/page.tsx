@@ -196,10 +196,10 @@ export default function CheckoutPage() {
             <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground">
               <Trash2 className="h-12 w-12" />
             </div>
-            <h2 className="text-3xl font-bold">Seu pedido está vazio</h2>
+            <h2 className="text-3xl font-bold text-foreground">Seu pedido está vazio</h2>
             <p className="text-muted-foreground text-lg">Que tal escolher uma pizza deliciosa agora?</p>
             <Link href="/menu">
-              <Button className="rounded-full h-14 px-10 text-xl font-bold bg-primary">
+              <Button className="rounded-full h-14 px-10 text-xl font-bold bg-primary text-white">
                 Ver Cardápio
               </Button>
             </Link>
@@ -209,7 +209,7 @@ export default function CheckoutPage() {
             <div className="space-y-6">
               <Card className="rounded-3xl border-2 shadow-sm overflow-hidden bg-white">
                 <CardHeader className="bg-primary/5 border-b py-4">
-                  <CardTitle className="text-xl md:text-2xl font-black flex items-center gap-2">
+                  <CardTitle className="text-xl md:text-2xl font-black flex items-center gap-2 text-black">
                     Meu Pedido
                   </CardTitle>
                 </CardHeader>
@@ -247,7 +247,7 @@ export default function CheckoutPage() {
                               >
                                 <span className="text-lg">-</span>
                               </Button>
-                              <span className="font-black text-xs md:text-base w-5 md:w-8 text-center">{item.quantity}</span>
+                              <span className="font-black text-xs md:text-base w-5 md:w-8 text-center text-black">{item.quantity}</span>
                               <Button 
                                 variant="ghost" 
                                 size="icon" 
@@ -294,7 +294,7 @@ export default function CheckoutPage() {
             <div className="space-y-6">
               <Card className="rounded-3xl border-2 shadow-sm bg-white">
                 <CardHeader className="py-4 border-b">
-                  <CardTitle className="text-xl md:text-2xl font-black">Dados de Entrega</CardTitle>
+                  <CardTitle className="text-xl md:text-2xl font-black text-black">Dados de Entrega</CardTitle>
                   {user && !loadingProfile && (
                     <p className="text-xs text-green-600 font-bold flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-green-600 animate-pulse" />
@@ -308,7 +308,7 @@ export default function CheckoutPage() {
                   ) : (
                     <>
                       <div className="space-y-2">
-                        <Label htmlFor="name" className="text-base md:text-lg font-bold flex items-center gap-2">
+                        <Label htmlFor="name" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
                           <User className="h-5 w-5 text-primary" /> Nome Completo
                         </Label>
                         <Input 
@@ -321,7 +321,7 @@ export default function CheckoutPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-base md:text-lg font-bold flex items-center gap-2">
+                        <Label htmlFor="phone" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
                           <Phone className="h-5 w-5 text-primary" /> Telefone / WhatsApp
                         </Label>
                         <Input 
@@ -334,7 +334,7 @@ export default function CheckoutPage() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="address" className="text-base md:text-lg font-bold flex items-center gap-2">
+                        <Label htmlFor="address" className="text-base md:text-lg font-bold flex items-center gap-2 text-black">
                           <MapPin className="h-5 w-5 text-primary" /> Endereço (Rua e Número)
                         </Label>
                         <Input 
@@ -348,7 +348,7 @@ export default function CheckoutPage() {
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label htmlFor="neighborhood" className="text-base md:text-lg font-bold">Bairro</Label>
+                          <Label htmlFor="neighborhood" className="text-base md:text-lg font-bold text-black">Bairro</Label>
                           <Input 
                             id="neighborhood" 
                             placeholder="Ex: Centro" 
@@ -358,7 +358,7 @@ export default function CheckoutPage() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="complement" className="text-base md:text-lg font-bold">Complemento</Label>
+                          <Label htmlFor="complement" className="text-base md:text-lg font-bold text-black">Complemento</Label>
                           <Input 
                             id="complement" 
                             placeholder="Ex: Ap 42" 
