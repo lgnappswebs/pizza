@@ -85,7 +85,7 @@ export function Header() {
               )}
             </div>
             <div className="flex flex-col">
-              <span className="text-4xl lg:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
+              <span className="text-5xl md:text-4xl lg:text-3xl font-black font-headline text-primary whitespace-nowrap leading-none">
                 {config?.restaurantName || "PizzApp"}
               </span>
               <span className="text-sm lg:text-xs font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">
@@ -95,8 +95,8 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Navegação: Em telas menores forma uma segunda linha, em desktop fica na mesma linha */}
-        <nav className="flex items-center justify-center gap-6 md:gap-4 w-full lg:w-auto border-t lg:border-none border-primary/5 pt-4 lg:pt-0">
+        {/* Navegação: Em telas menores forma uma segunda linha, em desktop fica no canto direito */}
+        <nav className="flex items-center justify-center lg:justify-end gap-6 md:gap-4 w-full lg:w-auto border-t lg:border-none border-primary/5 pt-4 lg:pt-0">
           <Link href="/menu">
             <Button variant="ghost" size="icon" className="lg:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
               <UtensilsCrossed className="h-8 w-8" />
