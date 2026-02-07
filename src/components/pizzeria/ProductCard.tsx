@@ -123,18 +123,18 @@ export function ProductCard({
         )}
       </CardHeader>
       <CardContent 
-        className="p-4 space-y-2 cursor-pointer"
+        className="p-4 space-y-3 cursor-pointer"
         onClick={() => setOpen(true)}
       >
         <div className="flex justify-between items-start gap-2">
-          <h3 className="text-xl font-black font-headline leading-tight text-black">{name}</h3>
+          <h3 className="text-xl md:text-2xl font-black font-headline leading-tight text-black">{name}</h3>
           <div className="flex flex-col items-end shrink-0">
             {isPromotion && (
-              <span className="text-[10px] md:text-xs text-muted-foreground line-through font-bold opacity-70">
+              <span className="text-sm md:text-base text-muted-foreground/60 line-through font-bold">
                 R$ {getOriginalPrice().toFixed(2)}
               </span>
             )}
-            <span className="text-xl font-black text-primary">R$ {getPrice().toFixed(2)}</span>
+            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">R$ {getPrice().toFixed(2)}</span>
           </div>
         </div>
         <p className="text-muted-foreground text-sm line-clamp-2 font-medium">{description}</p>
@@ -158,52 +158,52 @@ export function ProductCard({
             </div>
             
             <div className="p-6 space-y-8 flex-1">
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <div className="flex justify-between items-start gap-4">
-                  <DialogTitle className="text-3xl font-black text-foreground tracking-tight flex-1">{name}</DialogTitle>
+                  <DialogTitle className="text-3xl md:text-4xl font-black text-foreground tracking-tighter flex-1 leading-tight">{name}</DialogTitle>
                   <div className="text-right shrink-0 flex flex-col items-end">
                     {isPromotion && (
-                      <p className="text-xs text-muted-foreground line-through font-bold opacity-70">R$ {getOriginalPrice().toFixed(2)}</p>
+                      <p className="text-base text-muted-foreground/60 line-through font-bold">R$ {getOriginalPrice().toFixed(2)}</p>
                     )}
-                    <p className="text-xl font-black text-primary leading-none">R$ {getPrice().toFixed(2)}</p>
+                    <p className="text-4xl md:text-5xl font-black text-primary leading-tight tracking-tighter">R$ {getPrice().toFixed(2)}</p>
                   </div>
                 </div>
-                <p className="text-muted-foreground font-medium leading-relaxed">
+                <p className="text-muted-foreground font-medium text-lg leading-relaxed">
                   {description}
                 </p>
               </div>
 
               {hasMultipleSizes && (
                 <div className="space-y-4">
-                  <Label className="text-xl font-black text-foreground">Tamanho</Label>
+                  <Label className="text-xl font-black text-foreground">Escolha o Tamanho</Label>
                   <RadioGroup value={size} onValueChange={setSize} className="grid grid-cols-3 gap-3">
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Pequena" id="broto" className="sr-only" />
                       <Label htmlFor="broto" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Pequena' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
-                        <span className="block font-black text-sm">Pequena</span>
+                        <span className="block font-black text-base">Pequena</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[8px] line-through opacity-50">R$ {((priceSmall || price) * 1.25).toFixed(2)}</span>}
-                          <span className="text-[10px] font-bold opacity-70">R$ {priceSmall?.toFixed(2)}</span>
+                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceSmall || price) * 1.25).toFixed(2)}</span>}
+                          <span className="text-sm font-black opacity-80">R$ {priceSmall?.toFixed(2)}</span>
                         </div>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Média" id="media" className="sr-only" />
                       <Label htmlFor="media" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Média' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
-                        <span className="block font-black text-sm">Média</span>
+                        <span className="block font-black text-base">Média</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[8px] line-through opacity-50">R$ {((priceMedium || price) * 1.25).toFixed(2)}</span>}
-                          <span className="text-[10px] font-bold opacity-70">R$ {priceMedium?.toFixed(2)}</span>
+                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceMedium || price) * 1.25).toFixed(2)}</span>}
+                          <span className="text-sm font-black opacity-80">R$ {priceMedium?.toFixed(2)}</span>
                         </div>
                       </Label>
                     </div>
                     <div className="flex flex-col items-center">
                       <RadioGroupItem value="Grande" id="grande" className="sr-only" />
                       <Label htmlFor="grande" className={`w-full text-center py-4 border-2 rounded-2xl cursor-pointer transition-all ${size === 'Grande' ? 'border-primary bg-primary/10 text-primary shadow-md' : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'}`}>
-                        <span className="block font-black text-sm">Grande</span>
+                        <span className="block font-black text-base">Grande</span>
                         <div className="flex flex-col items-center">
-                          {isPromotion && <span className="text-[8px] line-through opacity-50">R$ {((priceLarge || price) * 1.25).toFixed(2)}</span>}
-                          <span className="text-[10px] font-bold opacity-70">R$ {priceLarge?.toFixed(2)}</span>
+                          {isPromotion && <span className="text-[10px] line-through opacity-50 font-bold">R$ {((priceLarge || price) * 1.25).toFixed(2)}</span>}
+                          <span className="text-sm font-black opacity-80">R$ {priceLarge?.toFixed(2)}</span>
                         </div>
                       </Label>
                     </div>
@@ -212,7 +212,7 @@ export function ProductCard({
               )}
 
               <div className="space-y-4">
-                <Label className="text-xl font-black text-foreground">Borda Recheada</Label>
+                <Label className="text-xl font-black text-foreground">Borda Recheada (Opcional)</Label>
                 <RadioGroup value={crust} onValueChange={setCrust} className="grid grid-cols-2 gap-3">
                   {CRUST_OPTIONS.map((option) => (
                     <div key={option.name} className="flex flex-col items-center">
@@ -225,9 +225,9 @@ export function ProductCard({
                             : 'border-muted bg-white/50 hover:border-primary/50 text-foreground'
                         }`}
                       >
-                        <span className="font-black text-sm">{option.label}</span>
+                        <span className="font-black text-base">{option.label}</span>
                         {option.price > 0 && (
-                          <span className="text-[10px] font-black opacity-80">+ R$ {option.price.toFixed(2)}</span>
+                          <span className="text-xs font-black opacity-80">+ R$ {option.price.toFixed(2)}</span>
                         )}
                       </Label>
                     </div>
@@ -241,7 +241,7 @@ export function ProductCard({
                   placeholder="Ex: Sem cebola, bem passada, s/ gergelim..." 
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="rounded-2xl min-h-[120px] border-2 bg-[hsl(var(--field))] text-[hsl(var(--field-foreground))] font-medium placeholder:text-muted-foreground"
+                  className="rounded-2xl min-h-[120px] border-2 bg-[hsl(var(--field))] text-[hsl(var(--field-foreground))] font-medium placeholder:text-muted-foreground text-lg"
                 />
               </div>
 
@@ -259,8 +259,8 @@ export function ProductCard({
                   <Minus className="h-8 w-8" />
                 </Button>
                 <div className="text-center">
-                  <span className="text-4xl font-black block text-foreground">{quantity}</span>
-                  <span className="text-[10px] uppercase font-black opacity-40 text-foreground">Qtd</span>
+                  <span className="text-5xl font-black block text-foreground leading-none">{quantity}</span>
+                  <span className="text-[10px] uppercase font-black opacity-40 text-foreground tracking-widest mt-1 block">Quantidade</span>
                 </div>
                 <Button 
                   type="button"
@@ -278,14 +278,14 @@ export function ProductCard({
             </div>
 
             <div className="p-6 border-t sticky bottom-0 z-20 bg-background/80 backdrop-blur-md">
-              <Button onClick={handleAddToCart} className="w-full h-20 rounded-full text-2xl font-black bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/40 text-white transform transition active:scale-95 flex flex-col justify-center leading-tight">
-                <div className="flex flex-col items-center gap-0.5">
-                  <span className="text-sm font-bold opacity-80">Confirmar Pedido</span>
-                  <div className="flex items-center gap-2">
+              <Button onClick={handleAddToCart} className="w-full h-24 rounded-full text-2xl font-black bg-primary hover:bg-primary/90 shadow-2xl shadow-primary/40 text-white transform transition active:scale-95 flex flex-col justify-center leading-tight">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-xs font-black uppercase tracking-[0.2em] opacity-80">Confirmar Pedido</span>
+                  <div className="flex items-center gap-3">
                     {isPromotion && (
-                      <span className="text-xs line-through opacity-60">R$ {(getOriginalPrice() * quantity).toFixed(2)}</span>
+                      <span className="text-base line-through opacity-50 font-bold">R$ {(getOriginalPrice() * quantity).toFixed(2)}</span>
                     )}
-                    <span className="text-2xl">R$ {(getPrice() * quantity).toFixed(2)}</span>
+                    <span className="text-3xl md:text-4xl font-black tracking-tighter">R$ {(getPrice() * quantity).toFixed(2)}</span>
                   </div>
                 </div>
               </Button>
