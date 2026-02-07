@@ -26,7 +26,7 @@ export function Header() {
   const logoPlaceholder = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
   const { user } = useUser();
   const auth = useAuth();
-  const firestore = useFirebase().firestore;
+  const firestore = useFirestore();
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
@@ -58,8 +58,8 @@ export function Header() {
   if (loadingConfigs) return <header className="h-28 w-full border-b bg-background/95"></header>;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 flex h-28 items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-28 flex items-center">
+      <div className="container mx-auto px-4 flex h-full items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative w-14 h-14 md:w-16 md:h-16 overflow-hidden rounded-full border-2 border-primary shrink-0 flex items-center justify-center bg-white shadow-lg">
@@ -97,7 +97,7 @@ export function Header() {
             <Button variant="ghost" size="icon" className="md:hidden h-12 w-12 rounded-full text-primary">
               <UtensilsCrossed className="h-7 w-7" />
             </Button>
-            <Button variant="ghost" className="hidden md:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl">Cardápio</Button>
+            <Button variant="ghost" className="hidden md:flex font-black text-xl h-14 hover:bg-primary/5 rounded-2xl text-foreground">Cardápio</Button>
           </Link>
           
           <Link href="/checkout">
@@ -119,10 +119,10 @@ export function Header() {
                   <User className="h-8 w-8 text-primary" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 rounded-[2rem] p-3 shadow-2xl border-2">
+              <DropdownMenuContent align="end" className="w-64 rounded-[2rem] p-3 shadow-2xl border-2 bg-white">
                 <DropdownMenuLabel className="font-bold flex flex-col gap-1 p-4">
                   <span className="text-xs text-muted-foreground uppercase font-black tracking-widest">Olá,</span>
-                  <span className="truncate text-lg font-black">{customerName}</span>
+                  <span className="truncate text-lg font-black text-black">{customerName}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
