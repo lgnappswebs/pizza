@@ -278,7 +278,7 @@ export default function AdminCategoriesPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-20 md:mt-16">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">Categorias</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-black">Categorias</h1>
             <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">

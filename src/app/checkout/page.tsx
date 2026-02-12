@@ -121,12 +121,11 @@ export default function CheckoutPage() {
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
       
-      // Abre o WhatsApp automaticamente
       window.open(whatsappUrl, '_blank');
       
       setWaLink(whatsappUrl);
       setIsSuccess(true);
-      setWaSent(true); // Marca como enviado automaticamente
+      setWaSent(true);
       clearCart();
 
       toast({

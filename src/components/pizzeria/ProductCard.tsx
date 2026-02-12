@@ -86,7 +86,6 @@ export function ProductCard({
     return false;
   };
 
-  // Preço original para exibir quando em promoção (acréscimo de 25%)
   const getOriginalPrice = () => {
     return getPrice() * 1.25;
   };

@@ -242,7 +242,7 @@ export default function AdminBannersPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-20 md:mt-16">
           <div className="space-y-1">
-            <h1 className="text-3xl sm:text-4xl font-bold">Banners Promocionais</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold text-black">Banners Promocionais</h1>
             <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
