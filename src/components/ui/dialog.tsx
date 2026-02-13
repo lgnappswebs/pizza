@@ -44,6 +44,7 @@ const DialogContent = React.forwardRef<
       )}
       {...props}
     >
+      {/* Camadas de fundo para herdar o tema do app */}
       <div className="absolute inset-0 z-[-3] bg-background pointer-events-none" />
       
       <div 
