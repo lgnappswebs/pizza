@@ -66,531 +66,138 @@ export default function CheckoutPage() {
     if (config?.pixKey) {
       navigator.clipboard.writeText(config.pixKey);
       setCopied(true);
-      toast({
-        title: "Copiado!",
-        description: "Chave Pix copiada para a área de transferência."
-      });
+      toast({ title: "Copiado!", description: "Chave Pix copiada." });
       setTimeout(() => setCopied(false), 2000);
     }
   };
 
   const handleSendToWhatsApp = async () => {
     if (!form.name || !form.address || !form.neighborhood || !form.phone || !form.paymentMethod) {
-      toast({
-        variant: "destructive",
-        title: "Atenção",
-        description: "Por favor, preencha todos os campos obrigatórios e escolha uma forma de pagamento."
-      });
+      toast({ variant: "destructive", title: "Atenção", description: "Preencha todos os campos obrigatórios." });
       return;
     }
 
     setLoading(true);
+    const orderId = doc(collection(firestore, 'pedidos')).id;
+    let paymentDetails = '';
+    if (form.paymentMethod === 'cash' && form.cashChange) paymentDetails = `Troco para R$ ${form.cashChange}`;
+    else if (form.paymentMethod === 'pix') paymentDetails = `Pagamento via PIX (${config?.pixKeyType || 'Chave'}: ${config?.pixKey || 'N/A'})`;
+    else if (form.paymentMethod === 'card') paymentDetails = 'Cartão na Entrega';
+
+    const orderData = {
+      id: orderId,
+      customerName: form.name,
+      customerAddress: `${form.address}, ${form.neighborhood}${form.complement ? ` - ${form.complement}` : ''}`,
+      customerPhoneNumber: form.phone,
+      createdAt: serverTimestamp(),
+      totalAmount: total + deliveryFee,
+      status: 'New',
+      userId: user?.uid || null,
+      paymentMethod: form.paymentMethod,
+      paymentDetails: paymentDetails
+    };
+
+    addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
+    addDocumentNonBlocking(collection(firestore, 'notificacoes'), {
+      title: `Novo Pedido #${orderId.slice(-4).toUpperCase()}`,
+      message: `Cliente ${form.name} pediu R$ ${(total + deliveryFee).toFixed(2)}.`,
+      createdAt: serverTimestamp(),
+      isRead: false,
+      orderId: orderId
+    });
     
-    try {
-      const orderId = doc(collection(firestore, 'pedidos')).id;
-      
-      let paymentDetails = '';
-      if (form.paymentMethod === 'cash' && form.cashChange) {
-        paymentDetails = `Troco para R$ ${form.cashChange}`;
-      } else if (form.paymentMethod === 'pix') {
-        paymentDetails = `Pagamento via PIX (${config?.pixKeyType || 'Chave'}: ${config?.pixKey || 'N/A'})`;
-      } else if (form.paymentMethod === 'card') {
-        paymentDetails = 'Pagamento em Cartão na Entrega';
-      }
+    items.forEach(item => addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), { ...item, orderId }));
 
-      const orderData = {
-        id: orderId,
-        customerName: form.name,
-        customerAddress: `${form.address}, ${form.neighborhood}${form.complement ? ` - ${form.complement}` : ''}`,
-        customerPhoneNumber: form.phone,
-        createdAt: serverTimestamp(),
-        totalAmount: total + deliveryFee,
-        status: 'New',
-        userId: user?.uid || null,
-        paymentMethod: form.paymentMethod,
-        paymentDetails: paymentDetails
-      };
+    const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
+    let msg = `*NOVO PEDIDO - ${config?.restaurantName || 'Pizzaria'}*%0A%0A*CLIENTE:* ${form.name}%0A*ITENS:*%0A`;
+    items.forEach(i => msg += `- ${i.quantity}x ${i.name} (${i.size})%0A`);
+    msg += `%0ATOTAL: R$ ${(total + deliveryFee).toFixed(2)}%0APAGAMENTO: ${form.paymentMethod}`;
 
-      addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
-      
-      addDocumentNonBlocking(collection(firestore, 'notificacoes'), {
-        title: `Novo Pedido #${orderId.slice(-4).toUpperCase()}`,
-        message: `Cliente ${form.name} acabou de pedir R$ ${(total + deliveryFee).toFixed(2)}. Pagamento: ${form.paymentMethod}.`,
-        createdAt: serverTimestamp(),
-        isRead: false,
-        orderId: orderId
-      });
-      
-      for (const item of items) {
-        addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), {
-          ...item,
-          orderId
-        });
-      }
-
-      const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
-      let message = `*NOVO PEDIDO - ${config?.restaurantName || 'Pizzaria'}*%0A%0A`;
-      message += `*CLIENTE:* ${form.name}%0A`;
-      message += `*TELEFONE:* ${form.phone}%0A`;
-      message += `*ENDEREÇO:* ${form.address}%0A`;
-      message += `*BAIRRO:* ${form.neighborhood}%0A`;
-      if (form.complement) message += `*COMPLEMENTO:* ${form.complement}%0A`;
-      message += `%0A*ITENS:*%0A`;
-
-      items.forEach(item => {
-        message += `- ${item.quantity}x ${item.name} (${item.size})`;
-        if (item.crust !== 'Tradicional') message += ` (Borda: ${item.crust})`;
-        if (item.notes) message += ` [Obs: ${item.notes}]`;
-        message += `%0A`;
-      });
-
-      message += `%0A*Subtotal:* R$ ${total.toFixed(2)}`;
-      message += `%0A*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}`;
-      message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A`;
-      message += `%0A*FORMA DE PAGAMENTO:* ${form.paymentMethod === 'pix' ? 'PIX' : form.paymentMethod === 'card' ? 'Cartão na Entrega' : 'Dinheiro'}`;
-      if (paymentDetails) message += `%0A*DETALHES:* ${paymentDetails}`;
-      message += `%0A%0A_Aguardando confirmação da loja._`;
-
-      const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
-      
-      window.open(whatsappUrl, '_blank');
-      
-      setWaLink(whatsappUrl);
-      setIsSuccess(true);
-      setWaSent(true);
-      clearCart();
-
-      toast({
-        title: "🚀 Pedido Realizado!",
-        description: "Redirecionando para o WhatsApp para confirmar seu pedido.",
-      });
-
-    } catch (error) {
-      console.error("Error submitting order:", error);
-      toast({
-        variant: "destructive",
-        title: "Erro ao Enviar",
-        description: "Ocorreu um problema ao processar seu pedido. Tente novamente."
-      });
-    } finally {
-      setLoading(false);
-    }
+    const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${msg}`;
+    window.open(whatsappUrl, '_blank');
+    setWaLink(whatsappUrl);
+    setIsSuccess(true);
+    setWaSent(true);
+    clearCart();
+    setLoading(false);
   };
 
   if (isSuccess) {
     return (
-      <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen relative">
-        <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-100 shadow-2xl p-8 md:p-12 text-center space-y-8 animate-in zoom-in-95 duration-500 bg-white">
-          <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center">
-            <CheckCircle2 className="h-16 w-16 text-green-600" />
-          </div>
-          
-          <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-black text-green-700 tracking-tighter">Pedido Gravado!</h2>
-            <p className="text-xl text-muted-foreground font-medium max-w-md mx-auto">
-              {waSent 
-                ? "Seu pedido já está com a gente! Agora é só aguardar o preparo e a entrega."
-                : "Para que sua pizza comece a ser preparada, você PRECISA enviar o pedido pelo WhatsApp abaixo."
-              }
-            </p>
-          </div>
-
-          <div className={cn(
-            "p-6 rounded-3xl border-2 border-dashed text-left space-y-3 transition-colors duration-500",
-            waSent ? "bg-green-50 border-green-200" : "bg-primary/5 border-primary/20"
-          )}>
-            <p className={cn("font-black text-lg flex items-center gap-2", waSent ? "text-green-700" : "text-primary")}>
-              {waSent ? <CheckCircle2 className="h-6 w-6" /> : <AlertCircle className="h-6 w-6" />}
-              {waSent ? "ENVIADO PARA O WHATSAPP" : "PASSO OBRIGATÓRIO:"}
-            </p>
-            <p className="text-muted-foreground font-bold">
-              {waSent 
-                ? "O envio foi iniciado. Se por algum motivo o WhatsApp não abriu, use o link de ajuda abaixo."
-                : "Se a conversa do WhatsApp não abriu automaticamente, clique no botão verde abaixo. Só começamos a preparar após recebermos sua mensagem."
-              }
-            </p>
-          </div>
-
-          <div className="space-y-4 w-full">
-            <Button 
-              onClick={() => {
-                if (waSent) {
-                  router.push('/menu');
-                } else {
-                  window.open(waLink, '_blank');
-                  setWaSent(true);
-                }
-              }}
-              className={cn(
-                "w-full h-24 rounded-full text-white text-2xl font-black shadow-2xl transform transition hover:scale-[1.02] active:scale-95 flex flex-col items-center justify-center leading-tight gap-1",
-                waSent ? "bg-primary shadow-primary/30" : "bg-[#25D366] shadow-[#25D366]/30"
-              )}
-            >
-              <div className="flex items-center gap-3">
-                {waSent ? <CheckCircle2 className="h-8 w-8" /> : <Send className="h-8 w-8" />}
-                <span>{waSent ? 'FINALIZAR PEDIDO' : 'ENVIAR AGORA'}</span>
-              </div>
-              <span className="text-xs opacity-80 font-bold uppercase tracking-widest">
-                {waSent ? '(Voltar ao Cardápio)' : '(Clique para confirmar no WhatsApp)'}
-              </span>
-            </Button>
-
-            {waSent && (
-              <button 
-                onClick={() => window.open(waLink, '_blank')}
-                className="text-primary font-bold text-sm underline opacity-70 hover:opacity-100 block mx-auto transition-opacity"
-              >
-                Não abriu o WhatsApp? Tentar enviar novamente
-              </button>
-            )}
-          </div>
-
-          <Link href="/menu" className="block text-muted-foreground font-bold text-lg hover:text-primary transition-colors">
-            Voltar ao Cardápio
-          </Link>
+      <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
+        <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-100 shadow-2xl p-8 text-center space-y-8 animate-in zoom-in-95 bg-white">
+          <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle2 className="h-16 w-16 text-green-600" /></div>
+          <h2 className="text-4xl font-black text-green-700">Pedido Gravado!</h2>
+          <Button onClick={() => router.push('/menu')} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-xl">FINALIZAR PEDIDO</Button>
+          <button onClick={() => window.open(waLink, '_blank')} className="text-primary font-bold text-sm underline opacity-70">Tentar enviar ao WhatsApp novamente</button>
         </Card>
       </main>
     );
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 relative">
-      <Link href="/menu" className="fixed top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
-        <ArrowLeft className="h-5 w-5" /> Voltar ao Cardápio
+    <main className="container mx-auto px-4 py-8">
+      <Link href="/menu" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10">
+        <ArrowLeft className="h-5 w-5" /> Voltar
       </Link>
-
       <div className="max-w-4xl mx-auto mt-12 mb-12 text-center space-y-2">
-        <h1 className="text-4xl md:text-6xl font-black text-foreground tracking-tighter text-black">Finalizar Pedido</h1>
-        <p className="text-lg md:text-xl text-muted-foreground font-medium">Seu pedido será enviado automaticamente para o nosso WhatsApp</p>
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter">Finalizar Pedido</h1>
       </div>
-
       {items.length === 0 ? (
-        <div className="py-20 text-center space-y-6">
-          <div className="inline-flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl text-muted-foreground border-2">
-            <Trash2 className="h-12 w-12" />
-          </div>
-          <h2 className="text-3xl font-black text-foreground">Seu pedido está vazio</h2>
-          <p className="text-muted-foreground text-lg font-medium">Que tal escolher uma pizza deliciosa agora?</p>
-          <Link href="/menu">
-            <Button className="rounded-full h-16 px-12 text-2xl font-black bg-primary text-white shadow-xl shadow-primary/20">
-              Ver Cardápio
-            </Button>
-          </Link>
-        </div>
+        <div className="py-20 text-center space-y-6"><h2 className="text-3xl font-black">Pedido Vazio</h2><Link href="/menu"><Button className="rounded-full h-16 px-12 text-xl font-black bg-primary text-white">Ver Cardápio</Button></Link></div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-8">
             <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
-              <CardHeader className="bg-primary/5 border-b py-6 px-8">
-                <CardTitle className="text-2xl md:text-3xl font-black flex items-center gap-3 text-black">
-                  Meu Pedido
-                </CardTitle>
-              </CardHeader>
+              <CardHeader className="bg-primary/5 border-b py-6 px-8"><CardTitle className="text-2xl font-black">Meu Pedido</CardTitle></CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-4 md:gap-6 p-6 hover:bg-muted/20 transition-colors items-center">
-                      <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-2xl overflow-hidden shrink-0 shadow-lg border-2 border-white">
-                        <Image 
-                          src={item.imageUrl || 'https://placehold.co/400x400?text=Pizza'} 
-                          alt={item.name} 
-                          fill 
-                          className="object-cover" 
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between">
-                        <div>
-                          <div className="flex justify-between items-start gap-2">
-                            <h4 className="font-black text-lg md:text-2xl truncate leading-tight text-black">{item.name}</h4>
-                            <span className="font-black text-primary text-lg md:text-2xl shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
-                          </div>
-                          <p className="text-xs md:text-base font-bold text-muted-foreground mt-1">
-                            {item.size} {item.crust && item.crust !== 'Tradicional' ? `• Borda ${item.crust}` : '• S/ Borda'}
-                          </p>
-                          {item.notes && <p className="text-[10px] md:text-sm text-primary/70 font-bold italic mt-2 line-clamp-1 bg-primary/5 px-2 py-1 rounded-lg">Obs: {item.notes}</p>}
-                        </div>
-                        
-                        <div className="flex items-center justify-between mt-4">
-                          <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-full border-2 border-muted-foreground/10">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-black"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            >
-                              <span className="text-xl font-black">-</span>
-                            </Button>
-                            <span className="font-black text-sm md:text-xl w-6 md:w-10 text-center text-black">{item.quantity}</span>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white shadow-sm hover:bg-primary hover:text-white transition-all text-black"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            >
-                              <span className="text-xl font-black">+</span>
-                            </Button>
-                          </div>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="h-10 w-10 text-destructive hover:bg-destructive/10 rounded-full transition-colors"
-                            onClick={() => removeItem(item.id)}
-                          >
-                            <Trash2 className="h-5 w-5 md:h-6 md:w-6" />
-                          </Button>
+                    <div key={item.id} className="flex gap-4 p-6 items-center">
+                      <div className="relative h-20 w-20 rounded-2xl overflow-hidden shrink-0 border-2"><Image src={item.imageUrl || 'https://placehold.co/400x400'} alt={item.name} fill className="object-cover" /></div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start"><h4 className="font-black truncate text-lg">{item.name}</h4><span className="font-black text-primary">R$ {(item.price * item.quantity).toFixed(2)}</span></div>
+                        <div className="flex items-center gap-2 mt-4">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</Button>
+                          <span className="font-black w-6 text-center">{item.quantity}</span>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full border" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</Button>
+                          <Button variant="ghost" size="icon" className="ml-auto text-destructive" onClick={() => removeItem(item.id)}><Trash2 className="h-5 w-5" /></Button>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-
-                <div className="p-8 bg-primary/5 border-t-4 border-dashed space-y-4">
-                  <div className="flex justify-between items-center text-lg md:text-xl font-bold">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span className="text-black">R$ {total.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-lg md:text-xl font-bold">
-                    <span className="text-muted-foreground">Taxa de Entrega</span>
-                    <span className={cn(deliveryFee > 0 ? "text-primary" : "text-green-600")}>
-                      {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-3xl md:text-5xl font-black text-green-600 pt-6">
-                    <span>Total</span>
-                    <span className="drop-shadow-sm">R$ {(total + deliveryFee).toFixed(2)}</span>
-                  </div>
-                </div>
+                <div className="p-8 bg-primary/5 border-t-4 border-dashed text-right"><span className="text-3xl md:text-5xl font-black text-green-600">Total: R$ {(total + deliveryFee).toFixed(2)}</span></div>
               </CardContent>
             </Card>
           </div>
-
           <div className="space-y-8">
-            <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white">
-              <CardHeader className="py-6 px-8 border-b">
-                <CardTitle className="text-2xl md:text-3xl font-black text-black">Dados de Entrega</CardTitle>
-                {user && !loadingProfile && (
-                  <p className="text-xs text-green-600 font-black flex items-center gap-2 mt-1">
-                    <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />
-                    ENDEREÇO CARREGADO AUTOMATICAMENTE
-                  </p>
-                )}
-              </CardHeader>
-              <CardContent className="space-y-8 pt-8 px-8">
-                {loadingProfile ? (
-                  <div className="flex justify-center py-16"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>
-                ) : (
-                  <>
-                    <div className="space-y-3">
-                      <Label htmlFor="name" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
-                        <User className="h-6 w-6 text-primary" /> Nome Completo
-                      </Label>
-                      <Input 
-                        id="name" 
-                        placeholder="Como devemos te chamar?" 
-                        className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
-                        value={form.name}
-                        onChange={(e) => setForm({...form, name: e.target.value})}
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="phone" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
-                        <Phone className="h-6 w-6 text-primary" /> Telefone / WhatsApp
-                      </Label>
-                      <Input 
-                        id="phone" 
-                        placeholder="(00) 00000-0000" 
-                        className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
-                        value={form.phone}
-                        onChange={(e) => setForm({...form, phone: e.target.value})}
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="address" className="text-lg md:text-xl font-black flex items-center gap-3 text-black">
-                        <MapPin className="h-6 w-6 text-primary" /> Endereço (Rua e Número)
-                      </Label>
-                      <Input 
-                        id="address" 
-                        placeholder="Ex: Rua das Pizzas, 123" 
-                        className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
-                        value={form.address}
-                        onChange={(e) => setForm({...form, address: e.target.value})}
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div className="space-y-3">
-                        <Label htmlFor="neighborhood" className="text-lg md:text-xl font-black text-black">Bairro</Label>
-                        <Input 
-                          id="neighborhood" 
-                          placeholder="Ex: Centro" 
-                          className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
-                          value={form.neighborhood}
-                          onChange={(e) => setForm({...form, neighborhood: e.target.value})}
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="complement" className="text-lg md:text-xl font-black text-black">Complemento</Label>
-                        <Input 
-                          id="complement" 
-                          placeholder="Ex: Ap 42" 
-                          className="h-14 md:h-16 rounded-2xl text-lg md:text-xl border-2 font-bold text-black bg-white focus:border-primary transition-all"
-                          value={form.complement}
-                          onChange={(e) => setForm({...form, complement: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white overflow-hidden">
-              <CardHeader className="py-6 px-8 border-b bg-muted/30">
-                <CardTitle className="text-2xl md:text-3xl font-black text-black">Forma de Pagamento</CardTitle>
-              </CardHeader>
-              <CardContent className="p-8 space-y-8">
-                <RadioGroup 
-                  value={form.paymentMethod} 
-                  onValueChange={(v) => setForm({...form, paymentMethod: v})}
-                  className="grid grid-cols-1 gap-4"
-                >
-                  {config?.pixEnabled && (
-                    <div className="flex flex-col">
-                      <RadioGroupItem value="pix" id="pay-pix" className="sr-only" />
-                      <Label 
-                        htmlFor="pay-pix" 
-                        className={cn(
-                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
-                          form.paymentMethod === 'pix' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
-                        )}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                          <QrCode className="h-7 w-7" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xl font-black text-black">PIX</p>
-                          <p className="text-sm text-muted-foreground font-medium">Pagamento instantâneo</p>
-                        </div>
-                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'pix' ? "border-primary" : "border-muted")}>
-                          {form.paymentMethod === 'pix' && <div className="h-3 w-3 rounded-full bg-primary" />}
-                        </div>
-                      </Label>
-                      {form.paymentMethod === 'pix' && config.pixKey && (
-                        <div className="mt-3 p-4 bg-emerald-50 rounded-2xl border-2 border-dashed border-emerald-200 animate-in slide-in-from-top-2">
-                          <div className="flex justify-between items-start gap-4">
-                            <div className="min-w-0">
-                              <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest mb-1">
-                                Chave PIX ({config.pixKeyType || 'Chave'}):
-                              </p>
-                              <p className="text-lg font-black text-emerald-900 break-all leading-tight">
-                                {config.pixKey}
-                              </p>
-                            </div>
-                            <Button 
-                              type="button"
-                              size="sm" 
-                              variant="outline" 
-                              className="shrink-0 h-10 rounded-xl border-emerald-200 text-emerald-700 hover:bg-emerald-100 bg-white"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleCopyPix();
-                              }}
-                            >
-                              {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                              {copied ? 'Copiado' : 'Copiar'}
-                            </Button>
-                          </div>
-                          <p className="text-[10px] text-emerald-600 mt-3 italic font-medium">
-                            *Você pode pagar agora para agilizar o preparo da sua pizza!
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {config?.cardOnDeliveryEnabled && (
-                    <div>
-                      <RadioGroupItem value="card" id="pay-card" className="sr-only" />
-                      <Label 
-                        htmlFor="pay-card" 
-                        className={cn(
-                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
-                          form.paymentMethod === 'card' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
-                        )}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
-                          <CreditCard className="h-7 w-7" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xl font-black text-black">Cartão na Entrega</p>
-                          <p className="text-sm text-muted-foreground font-medium">Débito ou Crédito</p>
-                        </div>
-                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'card' ? "border-primary" : "border-muted")}>
-                          {form.paymentMethod === 'card' && <div className="h-3 w-3 rounded-full bg-primary" />}
-                        </div>
-                      </Label>
-                    </div>
-                  )}
-
-                  {config?.cashOnDeliveryEnabled && (
-                    <div className="flex flex-col">
-                      <RadioGroupItem value="cash" id="pay-cash" className="sr-only" />
-                      <Label 
-                        htmlFor="pay-cash" 
-                        className={cn(
-                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
-                          form.paymentMethod === 'cash' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
-                        )}
-                      >
-                        <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600 shrink-0">
-                          <Banknote className="h-7 w-7" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xl font-black text-black">Dinheiro vivo</p>
-                          <p className="text-sm text-muted-foreground font-medium">Pagamento na entrega</p>
-                        </div>
-                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'cash' ? "border-primary" : "border-muted")}>
-                          {form.paymentMethod === 'cash' && <div className="h-3 w-3 rounded-full bg-primary" />}
-                        </div>
-                      </Label>
-                      {form.paymentMethod === 'cash' && (
-                        <div className="mt-3 space-y-2 animate-in slide-in-from-top-2">
-                          <Label className="text-sm font-bold text-black">Precisa de troco?</Label>
-                          <Input 
-                            placeholder="Troco para quanto? (Ex: 50,00)" 
-                            value={form.cashChange}
-                            onChange={(e) => setForm({...form, cashChange: e.target.value})}
-                            className="rounded-xl h-12 border-2 text-black bg-white"
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </RadioGroup>
-
-                <Button 
-                  onClick={handleSendToWhatsApp}
-                  disabled={loading || (config && !config.isStoreOpen)}
-                  className={cn(
-                    "w-full h-20 md:h-24 rounded-full text-white text-2xl md:text-3xl font-black shadow-2xl flex flex-col items-center justify-center transform transition hover:scale-[1.02] active:scale-95 mt-10",
-                    config && !config.isStoreOpen ? 'bg-muted text-muted-foreground cursor-not-allowed' : 'bg-primary shadow-primary/30'
-                  )}
-                >
-                  {loading ? (
-                    <Loader2 className="h-10 w-10 animate-spin" />
-                  ) : (
-                    <div className="flex flex-col items-center leading-tight">
-                      <div className="flex items-center gap-4">
-                        <Send className="h-8 w-8 md:h-10 md:w-10" />
-                        <span>{config && !config.isStoreOpen ? 'Pizzaria Fechada' : 'Finalizar e Enviar'}</span>
-                      </div>
-                      <span className="text-xs opacity-80 font-bold uppercase tracking-widest mt-1">(Redireciona para o WhatsApp)</span>
-                    </div>
-                  )}
-                </Button>
-              </CardContent>
+            <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8 space-y-6">
+              <h3 className="text-2xl font-black">Dados de Entrega</h3>
+              <div className="space-y-4">
+                <Input placeholder="Nome Completo" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-xl border-2" />
+                <Input placeholder="WhatsApp" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-xl border-2" />
+                <Input placeholder="Endereço" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-xl border-2" />
+                <div className="grid grid-cols-2 gap-4">
+                  <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-xl border-2" />
+                  <Input placeholder="Complemento" value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-xl border-2" />
+                </div>
+              </div>
+              <h3 className="text-2xl font-black pt-4">Pagamento</h3>
+              <RadioGroup value={form.paymentMethod} onValueChange={(v) => setForm({...form, paymentMethod: v})} className="grid gap-4">
+                {config?.pixEnabled && <Label htmlFor="p-pix" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'pix' && "border-primary bg-primary/5")}>
+                  <RadioGroupItem value="pix" id="p-pix" className="sr-only" /><QrCode className="text-emerald-600" /> PIX
+                </Label>}
+                {config?.cardOnDeliveryEnabled && <Label htmlFor="p-card" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'card' && "border-primary bg-primary/5")}>
+                  <RadioGroupItem value="card" id="p-card" className="sr-only" /><CreditCard className="text-blue-600" /> Cartão
+                </Label>}
+                {config?.cashOnDeliveryEnabled && <Label htmlFor="p-cash" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'cash' && "border-primary bg-primary/5")}>
+                  <RadioGroupItem value="cash" id="p-cash" className="sr-only" /><Banknote className="text-green-600" /> Dinheiro
+                </Label>}
+              </RadioGroup>
+              <Button onClick={handleSendToWhatsApp} disabled={loading || !config?.isStoreOpen} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-2xl mt-6">
+                {loading ? <Loader2 className="animate-spin" /> : "Finalizar e Enviar"}
+              </Button>
             </Card>
           </div>
         </div>
