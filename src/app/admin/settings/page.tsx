@@ -279,7 +279,6 @@ export default function AdminSettingsPage() {
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
                 <Store className="h-7 w-7 text-primary" /> Configurações Gerais
               </CardTitle>
-              <CardDescription className="text-base">Altere as informações principais e a aparência do seu aplicativo.</CardDescription>
             </CardHeader>
             <CardContent className="p-8 space-y-6">
               <div className="grid grid-cols-1 gap-6">
@@ -319,7 +318,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="logoImageUrl" className="text-lg font-bold text-black">Logotipo da Pizzaria (URL ou Galeria)</Label>
+                  <Label htmlFor="logoImageUrl" className="text-lg font-bold text-black">Logotipo da Pizzaria</Label>
                   <div className="flex gap-2">
                     <Input 
                       id="logoImageUrl" 
@@ -340,7 +339,7 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="whatsapp" className="text-lg font-bold text-black">Número do WhatsApp para Pedidos</Label>
+                  <Label htmlFor="whatsapp" className="text-lg font-bold text-black">Número do WhatsApp</Label>
                   <Input 
                     id="whatsapp" 
                     placeholder="(00) 00000-0000"
@@ -380,7 +379,6 @@ export default function AdminSettingsPage() {
               >
                 <div className="space-y-1">
                   <Label className="text-xl font-black text-yellow-800 cursor-pointer">Loja Aberta?</Label>
-                  <p className="text-sm text-yellow-700">Marque para permitir que os clientes façam pedidos.</p>
                 </div>
                 <Switch 
                   className="scale-150 data-[state=checked]:bg-green-500 pointer-events-none"
@@ -389,7 +387,7 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="hours" className="text-lg font-bold text-black">Horário de Funcionamento (Texto)</Label>
+                <Label htmlFor="hours" className="text-lg font-bold text-black">Horário de Funcionamento</Label>
                 <Input 
                   id="hours" 
                   placeholder="Ex: Aberto das 18h às 23h30"
@@ -397,255 +395,6 @@ export default function AdminSettingsPage() {
                   onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
                   className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="closedMessage" className="text-lg font-bold text-black">Mensagem de "Fechado no Momento"</Label>
-                <Textarea 
-                  id="closedMessage" 
-                  placeholder="Ex: Estamos fechados agora. Volte em breve!"
-                  value={form.closedMessage} 
-                  onChange={(e) => setForm({...form, closedMessage: e.target.value})}
-                  className="rounded-2xl min-h-[120px] border-2 text-lg text-black bg-white"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-2 shadow-sm bg-white">
-            <CardHeader className="bg-blue-500/5 border-b px-8 py-6">
-              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
-                <Palette className="h-7 w-7 text-blue-600" /> Aparência e Cores
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="grid grid-cols-1 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="menuTitle" className="text-lg font-bold text-black">Título do Cardápio</Label>
-                  <Input 
-                    id="menuTitle" 
-                    placeholder="Nosso Cardápio"
-                    value={form.menuTitle} 
-                    onChange={(e) => setForm({...form, menuTitle: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="menuSubtitle" className="text-lg font-bold text-black">Subtítulo do Cardápio</Label>
-                  <Input 
-                    id="menuSubtitle" 
-                    placeholder="Escolha suas pizzas favoritas e monte seu pedido"
-                    value={form.menuSubtitle} 
-                    onChange={(e) => setForm({...form, menuSubtitle: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bannerText" className="text-lg font-bold text-black">Texto do Banner Principal</Label>
-                  <Input 
-                    id="bannerText" 
-                    placeholder="Pizza quentinha, sabor inesquecível 🍕🔥"
-                    value={form.heroBannerText} 
-                    onChange={(e) => setForm({...form, heroBannerText: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bannerImage" className="text-lg font-bold text-black">Banner Principal (URL ou Galeria)</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="bannerImage" 
-                      placeholder="https://suaimagem.com/banner-pizza.jpg"
-                      value={form.heroBannerImageUrl} 
-                      onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})}
-                      className="rounded-xl h-14 flex-1 border-2 text-lg text-black bg-white"
-                    />
-                    <Button 
-                      variant="outline" 
-                      className="h-14 rounded-xl border-2 px-6 text-black bg-white"
-                      onClick={() => document.getElementById('banner-hero-upload')?.click()}
-                    >
-                      <ImageIcon className="h-6 w-6 text-primary" />
-                    </Button>
-                    <input id="banner-hero-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('heroBannerImageUrl')} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t pt-8">
-                <div className="space-y-4">
-                  <Label className="text-xl font-black text-black">Cores do App</Label>
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="primaryColor" className="text-base font-bold text-black">Cor Principal (Primária)</Label>
-                      <div className="flex gap-3">
-                        <Input 
-                          id="primaryColor" 
-                          type="color" 
-                          value={form.primaryColor} 
-                          onChange={(e) => setForm({...form, primaryColor: e.target.value})}
-                          className="w-14 h-14 p-1 rounded-xl cursor-pointer"
-                        />
-                        <Input 
-                          type="text" 
-                          value={form.primaryColor} 
-                          onChange={(e) => setForm({...form, primaryColor: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="secondaryColor" className="text-base font-bold text-black">Cor de Destaque (Secundária)</Label>
-                      <div className="flex gap-3">
-                        <Input 
-                          id="secondaryColor" 
-                          type="color" 
-                          value={form.secondaryColor} 
-                          onChange={(e) => setForm({...form, secondaryColor: e.target.value})}
-                          className="w-14 h-14 p-1 rounded-xl cursor-pointer"
-                        />
-                        <Input 
-                          type="text" 
-                          value={form.secondaryColor} 
-                          onChange={(e) => setForm({...form, secondaryColor: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <Label className="text-xl font-black text-black">Fundo do App</Label>
-                  <RadioGroup 
-                    value={form.appBackgroundType} 
-                    onValueChange={(v) => setForm({...form, appBackgroundType: v})}
-                    className="grid gap-4"
-                  >
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
-                      <RadioGroupItem value="pattern" id="bg-pattern" />
-                      <div className="flex-1 cursor-pointer">
-                        <Label htmlFor="bg-pattern" className="font-bold block text-black">Padrão Pizzaria (Ícones)</Label>
-                        <p className="text-[10px] text-muted-foreground">Aplica um fundo com textura leve na cor principal do app.</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
-                      <RadioGroupItem value="color" id="bg-color" />
-                      <Label htmlFor="bg-color" className="flex-1 cursor-pointer font-bold text-black">Cor Sólida</Label>
-                    </div>
-                    <div className="flex items-center space-x-3 p-4 border-2 rounded-2xl cursor-pointer hover:bg-muted/30 bg-white">
-                      <RadioGroupItem value="image" id="bg-image" />
-                      <Label htmlFor="bg-image" className="flex-1 cursor-pointer font-bold text-black">Imagem Personalizada</Label>
-                    </div>
-                  </RadioGroup>
-
-                  {form.appBackgroundType === 'color' && (
-                    <div className="mt-4 flex gap-3 animate-in fade-in zoom-in-95 duration-200">
-                      <Input 
-                        type="color" 
-                        value={form.backgroundColor} 
-                        onChange={(e) => setForm({...form, backgroundColor: e.target.value})}
-                        className="w-14 h-14 p-1 rounded-xl cursor-pointer"
-                      />
-                      <Input 
-                        type="text" 
-                        value={form.backgroundColor} 
-                        onChange={(e) => setForm({...form, backgroundColor: e.target.value})}
-                        className="rounded-xl h-14 flex-1 border-2 font-mono text-black bg-white"
-                      />
-                    </div>
-                  )}
-
-                  {form.appBackgroundType === 'image' && (
-                    <div className="mt-4 space-y-2 animate-in fade-in zoom-in-95 duration-200">
-                      <div className="flex gap-2">
-                        <Input 
-                          placeholder="URL da Imagem"
-                          value={form.appBackgroundImageUrl} 
-                          onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})}
-                          className="rounded-xl h-14 flex-1 border-2 text-black bg-white"
-                        />
-                        <Button 
-                          variant="outline" 
-                          className="h-14 rounded-xl border-2 px-6 text-black bg-white"
-                          onClick={() => document.getElementById('bg-upload')?.click()}
-                        >
-                          <ImageIcon className="h-6 w-6 text-primary" />
-                        </Button>
-                        <input id="bg-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('appBackgroundImageUrl')} />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="rounded-3xl border-2 shadow-sm bg-white">
-            <CardHeader className="bg-green-500/5 border-b px-8 py-6">
-              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
-                <MessageSquare className="h-7 w-7 text-green-600" /> Contato e Redes Sociais
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="addressFooter" className="text-lg font-bold text-black">Endereço Físico (Rodapé)</Label>
-                <Input 
-                  id="addressFooter" 
-                  placeholder="Rua das Pizzas, 123"
-                  value={form.address} 
-                  onChange={(e) => setForm({...form, address: e.target.value})}
-                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="contactPhone" className="text-lg font-bold text-black">Telefone de Contato (Rodapé)</Label>
-                  <Input 
-                    id="contactPhone" 
-                    placeholder="(00) 00000-0000"
-                    value={form.contactPhone} 
-                    onChange={(e) => setForm({...form, contactPhone: handlePhoneMask(e.target.value)})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contactEmail" className="text-lg font-bold text-black">E-mail de Contato</Label>
-                  <Input 
-                    id="contactEmail" 
-                    placeholder="contato@suapizzaria.com"
-                    value={form.contactEmail} 
-                    onChange={(e) => setForm({...form, contactEmail: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="waAuto" className="text-lg font-bold text-black">Mensagem Automática do WhatsApp (Rodapé)</Label>
-                <Input 
-                  id="waAuto" 
-                  placeholder="Olá! Gostaria de tirar uma dúvida."
-                  value={form.whatsappAutoMessage} 
-                  onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})}
-                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2 text-lg font-bold text-black"><Instagram className="h-5 w-5" /> Instagram URL</Label>
-                  <Input placeholder="Ex: instagram.com/suapizzaria" value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2 text-lg font-bold text-black"><Facebook className="h-5 w-5" /> Facebook URL</Label>
-                  <Input placeholder="Ex: facebook.com/suapizzaria" value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
-                </div>
-                <div className="space-y-2">
-                  <Label className="flex items-center gap-2 text-lg font-bold text-black"><Music2 className="h-5 w-5" /> TikTok URL</Label>
-                  <Input placeholder="Ex: tiktok.com/@suapizzaria" value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
-                </div>
               </div>
             </CardContent>
           </Card>

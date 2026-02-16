@@ -318,7 +318,7 @@ export default function AdminProductsPage() {
                       <Button variant="outline" size="lg" onClick={() => handleOpenDialog(product)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-black hover:bg-primary hover:text-white transition-colors bg-white">
                         <Edit2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Editar</span>
                       </Button>
-                      <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive hover:text-white transition-colors bg-white">
+                      <Button variant="outline" size="lg" onClick={() => handleDelete(product.id)} className="flex-1 sm:flex-none rounded-xl h-12 px-4 border-2 text-destructive hover:bg-destructive/10 hover:text-white transition-colors bg-white">
                         <Trash2 className="h-5 w-5 mr-2" /> <span className="sm:hidden lg:inline">Excluir</span>
                       </Button>
                     </div>
@@ -536,59 +536,59 @@ export default function AdminProductsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
-        <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
-          <LayoutDashboard className="h-5 w-5 text-blue-600" />
-          <span className="text-[12px] font-black uppercase">Painel</span>
-        </Link>
-        <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
-          <Layers className="h-5 w-5 text-emerald-600" />
-          <span className="text-[12px] font-black uppercase">Categorias</span>
-        </Link>
-        <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
-          <PizzaIcon className="h-5 w-5 text-amber-600" />
-          <span className="text-[12px] font-black uppercase">Produtos</span>
-        </Link>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
-              <Plus className="h-5 w-5 text-violet-600" />
-              <span className="text-[12px] font-black uppercase">Mais</span>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
-            <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
-                <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
-                <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
-                <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
-                <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
-                <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </nav>
+        <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
+          <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
+            <LayoutDashboard className="h-5 w-5 text-blue-600" />
+            <span className="text-[12px] font-black uppercase">Painel</span>
+          </Link>
+          <Link href="/admin/categories" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
+            <Layers className="h-5 w-5 text-emerald-600" />
+            <span className="text-[12px] font-black uppercase">Categorias</span>
+          </Link>
+          <Link href="/admin/products" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
+            <PizzaIcon className="h-5 w-5 text-amber-600" />
+            <span className="text-[12px] font-black uppercase">Produtos</span>
+          </Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
+                <Plus className="h-5 w-5 text-violet-600" />
+                <span className="text-[12px] font-black uppercase">Mais</span>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
+              <DropdownMenuItem asChild>
+                <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
+                  <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
+                  <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
+                  <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
+                  <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
+                  <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </nav>
+      </main>
     </div>
   );
 }

@@ -73,37 +73,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from '@/hooks/use-toast';
 
-const MAIN_CATEGORY_SUGGESTIONS = [
-  "Pizzas", "Bebidas", "Porções", "Combos", "Acompanhamentos", "Sobremesas", "Outros"
-];
-
-const CATEGORIZED_SUGGESTIONS = [
-  {
-    title: "Pizzas",
-    items: ["Salgadas", "Doces", "Especiais", "Premium", "Tradicionais", "Veganas", "Zero Lactose", "Meio a Meio", "Broto", "Gigante", "Borda Recheada", "Promocionais"]
-  },
-  {
-    title: "Bebidas",
-    items: ["Refrigerantes", "Lata 350ml", "600ml", "Garrafa 2L", "Sucos Naturais", "Cervejas", "Vinhos", "Água Mineral", "Energéticos", "Drinks & Coquetéis", "Doses", "Chás Gelados"]
-  },
-  {
-    title: "Porções & Entradas",
-    items: ["Batata Frita", "Calabresa Acebolada", "Frango a Passarinho", "Mandioca Frita", "Pastéis Mistos", "Bolinhos Gourmet", "Tábua de Frios", "Pão de Alho", "Bruschettas", "Anéis de Cebola"]
-  },
-  {
-    title: "Pratos & Massas",
-    items: ["Lasanhas", "Espaguetes", "Nhoques", "Lanches & Burgers", "Saladas Leves", "Pratos Kids", "Grelhados", "Risotos", "Massas Artesanais"]
-  },
-  {
-    title: "Combos & Ofertas",
-    items: ["Combo Família", "Combo Galera", "Combo Casal", "Combo Individual", "Promoção do Dia", "Mais Vendidos", "Almoço Executivo", "Happy Hour"]
-  },
-  {
-    title: "Sobremesas",
-    items: ["Pizzas Doces", "Petit Gâteau", "Brownie", "Pudim", "Sorvetes", "Milk Shakes", "Açaí", "Mousses", "Tortas Fatiadas"]
-  }
-];
-
 export default function AdminCategoriesPage() {
   const firestore = useFirestore();
   const router = useRouter();
@@ -112,8 +81,6 @@ export default function AdminCategoriesPage() {
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
-  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
-  const [isMainSuggestionsOpen, setIsMainSuggestionsOpen] = useState(false);
   
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
@@ -163,8 +130,6 @@ export default function AdminCategoriesPage() {
       });
     }
     setIsDialogOpen(true);
-    setIsSuggestionsOpen(false);
-    setIsMainSuggestionsOpen(false);
   };
 
   const handleSave = () => {
@@ -200,16 +165,6 @@ export default function AdminCategoriesPage() {
       setIsDeleteDialogOpen(false);
       setCategoryToDelete(null);
     }
-  };
-
-  const addNameSuggestion = (suggestion: string) => {
-    setFormData({ ...formData, name: suggestion });
-    setIsMainSuggestionsOpen(false);
-  };
-
-  const addSubSuggestion = (suggestion: string) => {
-    setFormData({ ...formData, subName: suggestion });
-    setIsSuggestionsOpen(false);
   };
 
   return (
@@ -352,73 +307,14 @@ export default function AdminCategoriesPage() {
                 <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2 text-black">
                   <FolderTree className="h-5 w-5 text-primary" /> Grupo Principal
                 </Label>
-                <p className="text-xs text-muted-foreground -mt-2">Define o grupo no cardápio (ex: Pizzas, Bebidas, Sobremesas)</p>
                 <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Pizzas" />
-                
-                <div className="space-y-2 mt-1">
-                  <Collapsible open={isMainSuggestionsOpen} onOpenChange={setIsMainSuggestionsOpen} className="w-full">
-                    <CollapsibleTrigger asChild>
-                      <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10 px-1">
-                        <Sparkles className="h-4 w-4" />
-                        {isMainSuggestionsOpen ? 'Esconder Grupos' : 'Ver Grupos Sugeridos'}
-                        {isMainSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                      </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-2">
-                      <div className="flex flex-wrap gap-2 p-3 bg-muted/30 rounded-xl border-2 border-dashed">
-                        {MAIN_CATEGORY_SUGGESTIONS.map((suggestion) => (
-                          <Badge 
-                            key={suggestion} 
-                            variant="secondary" 
-                            className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1.5 px-4 rounded-full text-xs font-bold border-2 border-muted bg-white text-black"
-                            onClick={() => addNameSuggestion(suggestion)}
-                          >
-                            {suggestion}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                </div>
               </div>
               
               <div className="grid gap-2 border-t pt-4">
                 <Label htmlFor="subName" className="text-lg font-bold flex items-center gap-2 text-black">
                   <Tags className="h-5 w-5 text-primary" /> Subcategoria / Variação
                 </Label>
-                <p className="text-xs text-muted-foreground -mt-1">Diferencia os tipos dentro do grupo (ex: Salgadas, Doces, Sucos)</p>
                 <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Salgadas" />
-                
-                <Collapsible open={isSuggestionsOpen} onOpenChange={setIsSuggestionsOpen} className="w-full mt-2">
-                  <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="flex items-center gap-2 text-primary font-bold hover:bg-primary/10">
-                      <Sparkles className="h-4 w-4" />
-                      {isSuggestionsOpen ? 'Esconder Ideias' : 'Ver Ideias de Subcategorias'}
-                      {isSuggestionsOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    </Button>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-3">
-                    <div className="space-y-4 p-4 bg-muted/30 rounded-2xl border-2 border-dashed">
-                      {CATEGORIZED_SUGGESTIONS.map((group) => (
-                        <div key={group.title} className="space-y-2">
-                          <p className="text-[10px] font-black uppercase text-muted-foreground ml-1">{group.title}</p>
-                          <div className="flex flex-wrap gap-2">
-                            {group.items.map((suggestion) => (
-                              <Badge 
-                                key={suggestion} 
-                                variant="secondary" 
-                                className="cursor-pointer hover:bg-primary hover:text-white transition-colors py-1 px-3 rounded-full text-[11px] bg-white text-black border-2"
-                                onClick={() => addSubSuggestion(suggestion)}
-                              >
-                                {suggestion}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
               </div>
 
               <div className="grid gap-2 border-t pt-4">
@@ -427,7 +323,6 @@ export default function AdminCategoriesPage() {
                    <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
                    <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" />
                 </div>
-                <p className="text-sm text-muted-foreground">Define a posição no menu (0 é o primeiro).</p>
               </div>
             </div>
             <DialogFooter>
@@ -444,7 +339,6 @@ export default function AdminCategoriesPage() {
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
               <AlertDialogDescription className="text-lg text-black">
                 Tem certeza que deseja excluir a categoria <strong>"{categoryToDelete?.name} - {categoryToDelete?.subName || 'Geral'}"</strong>? 
-                Esta ação não pode ser desfeita e pode afetar a exibição de produtos vinculados.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="gap-2">
