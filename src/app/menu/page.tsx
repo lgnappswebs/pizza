@@ -13,14 +13,12 @@ import {
   Loader2, 
   Search, 
   X, 
-  Filter,
   Beer,
   Package,
   IceCream,
-  Utensils,
-  Salad,
   LayoutGrid,
-  Clock
+  Clock,
+  ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,7 +27,6 @@ import Link from 'next/link';
 import { useCartStore } from '@/lib/cart-store';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
-import { cn } from '@/lib/utils';
 import {
   Carousel,
   CarouselContent,
@@ -42,9 +39,15 @@ export default function MenuPage() {
   const [selectedSubId, setSelectedSubId] = useState('all');
   const [activeCategory, setActiveCategory] = useState<string | null>('loading');
   
+  const { user } = useUser();
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
+
+  const isAdmin = useMemo(() => {
+    const adminEmails = ['lgngregorio@icloud.com', 'admin@pizzapp.com'];
+    return user?.email && adminEmails.includes(user.email);
+  }, [user]);
 
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
@@ -219,6 +222,21 @@ export default function MenuPage() {
         </div>
       </main>
       <Footer />
+      
+      {/* Botão flutuante do Admin */}
+      {isAdmin && (
+        <div className={cn(
+          "fixed z-50 transition-all",
+          cartItems.length > 0 ? "bottom-32 right-6 md:bottom-36 md:right-12" : "bottom-8 right-6 md:bottom-12 md:right-12"
+        )}>
+          <Link href="/admin/dashboard">
+            <Button className="h-16 w-16 rounded-full bg-primary text-white shadow-2xl hover:scale-110 active:scale-95 transition-all flex items-center justify-center border-4 border-white/30">
+              <ShieldCheck className="h-8 w-8" />
+            </Button>
+          </Link>
+        </div>
+      )}
+
       {cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-8 left-4 right-4 md:left-auto md:right-12 z-40 flex justify-center">
           <Link href="/checkout" className="w-full max-w-md">
