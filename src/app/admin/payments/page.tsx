@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -66,6 +67,7 @@ export default function AdminPaymentsPage() {
   const [form, setForm] = useState({
     pixEnabled: true,
     pixKey: '',
+    pixKeyType: 'CPF',
     cardOnDeliveryEnabled: true,
     cashOnDeliveryEnabled: true
   });
@@ -75,6 +77,7 @@ export default function AdminPaymentsPage() {
       setForm({
         pixEnabled: config.pixEnabled ?? true,
         pixKey: config.pixKey || '',
+        pixKeyType: config.pixKeyType || 'CPF',
         cardOnDeliveryEnabled: config.cardOnDeliveryEnabled ?? true,
         cashOnDeliveryEnabled: config.cashOnDeliveryEnabled ?? true
       });
@@ -176,16 +179,35 @@ export default function AdminPaymentsPage() {
               </div>
 
               {form.pixEnabled && (
-                <div className="space-y-3 animate-in fade-in slide-in-from-top-2">
-                  <Label htmlFor="pixKey" className="text-lg font-bold text-black">Sua Chave PIX</Label>
-                  <Input 
-                    id="pixKey" 
-                    placeholder="Ex: CPF, E-mail ou Telefone"
-                    value={form.pixKey} 
-                    onChange={(e) => setForm({...form, pixKey: e.target.value})}
-                    className="rounded-xl h-14 border-2 text-lg text-black bg-white focus:border-primary"
-                  />
-                  <p className="text-sm text-muted-foreground italic font-medium">Esta chave será mostrada ao cliente na tela de finalização.</p>
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-lg font-bold text-black">Tipo de Chave</Label>
+                      <Select value={form.pixKeyType} onValueChange={(v) => setForm({...form, pixKeyType: v})}>
+                        <SelectTrigger className="rounded-xl h-14 border-2 text-lg text-black bg-white focus:border-primary">
+                          <SelectValue placeholder="Selecione o tipo" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="CPF" className="text-black">CPF</SelectItem>
+                          <SelectItem value="CNPJ" className="text-black">CNPJ</SelectItem>
+                          <SelectItem value="E-mail" className="text-black">E-mail</SelectItem>
+                          <SelectItem value="Telefone" className="text-black">Telefone (Celular)</SelectItem>
+                          <SelectItem value="Aleatória" className="text-black">Chave Aleatória (EVP)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="pixKey" className="text-lg font-bold text-black">Sua Chave PIX</Label>
+                      <Input 
+                        id="pixKey" 
+                        placeholder="Insira a chave exatamente como no banco"
+                        value={form.pixKey} 
+                        onChange={(e) => setForm({...form, pixKey: e.target.value})}
+                        className="rounded-xl h-14 border-2 text-lg text-black bg-white focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground italic font-medium">Estes dados serão mostrados ao cliente para facilitar o "Copia e Cola" no momento do pagamento.</p>
                 </div>
               )}
             </CardContent>

@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle, QrCode, CreditCard, Banknote } from 'lucide-react';
+import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle, QrCode, CreditCard, Banknote, Copy, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [waLink, setWaLink] = useState('');
   const [waSent, setWaSent] = useState(false);
+  const [copied, setCopied] = useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
   const { toast } = useToast();
@@ -61,6 +62,18 @@ export default function CheckoutPage() {
   const total = getTotal();
   const deliveryFee = config?.deliveryFee || 0;
 
+  const handleCopyPix = () => {
+    if (config?.pixKey) {
+      navigator.clipboard.writeText(config.pixKey);
+      setCopied(true);
+      toast({
+        title: "Copiado!",
+        description: "Chave Pix copiada para a área de transferência."
+      });
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleSendToWhatsApp = async () => {
     if (!form.name || !form.address || !form.neighborhood || !form.phone || !form.paymentMethod) {
       toast({
@@ -80,7 +93,7 @@ export default function CheckoutPage() {
       if (form.paymentMethod === 'cash' && form.cashChange) {
         paymentDetails = `Troco para R$ ${form.cashChange}`;
       } else if (form.paymentMethod === 'pix') {
-        paymentDetails = 'Pagamento via PIX';
+        paymentDetails = `Pagamento via PIX (${config?.pixKeyType || 'Chave'}: ${config?.pixKey || 'N/A'})`;
       } else if (form.paymentMethod === 'card') {
         paymentDetails = 'Pagamento em Cartão na Entrega';
       }
@@ -465,10 +478,33 @@ export default function CheckoutPage() {
                         </div>
                       </Label>
                       {form.paymentMethod === 'pix' && config.pixKey && (
-                        <div className="mt-3 p-4 bg-emerald-50 rounded-xl border-2 border-dashed border-emerald-200 animate-in slide-in-from-top-2">
-                          <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest mb-1">Minha Chave PIX:</p>
-                          <p className="text-lg font-black text-emerald-900 break-all">{config.pixKey}</p>
-                          <p className="text-[10px] text-emerald-600 mt-2 italic">*Você pode pagar agora ou após o entregador chegar.</p>
+                        <div className="mt-3 p-4 bg-emerald-50 rounded-2xl border-2 border-dashed border-emerald-200 animate-in slide-in-from-top-2">
+                          <div className="flex justify-between items-start gap-4">
+                            <div className="min-w-0">
+                              <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest mb-1">
+                                Chave PIX ({config.pixKeyType || 'Chave'}):
+                              </p>
+                              <p className="text-lg font-black text-emerald-900 break-all leading-tight">
+                                {config.pixKey}
+                              </p>
+                            </div>
+                            <Button 
+                              type="button"
+                              size="sm" 
+                              variant="outline" 
+                              className="shrink-0 h-10 rounded-xl border-emerald-200 text-emerald-700 hover:bg-emerald-100 bg-white"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleCopyPix();
+                              }}
+                            >
+                              {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                              {copied ? 'Copiado' : 'Copiar'}
+                            </Button>
+                          </div>
+                          <p className="text-[10px] text-emerald-600 mt-3 italic font-medium">
+                            *Você pode pagar agora para agilizar o preparo da sua pizza!
+                          </p>
                         </div>
                       )}
                     </div>
