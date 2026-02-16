@@ -14,14 +14,7 @@ import {
   Settings as SettingsIcon,
   LogOut,
   Layers,
-  ExternalLink,
   Wallet,
-  X,
-  Type,
-  AlignLeft,
-  Layout,
-  Link as LinkIcon,
-  ArrowLeft,
   ArrowUpToLine,
   AlignCenterVertical,
   ArrowDownToLine,
@@ -187,7 +180,7 @@ export default function AdminBannersPage() {
             <h1 className="text-3xl font-black text-black">Gerir Banners</h1>
             <p className="text-muted-foreground font-medium">Organize os destaques por posições</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary text-white">
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg">
             <Plus className="mr-2 h-6 w-6" /> Novo Banner
           </Button>
         </div>
@@ -195,51 +188,59 @@ export default function AdminBannersPage() {
         {loadingBanners ? <div className="flex justify-center py-20"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div> : (
           <div className="space-y-16">
             <div className="space-y-6">
-              <div className="flex items-center gap-3 border-b-2 pb-2"><ArrowUpToLine className="text-orange-500" /><h2 className="text-2xl font-black">Topo do Cardápio</h2></div>
-              {bannersTop.length > 0 ? renderBannerGrid(bannersTop) : <p className="text-muted-foreground italic text-sm">Vazio.</p>}
+              <div className="flex items-center gap-3 border-b-2 pb-2"><ArrowUpToLine className="text-orange-500" /><h2 className="text-2xl font-black">Topo do Cardápio ({bannersTop.length})</h2></div>
+              {bannersTop.length > 0 ? renderBannerGrid(bannersTop) : <p className="text-muted-foreground italic text-sm">Nenhum banner no topo.</p>}
             </div>
             <div className="space-y-6">
-              <div className="flex items-center gap-3 border-b-2 pb-2"><AlignCenterVertical className="text-blue-500" /><h2 className="text-2xl font-black">Meio do Cardápio</h2></div>
-              {bannersMiddle.length > 0 ? renderBannerGrid(bannersMiddle) : <p className="text-muted-foreground italic text-sm">Vazio.</p>}
+              <div className="flex items-center gap-3 border-b-2 pb-2"><AlignCenterVertical className="text-blue-500" /><h2 className="text-2xl font-black">Meio do Cardápio ({bannersMiddle.length})</h2></div>
+              {bannersMiddle.length > 0 ? renderBannerGrid(bannersMiddle) : <p className="text-muted-foreground italic text-sm">Nenhum banner no meio.</p>}
             </div>
             <div className="space-y-6">
-              <div className="flex items-center gap-3 border-b-2 pb-2"><ArrowDownToLine className="text-emerald-500" /><h2 className="text-2xl font-black">Fim do Cardápio</h2></div>
-              {bannersBottom.length > 0 ? renderBannerGrid(bannersBottom) : <p className="text-muted-foreground italic text-sm">Vazio.</p>}
+              <div className="flex items-center gap-3 border-b-2 pb-2"><ArrowDownToLine className="text-emerald-500" /><h2 className="text-2xl font-black">Fim do Cardápio ({bannersBottom.length})</h2></div>
+              {bannersBottom.length > 0 ? renderBannerGrid(bannersBottom) : <p className="text-muted-foreground italic text-sm">Nenhum banner no fim.</p>}
             </div>
           </div>
         )}
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2 border-primary/20">
             <DialogHeader className="pt-10">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingBanner ? 'Editar' : 'Novo'} Banner</DialogTitle>
             </DialogHeader>
             <div className="grid gap-6 py-4">
-              <div className="grid gap-2"><Label className="font-bold">Título</Label><Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12" /></div>
+              <div className="grid gap-2"><Label className="font-bold">Título</Label><Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Promoção de Terça" /></div>
               <div className="grid gap-2">
                 <Label className="font-bold">Posição no Menu</Label>
                 <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
                   <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem value="top" className="text-black">Topo</SelectItem>
-                    <SelectItem value="middle" className="text-black">Meio</SelectItem>
-                    <SelectItem value="bottom" className="text-black">Fim</SelectItem>
+                    <SelectItem value="top" className="text-black">Topo do Cardápio</SelectItem>
+                    <SelectItem value="middle" className="text-black">Meio do Cardápio</SelectItem>
+                    <SelectItem value="bottom" className="text-black">Fim do Cardápio</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
                 <Label className="font-bold">Imagem</Label>
                 <div className="flex gap-2">
-                  <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12" />
+                  <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12" placeholder="URL da imagem" />
                   <Button type="button" variant="outline" className="shrink-0 rounded-xl border-2 h-12 w-12" onClick={() => document.getElementById('banner-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed cursor-pointer" onClick={() => setFormData({...formData, isActive: !formData.isActive})}>
-                <Label className="font-bold cursor-pointer">Exibir no App</Label><Switch checked={formData.isActive} className="pointer-events-none" />
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed cursor-pointer hover:bg-muted/50 transition-colors" 
+                onClick={() => setFormData({...formData, isActive: !formData.isActive})}
+              >
+                <Label className="font-bold cursor-pointer">Exibir no App</Label>
+                <Switch checked={formData.isActive} className="pointer-events-none" />
               </div>
             </div>
-            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full font-black text-xl bg-primary text-white shadow-lg">Salvar Banner</Button></DialogFooter>
+            <DialogFooter>
+              <Button onClick={handleSave} className="w-full h-16 rounded-full font-black text-xl bg-primary text-white shadow-lg hover:bg-primary/90 transition-all active:scale-95">
+                Salvar Banner
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </main>

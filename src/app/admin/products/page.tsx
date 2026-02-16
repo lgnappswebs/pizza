@@ -124,9 +124,7 @@ export default function AdminProductsPage() {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({ ...formData, imageUrl: reader.result as string });
-      };
+      reader.onloadend = () => setFormData({ ...formData, imageUrl: reader.result as string });
       reader.readAsDataURL(file);
     }
   };
@@ -152,8 +150,8 @@ export default function AdminProductsPage() {
 
       <main className="flex-1 p-4 md:p-8 pb-32">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
-          <div><h1 className="text-3xl font-bold">Produtos</h1><p className="text-muted-foreground">Gerencie seu cardápio</p></div>
-          <Button onClick={() => handleOpenDialog()} className="rounded-full h-12 px-6 font-bold bg-primary text-white"><Plus className="mr-2 h-5 w-5" /> Novo Produto</Button>
+          <div><h1 className="text-3xl font-black text-black">Produtos</h1><p className="text-muted-foreground font-medium">Gerencie seu cardápio de forma ágil</p></div>
+          <Button onClick={() => handleOpenDialog()} className="rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg"><Plus className="mr-2 h-6 w-6" /> Novo Produto</Button>
         </div>
         <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden bg-white">
           <CardHeader className="p-4 border-b">
@@ -169,11 +167,11 @@ export default function AdminProductsPage() {
                   <div key={product.id} className="flex items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white">
                     <div className="flex items-center gap-4 min-w-0">
                       <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
-                      <div className="min-w-0"><h3 className="font-black truncate text-primary">{product.name}</h3><p className="text-xs text-muted-foreground truncate">{product.description}</p></div>
+                      <div className="min-w-0"><h3 className="font-black truncate text-primary text-lg">{product.name}</h3><p className="text-xs text-muted-foreground truncate">{product.description}</p></div>
                     </div>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2"><Edit2 className="h-4 w-4" /></Button>
-                      <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
+                      <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
                 ))}
@@ -183,7 +181,7 @@ export default function AdminProductsPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl border-2 max-h-[90vh] overflow-y-auto bg-white">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl border-2 border-primary/20 max-h-[90vh] overflow-y-auto bg-white">
             <DialogHeader className="pt-10">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingProduct ? 'Editar' : 'Novo'} Produto</DialogTitle>
             </DialogHeader>
@@ -197,7 +195,10 @@ export default function AdminProductsPage() {
                   <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}>
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer hover:bg-muted/40 transition-colors" 
+                onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}
+              >
                 <div className="space-y-0.5">
                   <Label className="font-bold cursor-pointer">Múltiplos Tamanhos?</Label>
                   <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G</p>
@@ -222,14 +223,26 @@ export default function AdminProductsPage() {
                 </div>
                 {formData.imageUrl && <div className="mt-2 relative aspect-video rounded-xl overflow-hidden border-2 border-dashed flex items-center justify-center bg-muted/10"><img src={formData.imageUrl} alt="Preview" className="object-contain w-full h-full" /></div>}
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}>
-                <Label className="font-bold cursor-pointer">Disponível na Loja?</Label><Switch checked={formData.isAvailable} className="pointer-events-none" />
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer hover:bg-muted/40 transition-colors" 
+                onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}
+              >
+                <Label className="font-bold cursor-pointer">Disponível na Loja?</Label>
+                <Switch checked={formData.isAvailable} className="pointer-events-none" />
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}>
-                <Label className="font-bold cursor-pointer">Produto em Promoção?</Label><Switch checked={formData.isPromotion} className="pointer-events-none" />
+              <div 
+                className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer hover:bg-muted/40 transition-colors" 
+                onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}
+              >
+                <Label className="font-bold cursor-pointer">Produto em Promoção?</Label>
+                <Switch checked={formData.isPromotion} className="pointer-events-none" />
               </div>
             </div>
-            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white shadow-lg">Salvar Produto</Button></DialogFooter>
+            <DialogFooter>
+              <Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white shadow-lg hover:bg-primary/90 transition-all active:scale-95">
+                Salvar Produto
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       </main>

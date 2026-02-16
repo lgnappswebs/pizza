@@ -38,7 +38,6 @@ export default function CheckoutPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [waLink, setWaLink] = useState('');
   const [copied, setCopied] = useState(false);
   const firestore = useFirestore();
   const { user } = useUser();
@@ -143,7 +142,7 @@ export default function CheckoutPage() {
     
     items.forEach(item => addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), { ...item, orderId }));
 
-    const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
+    const pizzeriaNumber = config?.whatsappNumber || "";
     
     let msg = `*🔥 NOVO PEDIDO - ${config?.restaurantName?.toUpperCase() || 'PIZZARIA'}*%0A%0A`;
     msg += `*📍 TIPO DE PEDIDO:*%0A`;
@@ -169,14 +168,14 @@ export default function CheckoutPage() {
     msg += `*💳 FORMA DE PAGAMENTO:*%0A`;
     msg += `Método: ${paymentLabel}%0A`;
     if (paymentDetails) msg += `Detalhe: ${paymentDetails}%0A`;
+    
     if (form.paymentMethod === 'pix') {
       msg += `%0A⚠️ *AVISO IMPORTANTE:*%0A`;
       msg += `O pedido só será iniciado após o envio do comprovante do pagamento Pix aqui na conversa.`;
     }
 
-    const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${msg}`;
+    const whatsappUrl = `https://wa.me/${pizzeriaNumber.replace(/\D/g, '')}?text=${msg}`;
     window.open(whatsappUrl, '_blank');
-    setWaLink(whatsappUrl);
     setIsSuccess(true);
     clearCart();
     setLoading(false);
@@ -203,7 +202,7 @@ export default function CheckoutPage() {
       
       <div className="max-w-4xl mx-auto mt-16 mb-12 text-center">
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter">Finalizar Pedido</h1>
-        <p className="text-muted-foreground font-medium">Quase lá! Escolha como prefere receber sua pizza.</p>
+        <p className="text-muted-foreground font-medium">Confirme os detalhes para receber sua pizza!</p>
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">

@@ -41,12 +41,10 @@ export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
   const [activeCategory, setActiveCategory] = useState<string | null>('loading');
-  const [showSpecialties, setShowSpecialties] = useState(false);
   
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
-  const { user } = useUser();
 
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
@@ -72,7 +70,7 @@ export default function MenuPage() {
   }, [categories]);
 
   const mainNames = useMemo(() => {
-    const names = Object.keys(groupedCategories).sort((a, b) => {
+    return Object.keys(groupedCategories).sort((a, b) => {
       const aLow = a.trim().toLowerCase();
       const bLow = b.trim().toLowerCase();
       const isAPizza = aLow.includes('pizza');
@@ -83,7 +81,6 @@ export default function MenuPage() {
       const minB = Math.min(...groupedCategories[b].map(c => c.order ?? 99));
       return minA - minB;
     });
-    return names;
   }, [groupedCategories]);
 
   useEffect(() => {
@@ -127,17 +124,23 @@ export default function MenuPage() {
     if (bannerList.length === 0) return null;
     if (bannerList.length === 1) return <MenuBanner banner={bannerList[0]} onBannerClick={handleBannerClick} />;
     return (
-      <Carousel opts={{ loop: true }} plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]} className="w-full">
+      <Carousel 
+        opts={{ loop: true }} 
+        plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]} 
+        className="w-full"
+      >
         <CarouselContent>
           {bannerList.map((banner) => (
-            <CarouselItem key={banner.id}><MenuBanner banner={banner} onBannerClick={handleBannerClick} /></CarouselItem>
+            <CarouselItem key={banner.id}>
+              <MenuBanner banner={banner} onBannerClick={handleBannerClick} />
+            </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
     );
   };
 
-  if (loadingCats) {
+  if (loadingCats || loadingProds) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-12 w-12 text-primary animate-spin" /></div>;
   }
 
@@ -178,7 +181,7 @@ export default function MenuPage() {
             <div className="space-y-8">
               <h2 className="text-2xl font-black">Resultados para "{searchTerm}"</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {searchedProducts.map(p => <ProductCard key={p.id} {...p} />)}
+                {searchedProducts.map(p => <ProductCard key={p.id} {...p} category={p.categoryId} />)}
               </div>
             </div>
           ) : (
@@ -206,7 +209,7 @@ export default function MenuPage() {
                     {products?.filter(p => {
                       const pCat = categories?.find(c => c.id === p.categoryId);
                       return pCat && pCat.name === name && (selectedSubId === 'all' || p.categoryId === selectedSubId);
-                    }).map(product => <ProductCard key={product.id} {...product} />)}
+                    }).map(product => <ProductCard key={product.id} {...product} category={product.categoryId} />)}
                   </div>
                 </TabsContent>
               ))}
