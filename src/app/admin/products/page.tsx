@@ -324,7 +324,7 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                 ))}
-                {filteredProducts?.length === 0 && (
+                {!isLoadingProducts && filteredProducts?.length === 0 && (
                   <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed">
                     <PizzaIcon className="h-16 w-16 mx-auto mb-4 text-muted opacity-20" />
                     <h3 className="text-xl font-bold opacity-60 text-black">Nenhum produto encontrado</h3>

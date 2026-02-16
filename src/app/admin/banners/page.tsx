@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   Plus, 
   Edit2, 
@@ -21,7 +21,10 @@ import {
   AlignLeft,
   Layout,
   Link as LinkIcon,
-  ArrowLeft
+  ArrowLeft,
+  ArrowUpToLine,
+  AlignCenterVertical,
+  ArrowDownToLine
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -47,7 +50,7 @@ import {
   deleteDocumentNonBlocking,
   useUser 
 } from '@/firebase';
-import { collection, doc, query } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 import {
@@ -90,6 +93,11 @@ export default function AdminBannersPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
+  // Agrupamento de banners por posição
+  const bannersTop = useMemo(() => banners?.filter(b => b.bannerPosition === 'top') || [], [banners]);
+  const bannersMiddle = useMemo(() => banners?.filter(b => b.bannerPosition === 'middle') || [], [banners]);
+  const bannersBottom = useMemo(() => banners?.filter(b => b.bannerPosition === 'bottom') || [], [banners]);
+
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
   }
@@ -127,10 +135,7 @@ export default function AdminBannersPage() {
   };
 
   const handleSave = () => {
-    const data = {
-      ...formData
-    };
-
+    const data = { ...formData };
     if (editingBanner) {
       updateDocumentNonBlocking(doc(firestore, 'banners', editingBanner.id), data);
     } else {
@@ -167,14 +172,45 @@ export default function AdminBannersPage() {
     }
   };
 
-  const getBannerPositionLabel = (pos: string) => {
-    switch(pos) {
-      case 'top': return 'Topo';
-      case 'middle': return 'Meio';
-      case 'bottom': return 'Fim';
-      default: return pos;
-    }
-  };
+  const renderBannerGrid = (bannersList: any[]) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {bannersList.map((banner) => (
+        <Card className="rounded-2xl border-2 overflow-hidden group bg-white shadow-sm hover:shadow-md transition-all" key={banner.id}>
+          <div className="aspect-video relative overflow-hidden bg-muted">
+            <img src={banner.imageUrl} alt="Banner" className="object-cover w-full h-full" />
+            <div className="absolute inset-0 bg-black/20 flex flex-col p-4">
+              <div className="flex justify-between items-start">
+                 <Badge variant={banner.isActive ? 'default' : 'destructive'} className="shadow-lg">
+                  {banner.isActive ? 'Ativo' : 'Inativo'}
+                </Badge>
+              </div>
+              <div className="mt-auto">
+                {banner.title && <p className="text-white font-bold text-sm truncate drop-shadow-md">{banner.title}</p>}
+                {banner.linkCategoryId !== 'none' && (
+                  <p className="text-white/80 text-[10px] flex items-center gap-1 mt-1 font-bold">
+                    <LinkIcon className="h-3 w-3" /> Vinculado à categoria
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          <CardContent className="p-4 flex justify-between items-center bg-white">
+            <div className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+              Texto: {getTextPositionLabel(banner.textPosition)}
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8 text-black border-2 bg-white hover:bg-primary/5">
+                <Edit2 className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive border-2 hover:bg-destructive/10 bg-white">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
@@ -240,69 +276,59 @@ export default function AdminBannersPage() {
           <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
         </Link>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-10 text-center sm:text-left mt-20 md:mt-16">
+        <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-6 mb-12 text-center sm:text-left mt-20 md:mt-16">
           <div className="space-y-1">
-            <h1 className="text-3xl sm:text-4xl font-bold text-black">Banners Promocionais</h1>
-            <p className="text-muted-foreground">Gerencie as imagens e textos de destaque do cardápio</p>
+            <h1 className="text-3xl sm:text-4xl font-black text-black tracking-tight">Gerir Banners</h1>
+            <p className="text-muted-foreground font-medium">Organize os destaques do seu cardápio por posições</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black text-lg bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
             <Plus className="mr-2 h-6 w-6" /> Novo Banner
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {loadingBanners ? (
-            <div className="col-span-full flex justify-center py-12">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        {loadingBanners ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="space-y-16">
+            {/* Seção Topo */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
+                <ArrowUpToLine className="h-6 w-6 text-orange-500" />
+                <h2 className="text-2xl font-black text-black uppercase tracking-tight">Topo do Cardápio</h2>
+                <Badge variant="outline" className="ml-auto border-2 font-black text-primary">{bannersTop.length}</Badge>
+              </div>
+              {bannersTop.length > 0 ? renderBannerGrid(bannersTop) : (
+                <p className="text-muted-foreground italic text-sm py-4">Nenhum banner configurado para o topo.</p>
+              )}
             </div>
-          ) : (
-            banners?.map((banner) => (
-              <Card className="rounded-2xl border-2 overflow-hidden group bg-white" key={banner.id}>
-                <div className="aspect-video relative overflow-hidden bg-muted">
-                  <img src={banner.imageUrl} alt="Banner" className="object-cover w-full h-full" />
-                  <div className="absolute inset-0 bg-black/20 flex flex-col p-4">
-                    <div className="flex justify-between items-start">
-                       <Badge variant={banner.isActive ? 'default' : 'destructive'} className="shadow-lg">
-                        {banner.isActive ? 'Ativo' : 'Inativo'}
-                      </Badge>
-                      <Badge variant="secondary" className="bg-white/90 backdrop-blur-sm">
-                        {getBannerPositionLabel(banner.bannerPosition)}
-                      </Badge>
-                    </div>
-                    <div className="mt-auto">
-                      {banner.title && <p className="text-white font-bold text-sm truncate">{banner.title}</p>}
-                      {banner.linkCategoryId !== 'none' && (
-                        <p className="text-white/80 text-[10px] flex items-center gap-1 mt-1">
-                          <LinkIcon className="h-3 w-3" /> Vinculado à categoria
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <CardContent className="p-4 flex justify-between items-center bg-white">
-                  <div className="text-xs text-muted-foreground font-medium">
-                    Texto: {getTextPositionLabel(banner.textPosition)}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl h-8 w-8 text-black border-2 bg-white">
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl h-8 w-8 text-destructive border-2 hover:bg-destructive/10 bg-white">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-          {!loadingBanners && banners?.length === 0 && (
-            <div className="col-span-full text-center py-20 bg-white rounded-3xl border-2 border-dashed">
-              <ImageIcon className="h-16 w-16 mx-auto mb-4 text-muted" />
-              <h3 className="text-xl font-bold">Nenhum banner</h3>
-              <p className="text-muted-foreground">Adicione imagens para destacar suas promoções.</p>
+
+            {/* Seção Meio */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
+                <AlignCenterVertical className="h-6 w-6 text-blue-500" />
+                <h2 className="text-2xl font-black text-black uppercase tracking-tight">Meio do Cardápio</h2>
+                <Badge variant="outline" className="ml-auto border-2 font-black text-primary">{bannersMiddle.length}</Badge>
+              </div>
+              {bannersMiddle.length > 0 ? renderBannerGrid(bannersMiddle) : (
+                <p className="text-muted-foreground italic text-sm py-4">Nenhum banner configurado para o meio.</p>
+              )}
             </div>
-          )}
-        </div>
+
+            {/* Seção Fim */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
+                <ArrowDownToLine className="h-6 w-6 text-emerald-500" />
+                <h2 className="text-2xl font-black text-black uppercase tracking-tight">Fim do Cardápio</h2>
+                <Badge variant="outline" className="ml-auto border-2 font-black text-primary">{bannersBottom.length}</Badge>
+              </div>
+              {bannersBottom.length > 0 ? renderBannerGrid(bannersBottom) : (
+                <p className="text-muted-foreground italic text-sm py-4">Nenhum banner configurado para o fim.</p>
+              )}
+            </div>
+          </div>
+        )}
 
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
           <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
