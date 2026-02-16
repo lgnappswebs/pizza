@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Badge } from '@/components/ui/badge';
 import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle, QrCode, CreditCard, Banknote, Copy, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';

@@ -121,7 +121,7 @@ export default function AdminProductsPage() {
         hasMultipleSizes: product.hasMultipleSizes || false,
         priceSmall: product.priceSmall?.toString().replace('.', ',') || '',
         priceMedium: product.priceMedium?.toString().replace('.', ',') || '',
-        priceLarge: product.priceLarge?.toString().replace('.', ',') || ''
+        priceLarge: product.priceLarge?.toString().replace('.', ',') || ' '
       });
     } else {
       setEditingProduct(null);
