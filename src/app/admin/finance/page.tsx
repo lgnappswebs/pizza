@@ -17,7 +17,8 @@ import {
   Share2,
   Printer,
   ArrowLeft,
-  Plus
+  Plus,
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -240,6 +241,11 @@ export default function AdminFinancePage() {
               <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
             </Button>
           </Link>
+          <Link href="/admin/payments">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+              <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
+            </Button>
+          </Link>
           <Link href="/admin/banners">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
@@ -436,14 +442,12 @@ export default function AdminFinancePage() {
                         <td className="px-6 py-4 align-top text-center">
                           <Badge variant="outline" className={`text-[10px] px-3 py-0.5 uppercase font-black tracking-widest rounded-full ${
                             order.status === 'Delivered' ? 'border-emerald-500 text-emerald-600 bg-emerald-50' : 
-                            order.status === 'Cancelled' ? 'border-red-500 text-red-600 bg-red-50' : 
                             'border-amber-500 text-amber-600 bg-amber-50'
                           }`}>
                             {order.status === 'New' ? 'Novo' : 
                              order.status === 'Preparing' ? 'Preparando' : 
                              order.status === 'Out for Delivery' ? 'Entrega' : 
-                             order.status === 'Delivered' ? 'Finalizado' : 
-                             order.status === 'Cancelled' ? 'Cancelado' : order.status}
+                             order.status === 'Delivered' ? 'Finalizado' : order.status}
                           </Badge>
                         </td>
                         <td className="px-6 py-4 text-right font-black text-base align-top whitespace-nowrap text-black">
@@ -463,55 +467,6 @@ export default function AdminFinancePage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-
-        <div ref={exportRef} style={{ display: 'none' }} className="p-10 bg-white">
-           <div className="flex justify-between items-center mb-10 border-b-4 border-primary pb-6">
-              <div>
-                <h1 className="text-4xl font-black text-primary uppercase tracking-tighter">{config?.restaurantName || "PIZZAPP"}</h1>
-                <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Relatório Financeiro Profissional</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-black uppercase text-muted-foreground">Gerado em</p>
-                <p className="font-bold">{format(new Date(), "dd/MM/yyyy HH:mm")}</p>
-              </div>
-           </div>
-
-           <div className="grid grid-cols-3 gap-6 mb-10">
-              <div className="p-6 bg-muted/20 rounded-3xl border-2">
-                <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Período</p>
-                <p className="text-xl font-black text-black">{selectedDay}/{selectedMonth}/{selectedYear}</p>
-              </div>
-              <div className="p-6 bg-muted/20 rounded-3xl border-2">
-                <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Total Pedidos</p>
-                <p className="text-xl font-black text-black">{filteredOrders.length}</p>
-              </div>
-              <div className="p-6 bg-primary/10 rounded-3xl border-2 border-primary/20">
-                <p className="text-[10px] font-black uppercase text-primary mb-1">Faturamento Bruto</p>
-                <p className="text-2xl font-black text-primary">R$ {revenueInPeriod.toFixed(2)}</p>
-              </div>
-           </div>
-
-           <table className="w-full text-left">
-              <thead>
-                <tr className="bg-primary text-white font-black text-xs uppercase tracking-widest">
-                  <th className="p-4 rounded-tl-xl">Hora</th>
-                  <th className="p-4">Cliente</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4 text-right rounded-tr-xl">Valor</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y border-x border-b">
-                {filteredOrders.map(o => (
-                  <tr key={o.id}>
-                    <td className="p-4 text-sm font-bold">{o.createdAt?.seconds ? format(new Date(o.createdAt.seconds * 1000), "HH:mm") : '--:--'}</td>
-                    <td className="p-4 text-sm font-medium">{o.customerName}</td>
-                    <td className="p-4 text-[10px] font-black uppercase">{o.status}</td>
-                    <td className="p-4 text-right font-black">R$ {o.totalAmount?.toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-           </table>
         </div>
 
         <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50 print:hidden">
@@ -547,6 +502,11 @@ export default function AdminFinancePage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
+                <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black">
+                  <CreditCard className="mr-2 h-4 w-4 text-green-600" /> Pagamentos
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
                 <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
                 </Link>
@@ -566,31 +526,6 @@ export default function AdminFinancePage() {
           </DropdownMenu>
         </nav>
       </main>
-
-      <style jsx global>{`
-        @media print {
-          @page { size: portrait; margin: 0; }
-          body { font-size: 10pt; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .print-hidden { display: none !important; }
-          main { padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: none !important; }
-          aside, nav, header { display: none !important; }
-          body > div:not([style*="width: 850px"]) { display: none !important; }
-          [data-radix-portal] { display: none !important; }
-          div[style*="width: 850px"] { 
-            display: block !important; 
-            visibility: visible !important;
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            height: auto !important;
-            padding: 20mm !important;
-            margin: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -24,7 +24,8 @@ import {
   ArrowLeft,
   ArrowUpToLine,
   AlignCenterVertical,
-  ArrowDownToLine
+  ArrowDownToLine,
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -93,7 +94,6 @@ export default function AdminBannersPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Agrupamento de banners por posição
   const bannersTop = useMemo(() => banners?.filter(b => b.bannerPosition === 'top') || [], [banners]);
   const bannersMiddle = useMemo(() => banners?.filter(b => b.bannerPosition === 'middle') || [], [banners]);
   const bannersBottom = useMemo(() => banners?.filter(b => b.bannerPosition === 'bottom') || [], [banners]);
@@ -246,6 +246,11 @@ export default function AdminBannersPage() {
               <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
             </Button>
           </Link>
+          <Link href="/admin/payments">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+              <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
+            </Button>
+          </Link>
           <Link href="/admin/banners">
             <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
@@ -292,7 +297,6 @@ export default function AdminBannersPage() {
           </div>
         ) : (
           <div className="space-y-16">
-            {/* Seção Topo */}
             <div className="space-y-6">
               <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
                 <ArrowUpToLine className="h-6 w-6 text-orange-500" />
@@ -304,7 +308,6 @@ export default function AdminBannersPage() {
               )}
             </div>
 
-            {/* Seção Meio */}
             <div className="space-y-6">
               <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
                 <AlignCenterVertical className="h-6 w-6 text-blue-500" />
@@ -316,7 +319,6 @@ export default function AdminBannersPage() {
               )}
             </div>
 
-            {/* Seção Fim */}
             <div className="space-y-6">
               <div className="flex items-center gap-3 border-b-2 border-primary/10 pb-2">
                 <ArrowDownToLine className="h-6 w-6 text-emerald-500" />
@@ -343,7 +345,6 @@ export default function AdminBannersPage() {
             <PizzaIcon className="h-5 w-5 text-amber-600" />
             <span className="text-[12px] font-black uppercase">Produtos</span>
           </Link>
-          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
@@ -360,6 +361,11 @@ export default function AdminBannersPage() {
               <DropdownMenuItem asChild>
                 <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                   <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black">
+                  <CreditCard className="mr-2 h-4 w-4 text-green-600" /> Pagamentos
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>

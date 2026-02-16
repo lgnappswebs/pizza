@@ -21,7 +21,10 @@ import {
   Wallet,
   Plus,
   Trash2,
-  ArrowLeft
+  ArrowLeft,
+  CreditCard,
+  QrCode,
+  Banknote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -122,6 +125,24 @@ export default function AdminOrdersPage() {
     }
   };
 
+  const getPaymentIcon = (method: string) => {
+    switch(method) {
+      case 'pix': return <QrCode className="h-4 w-4 text-emerald-600" />;
+      case 'card': return <CreditCard className="h-4 w-4 text-blue-600" />;
+      case 'cash': return <Banknote className="h-4 w-4 text-green-600" />;
+      default: return <Wallet className="h-4 w-4 text-gray-600" />;
+    }
+  };
+
+  const getPaymentLabel = (method: string) => {
+    switch(method) {
+      case 'pix': return 'PIX';
+      case 'card': return 'Cartão (Entrega)';
+      case 'cash': return 'Dinheiro';
+      default: return 'Não informado';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
@@ -154,6 +175,11 @@ export default function AdminOrdersPage() {
           <Link href="/admin/finance">
             <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
               <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
+            </Button>
+          </Link>
+          <Link href="/admin/payments">
+            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+              <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
             </Button>
           </Link>
           <Link href="/admin/banners">
@@ -216,6 +242,10 @@ export default function AdminOrdersPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-2xl font-black text-primary">R$ {order.totalAmount.toFixed(2)}</p>
+                        <div className="flex items-center justify-end gap-1.5 mt-1">
+                          {getPaymentIcon(order.paymentMethod)}
+                          <span className="text-[10px] font-black uppercase text-muted-foreground">{getPaymentLabel(order.paymentMethod)}</span>
+                        </div>
                       </div>
                     </div>
 
@@ -236,6 +266,12 @@ export default function AdminOrdersPage() {
                         </p>
                       </div>
                     </div>
+                    {order.paymentDetails && (
+                      <div className="p-3 bg-muted/20 rounded-xl border-2 border-dashed border-primary/10">
+                        <p className="text-[9px] font-black uppercase text-muted-foreground tracking-widest mb-1">Observação de Pagamento</p>
+                        <p className="text-sm font-bold text-primary italic">{order.paymentDetails}</p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="bg-muted/30 p-6 w-full md:w-80 border-t md:border-t-0 md:border-l space-y-4">
@@ -340,6 +376,11 @@ export default function AdminOrdersPage() {
             <DropdownMenuItem asChild>
               <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
                 <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black">
+                <CreditCard className="mr-2 h-4 w-4 text-green-600" /> Pagamentos
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

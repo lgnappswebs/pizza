@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Trash2, Send, MapPin, User, Phone, Loader2, CheckCircle2, ArrowLeft, AlertCircle, QrCode, CreditCard, Banknote } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase, useUser, useDoc } from '@/firebase';
@@ -32,7 +33,9 @@ export default function CheckoutPage() {
     address: '',
     complement: '',
     neighborhood: '',
-    phone: ''
+    phone: '',
+    paymentMethod: '',
+    cashChange: ''
   });
 
   const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
@@ -40,13 +43,14 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (userProfile) {
-      setForm({
+      setForm(prev => ({
+        ...prev,
         name: userProfile.name || '',
         address: `${userProfile.address || ''}${userProfile.number ? `, ${userProfile.number}` : ''}`,
         complement: userProfile.complement || '',
         neighborhood: userProfile.neighborhood || '',
         phone: userProfile.phone || ''
-      });
+      }));
     }
   }, [userProfile]);
 
@@ -58,11 +62,11 @@ export default function CheckoutPage() {
   const deliveryFee = config?.deliveryFee || 0;
 
   const handleSendToWhatsApp = async () => {
-    if (!form.name || !form.address || !form.neighborhood || !form.phone) {
+    if (!form.name || !form.address || !form.neighborhood || !form.phone || !form.paymentMethod) {
       toast({
         variant: "destructive",
         title: "Atenção",
-        description: "Por favor, preencha todos os campos obrigatórios para finalizar seu pedido."
+        description: "Por favor, preencha todos os campos obrigatórios e escolha uma forma de pagamento."
       });
       return;
     }
@@ -71,6 +75,16 @@ export default function CheckoutPage() {
     
     try {
       const orderId = doc(collection(firestore, 'pedidos')).id;
+      
+      let paymentDetails = '';
+      if (form.paymentMethod === 'cash' && form.cashChange) {
+        paymentDetails = `Troco para R$ ${form.cashChange}`;
+      } else if (form.paymentMethod === 'pix') {
+        paymentDetails = 'Pagamento via PIX';
+      } else if (form.paymentMethod === 'card') {
+        paymentDetails = 'Pagamento em Cartão na Entrega';
+      }
+
       const orderData = {
         id: orderId,
         customerName: form.name,
@@ -79,14 +93,16 @@ export default function CheckoutPage() {
         createdAt: serverTimestamp(),
         totalAmount: total + deliveryFee,
         status: 'New',
-        userId: user?.uid || null
+        userId: user?.uid || null,
+        paymentMethod: form.paymentMethod,
+        paymentDetails: paymentDetails
       };
 
       addDocumentNonBlocking(collection(firestore, 'pedidos'), orderData);
       
       addDocumentNonBlocking(collection(firestore, 'notificacoes'), {
         title: `Novo Pedido #${orderId.slice(-4).toUpperCase()}`,
-        message: `Cliente ${form.name} acabou de pedir R$ ${(total + deliveryFee).toFixed(2)}.`,
+        message: `Cliente ${form.name} acabou de pedir R$ ${(total + deliveryFee).toFixed(2)}. Pagamento: ${form.paymentMethod}.`,
         createdAt: serverTimestamp(),
         isRead: false,
         orderId: orderId
@@ -117,7 +133,10 @@ export default function CheckoutPage() {
 
       message += `%0A*Subtotal:* R$ ${total.toFixed(2)}`;
       message += `%0A*Taxa de Entrega:* R$ ${deliveryFee.toFixed(2)}`;
-      message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A%0A`;
+      message += `%0A*TOTAL: R$ ${(total + deliveryFee).toFixed(2)}*%0A`;
+      message += `%0A*FORMA DE PAGAMENTO:* ${form.paymentMethod === 'pix' ? 'PIX' : form.paymentMethod === 'card' ? 'Cartão na Entrega' : 'Dinheiro'}`;
+      if (paymentDetails) message += `%0A*DETALHES:* ${paymentDetails}`;
+      message += `%0A%0A_Aguardando confirmação da loja._`;
 
       const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${message}`;
       
@@ -411,6 +430,109 @@ export default function CheckoutPage() {
                     </div>
                   </>
                 )}
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white overflow-hidden">
+              <CardHeader className="py-6 px-8 border-b bg-muted/30">
+                <CardTitle className="text-2xl md:text-3xl font-black text-black">Forma de Pagamento</CardTitle>
+              </CardHeader>
+              <CardContent className="p-8 space-y-8">
+                <RadioGroup 
+                  value={form.paymentMethod} 
+                  onValueChange={(v) => setForm({...form, paymentMethod: v})}
+                  className="grid grid-cols-1 gap-4"
+                >
+                  {config?.pixEnabled && (
+                    <div className="flex flex-col">
+                      <RadioGroupItem value="pix" id="pay-pix" className="sr-only" />
+                      <Label 
+                        htmlFor="pay-pix" 
+                        className={cn(
+                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
+                          form.paymentMethod === 'pix' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
+                        )}
+                      >
+                        <div className="h-12 w-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                          <QrCode className="h-7 w-7" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xl font-black text-black">PIX</p>
+                          <p className="text-sm text-muted-foreground font-medium">Pagamento instantâneo</p>
+                        </div>
+                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'pix' ? "border-primary" : "border-muted")}>
+                          {form.paymentMethod === 'pix' && <div className="h-3 w-3 rounded-full bg-primary" />}
+                        </div>
+                      </Label>
+                      {form.paymentMethod === 'pix' && config.pixKey && (
+                        <div className="mt-3 p-4 bg-emerald-50 rounded-xl border-2 border-dashed border-emerald-200 animate-in slide-in-from-top-2">
+                          <p className="text-[10px] font-black uppercase text-emerald-700 tracking-widest mb-1">Minha Chave PIX:</p>
+                          <p className="text-lg font-black text-emerald-900 break-all">{config.pixKey}</p>
+                          <p className="text-[10px] text-emerald-600 mt-2 italic">*Você pode pagar agora ou após o entregador chegar.</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {config?.cardOnDeliveryEnabled && (
+                    <div>
+                      <RadioGroupItem value="card" id="pay-card" className="sr-only" />
+                      <Label 
+                        htmlFor="pay-card" 
+                        className={cn(
+                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
+                          form.paymentMethod === 'card' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
+                        )}
+                      >
+                        <div className="h-12 w-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                          <CreditCard className="h-7 w-7" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xl font-black text-black">Cartão na Entrega</p>
+                          <p className="text-sm text-muted-foreground font-medium">Débito ou Crédito</p>
+                        </div>
+                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'card' ? "border-primary" : "border-muted")}>
+                          {form.paymentMethod === 'card' && <div className="h-3 w-3 rounded-full bg-primary" />}
+                        </div>
+                      </Label>
+                    </div>
+                  )}
+
+                  {config?.cashOnDeliveryEnabled && (
+                    <div className="flex flex-col">
+                      <RadioGroupItem value="cash" id="pay-cash" className="sr-only" />
+                      <Label 
+                        htmlFor="pay-cash" 
+                        className={cn(
+                          "flex items-center gap-4 p-6 rounded-2xl border-2 cursor-pointer transition-all",
+                          form.paymentMethod === 'cash' ? "border-primary bg-primary/5 ring-2 ring-primary/20" : "border-muted hover:bg-muted/50"
+                        )}
+                      >
+                        <div className="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600 shrink-0">
+                          <Banknote className="h-7 w-7" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xl font-black text-black">Dinheiro vivo</p>
+                          <p className="text-sm text-muted-foreground font-medium">Pagamento na entrega</p>
+                        </div>
+                        <div className={cn("h-6 w-6 rounded-full border-2 flex items-center justify-center", form.paymentMethod === 'cash' ? "border-primary" : "border-muted")}>
+                          {form.paymentMethod === 'cash' && <div className="h-3 w-3 rounded-full bg-primary" />}
+                        </div>
+                      </Label>
+                      {form.paymentMethod === 'cash' && (
+                        <div className="mt-3 space-y-2 animate-in slide-in-from-top-2">
+                          <Label className="text-sm font-bold text-black">Precisa de troco?</Label>
+                          <Input 
+                            placeholder="Troco para quanto? (Ex: 50,00)" 
+                            value={form.cashChange}
+                            onChange={(e) => setForm({...form, cashChange: e.target.value})}
+                            className="rounded-xl h-12 border-2 text-black bg-white"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </RadioGroup>
 
                 <Button 
                   onClick={handleSendToWhatsApp}
@@ -436,6 +558,7 @@ export default function CheckoutPage() {
             </Card>
           </div>
         </div>
-      </main>
-    );
+      )}
+    </main>
+  );
 }

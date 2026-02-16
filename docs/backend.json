@@ -110,7 +110,9 @@
         "status": {
           "type": "string",
           "enum": ["New", "Preparing", "Out for Delivery", "Delivered"]
-        }
+        },
+        "paymentMethod": { "type": "string" },
+        "paymentDetails": { "type": "string" }
       },
       "required": [
         "customerName",
@@ -194,7 +196,11 @@
         "contactEmail": { "type": "string" },
         "instagramUrl": { "type": "string" },
         "facebookUrl": { "type": "string" },
-        "tiktokUrl": { "type": "string" }
+        "tiktokUrl": { "type": "string" },
+        "pixEnabled": { "type": "boolean" },
+        "pixKey": { "type": "string" },
+        "cardOnDeliveryEnabled": { "type": "boolean" },
+        "cashOnDeliveryEnabled": { "type": "boolean" }
       }
     },
     "Notification": {
