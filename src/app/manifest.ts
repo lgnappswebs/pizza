@@ -1,4 +1,3 @@
-
 import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
@@ -12,12 +11,12 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#FF4136',
     icons: [
       {
-        src: 'https://picsum.photos/seed/pizzapp-logo/192/192',
+        src: '/icons/icon-192.png',
         sizes: '192x192',
         type: 'image/png',
       },
       {
-        src: 'https://picsum.photos/seed/pizzapp-logo/512/512',
+        src: '/icons/icon-512.png',
         sizes: '512x512',
         type: 'image/png',
       },

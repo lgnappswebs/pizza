@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -206,6 +205,7 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
+        {/* Prioridade de Entrega/Retirada no Topo */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">
@@ -306,27 +306,27 @@ export default function CheckoutPage() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label className="font-bold">Seu Nome</Label>
-                    <Input placeholder="Como devemos te chamar?" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-2xl border-2" />
+                    <Input placeholder="Como devemos te chamar?" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-2xl border-2 bg-white" />
                   </div>
                   <div className="space-y-2">
                     <Label className="font-bold">Seu WhatsApp</Label>
-                    <Input placeholder="(00) 00000-0000" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-2xl border-2" />
+                    <Input placeholder="(00) 00000-0000" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-2xl border-2 bg-white" />
                   </div>
                   
                   {form.deliveryType === 'delivery' && (
                     <div className="space-y-4 animate-in fade-in">
                       <div className="space-y-2">
                         <Label className="font-bold">Endereço Completo</Label>
-                        <Input placeholder="Rua e Número" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-2xl border-2" />
+                        <Input placeholder="Rua e Número" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-2xl border-2 bg-white" />
                       </div>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="font-bold">Bairro</Label>
-                          <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-2xl border-2" />
+                          <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-2xl border-2 bg-white" />
                         </div>
                         <div className="space-y-2">
                           <Label className="font-bold">Complemento</Label>
-                          <Input placeholder="Ap, Bloco..." value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-2xl border-2" />
+                          <Input placeholder="Ap, Bloco..." value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-2xl border-2 bg-white" />
                         </div>
                       </div>
                     </div>
