@@ -175,28 +175,52 @@ export default function CheckoutPage() {
             <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8 space-y-6">
               <h3 className="text-2xl font-black">Dados de Entrega</h3>
               <div className="space-y-4">
-                <Input placeholder="Nome Completo" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-xl border-2" />
-                <Input placeholder="WhatsApp" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-xl border-2" />
-                <Input placeholder="Endereço" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-xl border-2" />
+                <Input placeholder="Nome Completo" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-xl border-2 bg-white" />
+                <Input placeholder="WhatsApp" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-xl border-2 bg-white" />
+                <Input placeholder="Endereço" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-xl border-2 bg-white" />
                 <div className="grid grid-cols-2 gap-4">
-                  <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-xl border-2" />
-                  <Input placeholder="Complemento" value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-xl border-2" />
+                  <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-xl border-2 bg-white" />
+                  <Input placeholder="Complemento" value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-xl border-2 bg-white" />
                 </div>
               </div>
               <h3 className="text-2xl font-black pt-4">Pagamento</h3>
               <RadioGroup value={form.paymentMethod} onValueChange={(v) => setForm({...form, paymentMethod: v})} className="grid gap-4">
-                {config?.pixEnabled && <Label htmlFor="p-pix" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'pix' && "border-primary bg-primary/5")}>
+                {config?.pixEnabled && <Label htmlFor="p-pix" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'pix' ? "border-primary bg-primary/5" : "border-muted bg-white")}>
                   <RadioGroupItem value="pix" id="p-pix" className="sr-only" /><QrCode className="text-emerald-600" /> PIX
                 </Label>}
-                {config?.cardOnDeliveryEnabled && <Label htmlFor="p-card" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'card' && "border-primary bg-primary/5")}>
-                  <RadioGroupItem value="card" id="p-card" className="sr-only" /><CreditCard className="text-blue-600" /> Cartão
+                {config?.cardOnDeliveryEnabled && <Label htmlFor="p-card" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'card' ? "border-primary bg-primary/5" : "border-muted bg-white")}>
+                  <RadioGroupItem value="card" id="p-card" className="sr-only" /><CreditCard className="text-blue-600" /> Cartão na Entrega
                 </Label>}
-                {config?.cashOnDeliveryEnabled && <Label htmlFor="p-cash" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'cash' && "border-primary bg-primary/5")}>
+                {config?.cashOnDeliveryEnabled && <Label htmlFor="p-cash" className={cn("flex items-center gap-4 p-4 border-2 rounded-xl cursor-pointer", form.paymentMethod === 'cash' ? "border-primary bg-primary/5" : "border-muted bg-white")}>
                   <RadioGroupItem value="cash" id="p-cash" className="sr-only" /><Banknote className="text-green-600" /> Dinheiro
                 </Label>}
               </RadioGroup>
+
+              {form.paymentMethod === 'pix' && config?.pixKey && (
+                <div className="p-4 bg-emerald-50 border-2 border-emerald-200 rounded-2xl space-y-3 animate-in fade-in">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-black uppercase text-emerald-700 tracking-widest">Pague via PIX</span>
+                    <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-bold">{config.pixKeyType}</Badge>
+                  </div>
+                  <div className="flex gap-2 items-center">
+                    <Input readOnly value={config.pixKey} className="h-12 bg-white border-2 border-emerald-100 font-black text-emerald-900 rounded-xl" />
+                    <Button onClick={handleCopyPix} size="icon" className="h-12 w-12 rounded-xl bg-emerald-600 hover:bg-emerald-700 shrink-0">
+                      {copied ? <Check className="h-5 w-5 text-white" /> : <Copy className="h-5 w-5 text-white" />}
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-emerald-600 font-medium">Copie a chave e pague no app do seu banco. Após o pagamento, envie o pedido pelo botão abaixo.</p>
+                </div>
+              )}
+
+              {form.paymentMethod === 'cash' && (
+                <div className="p-4 bg-amber-50 border-2 border-amber-200 rounded-2xl space-y-2 animate-in fade-in">
+                  <Label htmlFor="change" className="text-sm font-bold text-amber-800">Troco para quanto?</Label>
+                  <Input id="change" placeholder="Ex: R$ 100,00" value={form.cashChange} onChange={(e) => setForm({...form, cashChange: e.target.value})} className="h-12 bg-white border-2 border-amber-100 font-bold rounded-xl" />
+                </div>
+              )}
+
               <Button onClick={handleSendToWhatsApp} disabled={loading || !config?.isStoreOpen} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-2xl mt-6">
-                {loading ? <Loader2 className="animate-spin" /> : "Finalizar e Enviar"}
+                {loading ? <Loader2 className="animate-spin h-8 w-8" /> : "Finalizar e Enviar"}
               </Button>
             </Card>
           </div>

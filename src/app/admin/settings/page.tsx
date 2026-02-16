@@ -185,13 +185,11 @@ export default function AdminSettingsPage() {
       addDocumentNonBlocking(collection(firestore, 'configuracoes'), data);
     }
 
-    setTimeout(() => {
-      setLoading(false);
-      toast({
-        title: "Configurações Salvas",
-        description: "As alterações foram aplicadas com sucesso."
-      });
-    }, 1000);
+    setLoading(false);
+    toast({
+      title: "Configurações Salvas",
+      description: "As alterações foram aplicadas com sucesso."
+    });
   };
 
   const handleFileChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -280,6 +278,7 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-8 pb-20">
+          {/* Configurações Gerais */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -372,6 +371,7 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
+          {/* Status da Loja */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-yellow-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -393,7 +393,7 @@ export default function AdminSettingsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="hours" className="text-lg font-bold text-black">Horário de Funcionamento</Label>
+                <Label htmlFor="hours" className="text-lg font-bold text-black">Horário de Funcionamento (Texto)</Label>
                 <Input 
                   id="hours" 
                   placeholder="Ex: Aberto das 18h às 23h30"
@@ -401,6 +401,175 @@ export default function AdminSettingsPage() {
                   onChange={(e) => setForm({...form, openingHoursText: e.target.value})}
                   className="rounded-xl h-14 border-2 text-lg text-black bg-white"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="closedMsg" className="text-lg font-bold text-black">Mensagem de Loja Fechada</Label>
+                <Input 
+                  id="closedMsg" 
+                  placeholder="Ex: Estamos fechados agora. Volte em breve!"
+                  value={form.closedMessage} 
+                  onChange={(e) => setForm({...form, closedMessage: e.target.value})}
+                  className="rounded-xl h-14 border-2 text-lg text-black bg-white"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Textos do Cardápio */}
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
+                <Type className="h-7 w-7 text-primary" /> Textos do Cardápio
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="menuTitle" className="text-lg font-bold text-black">Título Principal</Label>
+                <Input id="menuTitle" value={form.menuTitle} onChange={(e) => setForm({...form, menuTitle: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="menuSubtitle" className="text-lg font-bold text-black">Subtítulo</Label>
+                <Input id="menuSubtitle" value={form.menuSubtitle} onChange={(e) => setForm({...form, menuSubtitle: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Hero Banner */}
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
+                <ImageIcon className="h-7 w-7 text-primary" /> Banner de Boas-Vindas (Hero)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="heroText" className="text-lg font-bold text-black">Texto do Banner</Label>
+                <Input id="heroText" value={form.heroBannerText} onChange={(e) => setForm({...form, heroBannerText: e.target.value})} className="rounded-xl h-14 border-2 text-lg text-black bg-white" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="heroImage" className="text-lg font-bold text-black">Imagem de Fundo (URL)</Label>
+                <div className="flex gap-2">
+                  <Input id="heroImage" value={form.heroBannerImageUrl} onChange={(e) => setForm({...form, heroBannerImageUrl: e.target.value})} className="rounded-xl h-14 flex-1 border-2 text-lg text-black bg-white" />
+                  <Button variant="outline" className="h-14 rounded-xl border-2 px-6" onClick={() => document.getElementById('hero-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
+                  <input id="hero-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange('heroBannerImageUrl')} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Aparência e Cores */}
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
+                <Palette className="h-7 w-7 text-primary" /> Aparência e Cores
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label className="font-bold">Cor Primária</Label>
+                  <div className="flex gap-2 items-center">
+                    <input type="color" value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="h-12 w-12 rounded-lg cursor-pointer border-2" />
+                    <Input value={form.primaryColor} onChange={(e) => setForm({...form, primaryColor: e.target.value})} className="h-12 rounded-xl border-2" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-bold">Cor Secundária</Label>
+                  <div className="flex gap-2 items-center">
+                    <input type="color" value={form.secondaryColor} onChange={(e) => setForm({...form, secondaryColor: e.target.value})} className="h-12 w-12 rounded-lg cursor-pointer border-2" />
+                    <Input value={form.secondaryColor} onChange={(e) => setForm({...form, secondaryColor: e.target.value})} className="h-12 rounded-xl border-2" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-bold">Cor de Fundo</Label>
+                  <div className="flex gap-2 items-center">
+                    <input type="color" value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="h-12 w-12 rounded-lg cursor-pointer border-2" />
+                    <Input value={form.backgroundColor} onChange={(e) => setForm({...form, backgroundColor: e.target.value})} className="h-12 rounded-xl border-2" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4 border-t pt-6">
+                <Label className="text-lg font-bold">Estilo de Fundo do Aplicativo</Label>
+                <RadioGroup value={form.appBackgroundType} onValueChange={(v) => setForm({...form, appBackgroundType: v})} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Label htmlFor="bg-pattern" className={`flex flex-col items-center justify-center p-6 border-2 rounded-2xl cursor-pointer transition-all ${form.appBackgroundType === 'pattern' ? 'border-primary bg-primary/5' : 'border-muted hover:border-primary/50'}`}>
+                    <RadioGroupItem value="pattern" id="bg-pattern" className="sr-only" />
+                    <PizzaIcon className="h-8 w-8 mb-2 text-primary" />
+                    <span className="font-bold">Padrão de Ícones</span>
+                  </Label>
+                  <Label htmlFor="bg-color" className={`flex flex-col items-center justify-center p-6 border-2 rounded-2xl cursor-pointer transition-all ${form.appBackgroundType === 'color' ? 'border-primary bg-primary/5' : 'border-muted hover:border-primary/50'}`}>
+                    <RadioGroupItem value="color" id="bg-color" className="sr-only" />
+                    <Palette className="h-8 w-8 mb-2 text-blue-500" />
+                    <span className="font-bold">Cor Sólida</span>
+                  </Label>
+                  <Label htmlFor="bg-image" className={`flex flex-col items-center justify-center p-6 border-2 rounded-2xl cursor-pointer transition-all ${form.appBackgroundType === 'image' ? 'border-primary bg-primary/5' : 'border-muted hover:border-primary/50'}`}>
+                    <RadioGroupItem value="image" id="bg-image" className="sr-only" />
+                    <ImageIcon className="h-8 w-8 mb-2 text-emerald-500" />
+                    <span className="font-bold">Imagem Personalizada</span>
+                  </Label>
+                </RadioGroup>
+              </div>
+
+              {form.appBackgroundType === 'image' && (
+                <div className="space-y-2 animate-in fade-in">
+                  <Label className="font-bold">URL da Imagem de Fundo</Label>
+                  <Input value={form.appBackgroundImageUrl} onChange={(e) => setForm({...form, appBackgroundImageUrl: e.target.value})} className="h-14 rounded-xl border-2" placeholder="https://imagem.com/fundo.jpg" />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Contato e Endereço */}
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
+                <MapPin className="h-7 w-7 text-primary" /> Contato e Endereço
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="address" className="text-lg font-bold text-black">Endereço Completo</Label>
+                <Input id="address" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-xl border-2 text-lg text-black bg-white" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="contactPhone" className="text-lg font-bold text-black">Telefone de Contato</Label>
+                  <Input id="contactPhone" value={form.contactPhone} onChange={(e) => setForm({...form, contactPhone: handlePhoneMask(e.target.value)})} className="h-14 rounded-xl border-2 text-lg text-black bg-white" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contactEmail" className="text-lg font-bold text-black">E-mail de Contato</Label>
+                  <Input id="contactEmail" type="email" value={form.contactEmail} onChange={(e) => setForm({...form, contactEmail: e.target.value})} className="h-14 rounded-xl border-2 text-lg text-black bg-white" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="autoMsg" className="text-lg font-bold text-black">Mensagem Automática WhatsApp</Label>
+                <Textarea id="autoMsg" value={form.whatsappAutoMessage} onChange={(e) => setForm({...form, whatsappAutoMessage: e.target.value})} className="rounded-xl border-2 min-h-[100px]" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Redes Sociais */}
+          <Card className="rounded-3xl border-2 shadow-sm bg-white">
+            <CardHeader className="bg-primary/5 border-b px-8 py-6">
+              <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
+                <MessageSquare className="h-7 w-7 text-primary" /> Redes Sociais
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 bg-pink-100 rounded-xl flex items-center justify-center text-pink-600"><Instagram className="h-6 w-6" /></div>
+                  <Input placeholder="URL do Instagram" value={form.instagramUrl} onChange={(e) => setForm({...form, instagramUrl: e.target.value})} className="h-14 rounded-xl border-2" />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600"><Facebook className="h-6 w-6" /></div>
+                  <Input placeholder="URL do Facebook" value={form.facebookUrl} onChange={(e) => setForm({...form, facebookUrl: e.target.value})} className="h-14 rounded-xl border-2" />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 bg-black/10 rounded-xl flex items-center justify-center text-black"><Music2 className="h-6 w-6" /></div>
+                  <Input placeholder="URL do TikTok" value={form.tiktokUrl} onChange={(e) => setForm({...form, tiktokUrl: e.target.value})} className="h-14 rounded-xl border-2" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -412,7 +581,7 @@ export default function AdminSettingsPage() {
               className="w-full h-20 rounded-full text-2xl font-black bg-primary shadow-2xl shadow-primary/40 transform transition hover:scale-[1.02] active:scale-95 text-white"
             >
               {loading ? <Loader2 className="h-8 w-8 animate-spin mr-3" /> : <Save className="mr-3 h-8 w-8" />}
-              Salvar Alterações
+              Salvar Configurações
             </Button>
           </div>
         </div>

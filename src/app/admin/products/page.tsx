@@ -20,7 +20,8 @@ import {
   ArrowLeft,
   Percent,
   X,
-  CreditCard
+  CreditCard,
+  ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -136,14 +137,14 @@ export default function AdminProductsPage() {
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 border-b"><h2 className="text-2xl font-black text-primary truncate">{config?.restaurantName || "PizzApp"} Admin</h2></div>
         <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
+          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
           <Link href="/admin/products"><Button variant="secondary" className="w-full justify-start rounded-xl font-bold h-12 text-black"><PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos</Button></Link>
-          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
-          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
-          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
-          <Link href="/admin/payments"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
-          <Link href="/admin/banners"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
-          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar</Button></Link>
+          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
+          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
+          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
+          <Link href="/admin/payments"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
+          <Link href="/admin/banners"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
+          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar</Button></Link>
         </nav>
         <div className="p-4 border-t"><Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive rounded-xl font-bold h-12"><LogOut className="mr-3 h-5 w-5" /> Sair</Button></div>
       </aside>
@@ -157,7 +158,7 @@ export default function AdminProductsPage() {
           <CardHeader className="p-4 border-b">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input placeholder="Buscar produto..." className="pl-12 h-12 rounded-xl border-2 text-black" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <Input placeholder="Buscar produto..." className="pl-12 h-12 rounded-xl border-2 text-black bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
           </CardHeader>
           <CardContent className="p-4">
@@ -178,34 +179,54 @@ export default function AdminProductsPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl border-2 max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl border-2 max-h-[90vh] overflow-y-auto bg-white">
             <DialogHeader className="pt-10"><DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingProduct ? 'Editar' : 'Novo'} Produto</DialogTitle></DialogHeader>
             <div className="grid gap-6 py-4">
-              <div className="grid gap-2"><Label className="font-bold">Nome</Label><Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="h-12 border-2 rounded-xl text-black" /></div>
-              <div className="grid gap-2"><Label className="font-bold">Descrição</Label><Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="h-12 border-2 rounded-xl text-black" /></div>
+              <div className="grid gap-2"><Label className="font-bold">Nome</Label><Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
+              <div className="grid gap-2"><Label className="font-bold">Descrição</Label><Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
               <div className="grid gap-2">
                 <Label className="font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="h-12 border-2 rounded-xl text-black"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione" /></SelectTrigger>
                   <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl" onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}>
-                <Label className="font-bold">Vários Tamanhos?</Label><Switch checked={formData.hasMultipleSizes} />
+              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}>
+                <Label className="font-bold cursor-pointer">Vários Tamanhos?</Label><Switch checked={formData.hasMultipleSizes} className="pointer-events-none" />
               </div>
-              {!formData.hasMultipleSizes ? <Input placeholder="Preço" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="h-12 border-2 rounded-xl text-black" /> : (
-                <div className="grid gap-2">{['Small', 'Medium', 'Large'].map(s => <Input key={s} placeholder={`Preço ${s}`} value={(formData as any)[`price${s}`]} onChange={(e) => setFormData({...formData, [`price${s}`]: e.target.value})} className="h-12 border-2 rounded-xl text-black" />)}</div>
+              {!formData.hasMultipleSizes ? (
+                <div className="grid gap-2"><Label className="font-bold">Preço Único (R$)</Label><Input placeholder="0,00" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
+              ) : (
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="space-y-1"><Label className="text-xs font-bold">P (R$)</Label><Input value={formData.priceSmall} onChange={(e) => setFormData({...formData, priceSmall: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-bold">M (R$)</Label><Input value={formData.priceMedium} onChange={(e) => setFormData({...formData, priceMedium: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-bold">G (R$)</Label><Input value={formData.priceLarge} onChange={(e) => setFormData({...formData, priceLarge: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
+                </div>
               )}
               <div className="grid gap-2">
                 <Label className="font-bold">URL da Imagem</Label>
-                <div className="flex gap-2"><Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="h-12 border-2 rounded-xl text-black" /></div>
+                <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" />
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl" onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}>
-                <Label className="font-bold">Disponível?</Label><Switch checked={formData.isAvailable} />
+              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}>
+                <Label className="font-bold cursor-pointer">Disponível?</Label><Switch checked={formData.isAvailable} className="pointer-events-none" />
               </div>
-              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl" onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}>
-                <Label className="font-bold">Promoção?</Label><Switch checked={formData.isPromotion} />
+              <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}>
+                <Label className="font-bold cursor-pointer">Promoção?</Label><Switch checked={formData.isPromotion} className="pointer-events-none" />
               </div>
+              {formData.isPromotion && (
+                <div className="grid gap-2 animate-in fade-in">
+                  <Label className="font-bold">Tamanho em Promoção</Label>
+                  <Select value={formData.promotionSize} onValueChange={(v) => setFormData({...formData, promotionSize: v})}>
+                    <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="all" className="text-black">Todos os tamanhos</SelectItem>
+                      <SelectItem value="small" className="text-black">Apenas P (Broto)</SelectItem>
+                      <SelectItem value="medium" className="text-black">Apenas M (Média)</SelectItem>
+                      <SelectItem value="large" className="text-black">Apenas G (Grande)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
             </div>
             <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white">Salvar Produto</Button></DialogFooter>
           </DialogContent>
