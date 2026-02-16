@@ -92,7 +92,6 @@ export default function CheckoutPage() {
   };
 
   const handleSendToWhatsApp = async () => {
-    // Validação básica
     if (!form.name || !form.phone || !form.paymentMethod) {
       toast({ variant: "destructive", title: "Atenção", description: "Preencha seu nome, telefone e forma de pagamento." });
       return;

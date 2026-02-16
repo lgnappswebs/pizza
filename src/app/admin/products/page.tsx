@@ -115,19 +115,30 @@ export default function AdminProductsPage() {
     if (product) {
       setEditingProduct(product);
       setFormData({
-        name: product.name, description: product.description, price: product.price.toString().replace('.', ','),
-        categoryId: product.categoryId, imageUrl: product.imageUrl, isAvailable: product.isAvailable,
+        name: product.name, description: product.description, price: (product.price || 0).toString().replace('.', ','),
+        categoryId: product.categoryId, imageUrl: product.imageUrl, isAvailable: product.isAvailable ?? true,
         isPromotion: product.isPromotion || false, promotionSize: product.promotionSize || 'all',
         hasMultipleSizes: product.hasMultipleSizes || false,
         priceSmall: product.priceSmall?.toString().replace('.', ',') || '',
         priceMedium: product.priceMedium?.toString().replace('.', ',') || '',
-        priceLarge: product.priceLarge?.toString().replace('.', ',') || ' '
+        priceLarge: product.priceLarge?.toString().replace('.', ',') || ''
       });
     } else {
       setEditingProduct(null);
       setFormData({ name: '', description: '', price: '', categoryId: '', imageUrl: '', isAvailable: true, isPromotion: false, promotionSize: 'all', hasMultipleSizes: false, priceSmall: '', priceMedium: '', priceLarge: '' });
     }
     setIsDialogOpen(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, imageUrl: reader.result as string });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   if (isUserLoading || !user) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -170,7 +181,10 @@ export default function AdminProductsPage() {
                       <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
                       <div className="min-w-0"><h3 className="font-black truncate text-primary">{product.name}</h3><p className="text-xs text-muted-foreground truncate">{product.description}</p></div>
                     </div>
-                    <div className="flex gap-2"><Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2"><Edit2 className="h-4 w-4" /></Button><Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive"><Trash2 className="h-4 w-4" /></Button></div>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2"><Edit2 className="h-4 w-4" /></Button>
+                      <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -180,38 +194,49 @@ export default function AdminProductsPage() {
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[500px] rounded-3xl border-2 max-h-[90vh] overflow-y-auto bg-white">
-            <DialogHeader className="pt-10"><DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingProduct ? 'Editar' : 'Novo'} Produto</DialogTitle></DialogHeader>
+            <DialogHeader className="pt-10">
+              <DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingProduct ? 'Editar' : 'Novo'} Produto</DialogTitle>
+            </DialogHeader>
             <div className="grid gap-6 py-4">
-              <div className="grid gap-2"><Label className="font-bold">Nome</Label><Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
-              <div className="grid gap-2"><Label className="font-bold">Descrição</Label><Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
+              <div className="grid gap-2"><Label className="font-bold">Nome do Produto</Label><Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" placeholder="Ex: Pizza de Calabresa" /></div>
+              <div className="grid gap-2"><Label className="font-bold">Descrição / Ingredientes</Label><Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" placeholder="Ex: Molho, mussarela, calabresa..." /></div>
               <div className="grid gap-2">
                 <Label className="font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
                   <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}>
-                <Label className="font-bold cursor-pointer">Vários Tamanhos?</Label><Switch checked={formData.hasMultipleSizes} className="pointer-events-none" />
+                <div className="space-y-0.5">
+                  <Label className="font-bold cursor-pointer">Múltiplos Tamanhos?</Label>
+                  <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
+                </div>
+                <Switch checked={formData.hasMultipleSizes} className="pointer-events-none" />
               </div>
               {!formData.hasMultipleSizes ? (
-                <div className="grid gap-2"><Label className="font-bold">Preço Único (R$)</Label><Input placeholder="0,00" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" /></div>
+                <div className="grid gap-2"><Label className="font-bold">Preço Único (R$)</Label><div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-muted-foreground">R$</span><Input placeholder="0,00" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="h-12 pl-10 border-2 rounded-xl text-black bg-white" /></div></div>
               ) : (
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="space-y-1"><Label className="text-xs font-bold">P (R$)</Label><Input value={formData.priceSmall} onChange={(e) => setFormData({...formData, priceSmall: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-bold">M (R$)</Label><Input value={formData.priceMedium} onChange={(e) => setFormData({...formData, priceMedium: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-bold">G (R$)</Label><Input value={formData.priceLarge} onChange={(e) => setFormData({...formData, priceLarge: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-bold">P (R$)</Label><Input value={formData.priceSmall} onChange={(e) => setFormData({...formData, priceSmall: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-bold">M (R$)</Label><Input value={formData.priceMedium} onChange={(e) => setFormData({...formData, priceMedium: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
+                  <div className="space-y-1"><Label className="text-xs font-bold">G (R$)</Label><Input value={formData.priceLarge} onChange={(e) => setFormData({...formData, priceLarge: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
                 </div>
               )}
               <div className="grid gap-2">
-                <Label className="font-bold">URL da Imagem</Label>
-                <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white" />
+                <Label className="font-bold">Imagem do Produto (URL ou Galeria)</Label>
+                <div className="flex gap-2">
+                  <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white flex-1" placeholder="Cole o link da imagem" />
+                  <Button type="button" variant="outline" className="h-12 w-12 rounded-xl border-2 p-0" onClick={() => document.getElementById('file-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
+                  <input id="file-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+                </div>
+                {formData.imageUrl && <div className="mt-2 relative aspect-video rounded-xl overflow-hidden border-2 border-dashed flex items-center justify-center bg-muted/10"><img src={formData.imageUrl} alt="Preview" className="object-contain w-full h-full" /></div>}
               </div>
               <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isAvailable: !formData.isAvailable})}>
-                <Label className="font-bold cursor-pointer">Disponível?</Label><Switch checked={formData.isAvailable} className="pointer-events-none" />
+                <Label className="font-bold cursor-pointer">Disponível na Loja?</Label><Switch checked={formData.isAvailable} className="pointer-events-none" />
               </div>
               <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}>
-                <Label className="font-bold cursor-pointer">Promoção?</Label><Switch checked={formData.isPromotion} className="pointer-events-none" />
+                <Label className="font-bold cursor-pointer">Produto em Promoção?</Label><Switch checked={formData.isPromotion} className="pointer-events-none" />
               </div>
               {formData.isPromotion && (
                 <div className="grid gap-2 animate-in fade-in">
@@ -228,7 +253,7 @@ export default function AdminProductsPage() {
                 </div>
               )}
             </div>
-            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white">Salvar Produto</Button></DialogFooter>
+            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white shadow-lg shadow-primary/20 transform transition active:scale-95">Salvar Produto</Button></DialogFooter>
           </DialogContent>
         </Dialog>
       </main>
