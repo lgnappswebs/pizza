@@ -224,7 +224,7 @@ export default function MenuPage() {
       </main>
       <Footer />
       
-      {/* Botão flutuante do Admin */}
+      {/* Botão flutuante do Admin - Apenas e-mails autorizados */}
       {isAdmin && (
         <div className={cn(
           "fixed z-50 transition-all",

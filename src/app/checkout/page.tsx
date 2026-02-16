@@ -188,7 +188,7 @@ export default function CheckoutPage() {
           <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle2 className="h-16 w-16 text-green-600" /></div>
           <h2 className="text-4xl font-black text-green-700">Pedido Enviado!</h2>
           <p className="text-lg font-medium text-muted-foreground">Seu resumo foi enviado ao WhatsApp. Clique no botão abaixo para voltar ao cardápio.</p>
-          <Button onClick={() => router.push('/menu')} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-xl">FINALIZAR PEDIDO</Button>
+          <Button onClick={() => router.push('/menu')} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-xl">VOLTAR AO CARDÁPIO</Button>
         </Card>
       </main>
     );
@@ -206,6 +206,7 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
+        {/* Opção de Entrega ou Retirada no Topo */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">
