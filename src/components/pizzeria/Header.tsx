@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Pizza as PizzaIconDefault } from 'lucide-react';
+import { ShoppingBasket, User, LogOut, UtensilsCrossed, LogIn, Pizza as PizzaIconDefault, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/cart-store';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -35,6 +35,11 @@ export function Header() {
 
   const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
   const { data: userProfile } = useDoc(userDocRef);
+
+  const isAdmin = useMemo(() => {
+    const adminEmails = ['lgngregorio@icloud.com', 'admin@pizzapp.com'];
+    return user?.email && adminEmails.includes(user.email);
+  }, [user]);
 
   const customerName = useMemo(() => {
     const fullName = userProfile?.name || user?.displayName;
@@ -95,7 +100,7 @@ export function Header() {
           </Link>
         </div>
 
-        {/* Navegação: No desktop à direita, no mobile em linha dedicada abaixo */}
+        {/* Navegação */}
         <nav className="flex items-center justify-center md:justify-end gap-6 md:gap-4 w-full md:w-auto border-t md:border-none border-primary/5 pt-4 md:pt-0">
           <Link href="/menu">
             <Button variant="ghost" size="icon" className="md:hidden h-14 w-14 rounded-full text-primary bg-white/50 border-2 border-primary/10">
@@ -129,6 +134,18 @@ export function Header() {
                   <span className="truncate text-lg font-black text-black">{customerName}</span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                
+                {isAdmin && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/dashboard" className="cursor-pointer flex items-center h-12 rounded-2xl font-bold hover:bg-primary/5 text-primary">
+                        <ShieldCheck className="mr-3 h-5 w-5" /> Painel Admin
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+
                 <DropdownMenuItem asChild>
                   <Link href="/account" className="cursor-pointer flex items-center h-12 rounded-2xl font-bold hover:bg-primary/5 text-black">
                     <User className="mr-3 h-5 w-5 text-primary" /> Minha Conta

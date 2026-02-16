@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -62,7 +63,7 @@ export default function CheckoutPage() {
       setForm(prev => ({
         ...prev,
         name: userProfile.name || '',
-        address: `${userProfile.address || ''}${userProfile.number ? `, ${userProfile.number}` : ''}`,
+        address: userProfile.address ? `${userProfile.address}${userProfile.number ? `, ${userProfile.number}` : ''}` : '',
         complement: userProfile.complement || '',
         neighborhood: userProfile.neighborhood || '',
         phone: userProfile.phone || ''
@@ -157,7 +158,7 @@ export default function CheckoutPage() {
     msg += `%0A*🍕 ITENS DO PEDIDO:*%0A`;
     items.forEach(i => {
       msg += `• ${i.quantity}x ${i.name}%0A`;
-      msg += `  Tam: ${i.size}${i.crust !== 'Tradicional' ? ` | Borda: ${i.crust}` : ''}%0A`;
+      msg += `  Tam: ${i.size}${i.crust && i.crust !== 'Tradicional' ? ` | Borda: ${i.crust}` : ''}%0A`;
       if (i.notes) msg += `  _Obs: ${i.notes}_%0A`;
     });
     msg += `%0A*💰 RESUMO DE VALORES:*%0A`;
@@ -205,7 +206,6 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
-        {/* Prioridade de Entrega/Retirada no Topo */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                         <div className="flex justify-between items-start">
                           <div>
                             <h4 className="font-black truncate text-lg">{item.name}</h4>
-                            <p className="text-xs text-muted-foreground font-bold uppercase">{item.size} • {item.crust}</p>
+                            <p className="text-xs text-muted-foreground font-bold uppercase">{item.size} {item.crust && item.crust !== 'Tradicional' ? `• ${item.crust}` : ''}</p>
                           </div>
                           <span className="font-black text-primary text-lg">R$ {(item.price * item.quantity).toFixed(2)}</span>
                         </div>

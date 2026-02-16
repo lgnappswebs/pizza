@@ -1,0 +1,11 @@
+
+PARA ATIVAR O LOGO NA INSTALAÇÃO DO APLICATIVO:
+
+1. Salve sua logo na pasta "public/icons/" com os seguintes nomes e tamanhos:
+   - icon-192.png (Tamanho: 192x192 pixels)
+   - icon-512.png (Tamanho: 512x512 pixels)
+   - apple-touch-icon.png (Tamanho: 180x180 pixels)
+
+2. Certifique-se de que os arquivos são do tipo PNG transparente ou com fundo sólido.
+
+3. Após carregar as imagens, o aplicativo mostrará automaticamente este ícone quando o cliente clicar em "Adicionar à tela de início" ou "Instalar Aplicativo".
