@@ -33,6 +33,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { cn } from '@/lib/utils';
 
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
