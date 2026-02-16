@@ -1,14 +1,13 @@
 
 # Guia Técnico: Módulo de Gerenciamento de Produtos (PizzApp)
 
-Este documento detalha as regras, permissões e funcionalidades da página de administração de produtos para uso em outros projetos.
+Este documento detalha as regras, permissões e funcionalidades da página de administração de produtos para uso em outros projetos ou replicação de lógica.
 
 ## 1. Tecnologias Utilizadas
 - **Framework:** Next.js 15 (App Router)
 - **Banco de Dados:** Firebase Firestore
-- **Autenticação:** Firebase Auth
-- **Estilização:** Tailwind CSS + ShadCN UI
-- **Ícones:** Lucide React
+- **Autenticação:** Firebase Auth (Client SDK)
+- **Estilização:** Tailwind CSS + ShadCN UI + Lucide Icons
 
 ## 2. Estrutura de Dados (Firestore)
 Coleção principal: `produtos`
@@ -28,17 +27,20 @@ Coleção principal: `produtos`
 | `priceLarge` | number | Preço para tamanho Grande |
 | `promotionSize` | string | Define qual tamanho está em oferta (`all`, `small`, `medium`, `large`) |
 
-## 3. Funcionalidades de Interface (UX)
+## 3. Funcionalidades de Interface (UI/UX)
 
-### Formulários de Edição (Modais)
-- **Centralização:** Títulos centralizados com `pt-10` para melhor respiro visual.
-- **Moldura:** Todos os modais possuem `border-2` e `rounded-3xl` para um visual "Premium".
-- **Pré-visualização de Imagem:** Assim que um link é colado ou um arquivo é enviado, uma miniatura aparece abaixo do campo para validação imediata.
-- **Switches de Ativação:** Toda a área da linha (retângulo) é clicável. Usamos um `onClick` no `div` pai para alternar o estado do `Switch` interno.
+### Formulários Administrativos (Modais)
+- **Centralização Profissional:** Todos os títulos dos formulários são centralizados e possuem um recuo superior (`pt-10`) para melhor respiro visual.
+- **Moldura Premium:** As janelas de diálogo possuem uma borda visível de 2px (`border-2`) e cantos arredondados (`rounded-3xl`).
+- **Pré-visualização de Imagem:** Ao inserir uma URL ou carregar um arquivo, uma miniatura aparece instantaneamente abaixo do campo para validação visual.
+- **Interatividade Inteligente:** Toda a área da linha de um seletor (Switch) é clicável. O usuário pode clicar no texto ou no fundo do retângulo para alternar a opção, não apenas na pequena chave.
 
-### Lógica de Preços
-- **Máscara Monetária:** O input aceita apenas números, converte para centavos internamente e exibe formatado como `R$ 0,00` em tempo real.
-- **Destaque Visual:** No cardápio, os preços de venda são exibidos com `font-black` e tamanhos ampliados. Se houver promoção no tamanho selecionado, o preço original (+25% simulado) aparece riscado.
+### Lógica de Promoções
+- **Seleção de Tamanho:** O administrador pode definir se a promoção vale para o produto todo ou apenas para um tamanho específico.
+- **Exibição Dinâmica:** No cardápio do cliente, o preço riscado (De/Por) só aparece se o tamanho que o cliente selecionou coincidir com o tamanho em promoção definido no admin.
+
+### Máscaras e Formatação
+- **Moeda:** Inputs monetários aceitam apenas números e formatam em tempo real para `R$ 0,00`, convertendo para centavos (`number`) antes de salvar no banco.
 
 ## 4. Regras de Segurança (Firestore Rules)
 
@@ -47,21 +49,20 @@ O acesso é controlado para que apenas administradores autorizados possam modifi
 ```javascript
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Função para validar administradores
     function isAdmin() {
       return request.auth != null && (
-        request.auth.token.email == 'lgngregorio@icloud.com' || 
-        request.auth.token.email == 'admin@pizzapp.com'
+        request.auth.token.email == 'admin@pizzapp.com' ||
+        request.auth.token.email == 'lgngregorio@icloud.com'
       );
     }
 
     match /produtos/{doc} {
-      allow read: if true; // Leitura pública para os clientes
-      allow write: if isAdmin(); // Escrita bloqueada para não-admins
+      allow read: if true; // Cardápio público
+      allow write: if isAdmin(); // Apenas admin altera
     }
   }
 }
 ```
 
 ## 5. Fluxo de Publicação
-As alterações feitas no Admin utilizam funções `non-blocking` (`updateDocumentNonBlocking` e `addDocumentNonBlocking`). Isso significa que a interface do administrador é atualizada instantaneamente no cache local enquanto o Firebase sincroniza os dados em segundo plano, garantindo uma navegação rápida e sem travamentos.
+As alterações utilizam funções `non-blocking` que atualizam o cache local instantaneamente, garantindo que o administrador sinta o aplicativo rápido e responsivo enquanto a sincronização ocorre em segundo plano.
