@@ -190,7 +190,6 @@ export default function CheckoutPage() {
         </div>
       ) : (
         <div className="max-w-5xl mx-auto space-y-10">
-          {/* Seção de Tipo de Recebimento no Topo */}
           <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
             <div className="space-y-6">
               <h3 className="text-2xl font-black flex items-center gap-2">
@@ -232,7 +231,6 @@ export default function CheckoutPage() {
           </Card>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Coluna da Esquerda: Resumo do Pedido */}
             <div className="space-y-8">
               <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
                 <CardHeader className="bg-primary/5 border-b py-6 px-8 flex flex-row items-center justify-between">
@@ -284,7 +282,6 @@ export default function CheckoutPage() {
               </Card>
             </div>
 
-            {/* Coluna da Direita: Dados e Pagamento */}
             <div className="space-y-8">
               <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8 space-y-8">
                 <div className="space-y-6">
@@ -385,7 +382,7 @@ export default function CheckoutPage() {
 
                 <Button 
                   onClick={handleSendToWhatsApp} 
-                  disabled={loading || !config?.isStoreOpen} 
+                  disabled={loading || !config?.isStoreOpen || !form.paymentMethod} 
                   className="w-full h-24 rounded-full bg-primary hover:bg-primary/90 text-white text-2xl font-black shadow-2xl shadow-primary/40 mt-10 transform transition hover:scale-[1.02] active:scale-95 disabled:grayscale"
                 >
                   {loading ? <Loader2 className="animate-spin h-10 w-10" /> : (
