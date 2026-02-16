@@ -23,7 +23,6 @@ import {
   Banknote, 
   Copy, 
   Check,
-  ShoppingBag,
   Truck,
   Store
 } from 'lucide-react';
@@ -146,38 +145,30 @@ export default function CheckoutPage() {
 
     const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
     
-    // Construção da mensagem detalhada para WhatsApp
     let msg = `*🔥 NOVO PEDIDO - ${config?.restaurantName?.toUpperCase() || 'PIZZARIA'}*%0A%0A`;
-    
     msg += `*📍 TIPO DE PEDIDO:*%0A`;
     msg += `${form.deliveryType === 'delivery' ? '🚚 ENTREGA EM CASA' : '🛍️ RETIRADA NA LOJA'}%0A%0A`;
-    
     msg += `*👤 DADOS DO CLIENTE:*%0A`;
     msg += `Nome: ${form.name}%0A`;
     msg += `WhatsApp: ${form.phone}%0A`;
-    
     if (form.deliveryType === 'delivery') {
       msg += `Endereço: ${form.address}%0A`;
       msg += `Bairro: ${form.neighborhood}%0A`;
       if (form.complement) msg += `Complemento: ${form.complement}%0A`;
     }
-    
     msg += `%0A*🍕 ITENS DO PEDIDO:*%0A`;
     items.forEach(i => {
       msg += `• ${i.quantity}x ${i.name}%0A`;
       msg += `  Tam: ${i.size}${i.crust !== 'Tradicional' ? ` | Borda: ${i.crust}` : ''}%0A`;
       if (i.notes) msg += `  _Obs: ${i.notes}_%0A`;
     });
-    
     msg += `%0A*💰 RESUMO DE VALORES:*%0A`;
     msg += `Subtotal: R$ ${subtotal.toFixed(2)}%0A`;
     if (form.deliveryType === 'delivery') msg += `Taxa de Entrega: R$ ${deliveryFee.toFixed(2)}%0A`;
     msg += `*TOTAL: R$ ${total.toFixed(2)}*%0A%0A`;
-    
     msg += `*💳 FORMA DE PAGAMENTO:*%0A`;
     msg += `Método: ${paymentLabel}%0A`;
     if (paymentDetails) msg += `Detalhe: ${paymentDetails}%0A`;
-    
     if (form.paymentMethod === 'pix') {
       msg += `%0A⚠️ *AVISO IMPORTANTE:*%0A`;
       msg += `O pedido só será iniciado após o envio do comprovante do pagamento Pix aqui na conversa.`;
@@ -196,10 +187,9 @@ export default function CheckoutPage() {
       <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
         <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-green-100 shadow-2xl p-8 text-center space-y-8 animate-in zoom-in-95 bg-white">
           <div className="mx-auto h-24 w-24 bg-green-100 rounded-full flex items-center justify-center"><CheckCircle2 className="h-16 w-16 text-green-600" /></div>
-          <h2 className="text-4xl font-black text-green-700">Pedido Gravado!</h2>
-          <p className="text-lg font-medium text-muted-foreground">O resumo do seu pedido foi enviado para o nosso WhatsApp. Agora é só aguardar!</p>
+          <h2 className="text-4xl font-black text-green-700">Pedido Enviado!</h2>
+          <p className="text-lg font-medium text-muted-foreground">Seu resumo foi enviado ao WhatsApp. Clique no botão abaixo para voltar ao cardápio.</p>
           <Button onClick={() => router.push('/menu')} className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-xl">FINALIZAR PEDIDO</Button>
-          <button onClick={() => window.open(waLink, '_blank')} className="text-primary font-bold text-sm underline opacity-70">Tentar enviar ao WhatsApp novamente</button>
         </Card>
       </main>
     );
@@ -211,231 +201,218 @@ export default function CheckoutPage() {
         <ArrowLeft className="h-5 w-5" /> Voltar
       </Link>
       
-      <div className="max-w-4xl mx-auto mt-16 mb-12 text-center space-y-2">
+      <div className="max-w-4xl mx-auto mt-16 mb-12 text-center">
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter">Finalizar Pedido</h1>
-        <p className="text-muted-foreground font-medium">Confira seus itens e escolha como quer receber</p>
+        <p className="text-muted-foreground font-medium">Quase lá! Escolha como prefere receber sua pizza.</p>
       </div>
 
-      {items.length === 0 ? (
-        <div className="py-20 text-center space-y-6">
-          <h2 className="text-3xl font-black">Seu pedido está vazio</h2>
-          <Link href="/menu"><Button className="rounded-full h-16 px-12 text-xl font-black bg-primary text-white">Ver Cardápio</Button></Link>
-        </div>
-      ) : (
-        <div className="max-w-5xl mx-auto space-y-10">
-          {/* Seletor de Entrega/Retirada no TOPO */}
-          <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-black flex items-center gap-2">
-                <Truck className="h-6 w-6 text-primary" /> Como prefere receber seu pedido?
-              </h3>
-              <RadioGroup 
-                value={form.deliveryType} 
-                onValueChange={(v: any) => setForm({...form, deliveryType: v})}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              >
-                <Label htmlFor="type-delivery" className={cn(
-                  "flex items-center gap-4 p-6 border-2 rounded-[2rem] cursor-pointer transition-all",
-                  form.deliveryType === 'delivery' ? "border-primary bg-primary/5 shadow-md scale-[1.02]" : "border-muted hover:border-primary/30"
-                )}>
-                  <RadioGroupItem value="delivery" id="type-delivery" className="sr-only" />
-                  <div className={cn("p-3 rounded-2xl", form.deliveryType === 'delivery' ? "bg-primary text-white" : "bg-muted text-muted-foreground")}>
-                    <Truck className="h-8 w-8" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-black text-lg">ENTREGA EM CASA</span>
-                    <span className="text-xs font-bold text-muted-foreground uppercase">Receba com rapidez</span>
-                  </div>
-                </Label>
-                <Label htmlFor="type-pickup" className={cn(
-                  "flex items-center gap-4 p-6 border-2 rounded-[2rem] cursor-pointer transition-all",
-                  form.deliveryType === 'pickup' ? "border-primary bg-primary/5 shadow-md scale-[1.02]" : "border-muted hover:border-primary/30"
-                )}>
-                  <RadioGroupItem value="pickup" id="type-pickup" className="sr-only" />
-                  <div className={cn("p-3 rounded-2xl", form.deliveryType === 'pickup' ? "bg-primary text-white" : "bg-muted text-muted-foreground")}>
-                    <Store className="h-8 w-8" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-black text-lg">RETIRADA NA LOJA</span>
-                    <span className="text-xs font-bold text-muted-foreground uppercase">Sem taxa de entrega</span>
-                  </div>
-                </Label>
-              </RadioGroup>
-            </div>
-          </Card>
+      <div className="max-w-5xl mx-auto space-y-10">
+        <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
+          <div className="space-y-6">
+            <h3 className="text-2xl font-black flex items-center gap-2">
+              <Truck className="h-6 w-6 text-primary" /> Como prefere receber?
+            </h3>
+            <RadioGroup 
+              value={form.deliveryType} 
+              onValueChange={(v: any) => setForm({...form, deliveryType: v})}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              <Label htmlFor="type-delivery" className={cn(
+                "flex items-center gap-4 p-6 border-2 rounded-[2rem] cursor-pointer transition-all",
+                form.deliveryType === 'delivery' ? "border-primary bg-primary/5 shadow-md scale-[1.02]" : "border-muted hover:border-primary/30"
+              )}>
+                <RadioGroupItem value="delivery" id="type-delivery" className="sr-only" />
+                <div className={cn("p-3 rounded-2xl", form.deliveryType === 'delivery' ? "bg-primary text-white" : "bg-muted text-muted-foreground")}>
+                  <Truck className="h-8 w-8" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-black text-lg">ENTREGAR</span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase">Receba em casa</span>
+                </div>
+              </Label>
+              <Label htmlFor="type-pickup" className={cn(
+                "flex items-center gap-4 p-6 border-2 rounded-[2rem] cursor-pointer transition-all",
+                form.deliveryType === 'pickup' ? "border-primary bg-primary/5 shadow-md scale-[1.02]" : "border-muted hover:border-primary/30"
+              )}>
+                <RadioGroupItem value="pickup" id="type-pickup" className="sr-only" />
+                <div className={cn("p-3 rounded-2xl", form.deliveryType === 'pickup' ? "bg-primary text-white" : "bg-muted text-muted-foreground")}>
+                  <Store className="h-8 w-8" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-black text-lg">RETIRAR</span>
+                  <span className="text-xs font-bold text-muted-foreground uppercase">Na nossa loja</span>
+                </div>
+              </Label>
+            </RadioGroup>
+          </div>
+        </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="space-y-8">
-              <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
-                <CardHeader className="bg-primary/5 border-b py-6 px-8 flex flex-row items-center justify-between">
-                  <CardTitle className="text-2xl font-black">Meu Pedido</CardTitle>
-                  <Badge variant="outline" className="border-2 font-bold px-3 py-1">{items.length} itens</Badge>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="divide-y">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex gap-4 p-6 items-center">
-                        <div className="relative h-20 w-20 rounded-2xl overflow-hidden shrink-0 border-2">
-                          <Image src={item.imageUrl || 'https://placehold.co/400x400'} alt={item.name} fill className="object-cover" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="space-y-8">
+            <Card className="rounded-[2.5rem] border-2 shadow-2xl overflow-hidden bg-white">
+              <CardHeader className="bg-primary/5 border-b py-6 px-8">
+                <CardTitle className="text-2xl font-black">Meu Pedido</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex gap-4 p-6 items-center">
+                      <div className="relative h-20 w-20 rounded-2xl overflow-hidden shrink-0 border-2">
+                        <Image src={item.imageUrl || 'https://placehold.co/400x400'} alt={item.name} fill className="object-cover" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-black truncate text-lg">{item.name}</h4>
+                            <p className="text-xs text-muted-foreground font-bold uppercase">{item.size} • {item.crust}</p>
+                          </div>
+                          <span className="font-black text-primary text-lg">R$ {(item.price * item.quantity).toFixed(2)}</span>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-black truncate text-lg">{item.name}</h4>
-                              <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">{item.size} • {item.crust}</p>
-                            </div>
-                            <span className="font-black text-primary text-lg">R$ {(item.price * item.quantity).toFixed(2)}</span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-4">
-                            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full border-2" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</Button>
-                            <span className="font-black w-6 text-center">{item.quantity}</span>
-                            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full border-2" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</Button>
-                            <Button variant="ghost" size="icon" className="ml-auto text-destructive" onClick={() => removeItem(item.id)}><Trash2 className="h-5 w-5" /></Button>
-                          </div>
+                        <div className="flex items-center gap-2 mt-4">
+                          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full border-2" onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</Button>
+                          <span className="font-black w-6 text-center">{item.quantity}</span>
+                          <Button variant="outline" size="icon" className="h-8 w-8 rounded-full border-2" onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</Button>
+                          <Button variant="ghost" size="icon" className="ml-auto text-destructive" onClick={() => removeItem(item.id)}><Trash2 className="h-5 w-5" /></Button>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
+                </div>
+                <div className="p-8 bg-muted/30 border-t-4 border-dashed space-y-3">
+                  <div className="flex justify-between text-lg font-bold text-muted-foreground">
+                    <span>Subtotal</span>
+                    <span>R$ {subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="p-8 bg-muted/30 border-t-4 border-dashed space-y-3">
-                    <div className="flex justify-between text-lg font-bold text-muted-foreground">
-                      <span>Subtotal</span>
-                      <span>R$ {subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between text-lg font-bold text-muted-foreground">
-                      <span>Taxa de Entrega</span>
-                      <span className={form.deliveryType === 'pickup' ? "line-through opacity-50" : ""}>
-                        {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2 border-t border-muted-foreground/20">
-                      <span className="text-2xl font-black text-black uppercase tracking-tight">Total</span>
-                      <span className="text-4xl md:text-5xl font-black text-green-600 tracking-tighter">R$ {total.toFixed(2)}</span>
-                    </div>
+                  <div className="flex justify-between text-lg font-bold text-muted-foreground">
+                    <span>Taxa de Entrega</span>
+                    <span className={form.deliveryType === 'pickup' ? "line-through opacity-50" : ""}>
+                      {deliveryFee > 0 ? `R$ ${deliveryFee.toFixed(2)}` : 'Grátis'}
+                    </span>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-muted-foreground/20">
+                    <span className="text-2xl font-black text-black uppercase">Total</span>
+                    <span className="text-4xl font-black text-green-600">R$ {total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <div className="space-y-8">
-              <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8 space-y-8">
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-black flex items-center gap-2">
-                    <User className="h-6 w-6 text-primary" /> Seus Dados
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="font-bold ml-1">Seu Nome</Label>
-                      <Input placeholder="Como devemos te chamar?" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-2xl border-2 bg-white text-lg font-medium" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="font-bold ml-1">Seu WhatsApp</Label>
-                      <Input placeholder="(00) 00000-0000" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-2xl border-2 bg-white text-lg font-medium" />
-                    </div>
-                    
-                    {form.deliveryType === 'delivery' && (
-                      <div className="space-y-4 animate-in fade-in slide-in-from-top-4">
+          <div className="space-y-8">
+            <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8 space-y-8">
+              <div className="space-y-6">
+                <h3 className="text-2xl font-black flex items-center gap-2">
+                  <User className="h-6 w-6 text-primary" /> Seus Dados
+                </h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label className="font-bold">Seu Nome</Label>
+                    <Input placeholder="Como devemos te chamar?" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="h-14 rounded-2xl border-2" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-bold">Seu WhatsApp</Label>
+                    <Input placeholder="(00) 00000-0000" value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="h-14 rounded-2xl border-2" />
+                  </div>
+                  
+                  {form.deliveryType === 'delivery' && (
+                    <div className="space-y-4 animate-in fade-in">
+                      <div className="space-y-2">
+                        <Label className="font-bold">Endereço Completo</Label>
+                        <Input placeholder="Rua e Número" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-2xl border-2" />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label className="font-bold ml-1">Endereço Completo</Label>
-                          <Input placeholder="Rua e Número" value={form.address} onChange={(e) => setForm({...form, address: e.target.value})} className="h-14 rounded-2xl border-2 bg-white text-lg font-medium" />
+                          <Label className="font-bold">Bairro</Label>
+                          <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-2xl border-2" />
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="font-bold ml-1">Bairro</Label>
-                            <Input placeholder="Bairro" value={form.neighborhood} onChange={(e) => setForm({...form, neighborhood: e.target.value})} className="h-14 rounded-2xl border-2 bg-white text-lg font-medium" />
-                          </div>
-                          <div className="space-y-2">
-                            <Label className="font-bold ml-1">Complemento</Label>
-                            <Input placeholder="Ap, Bloco..." value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-2xl border-2 bg-white text-lg font-medium" />
-                          </div>
+                        <div className="space-y-2">
+                          <Label className="font-bold">Complemento</Label>
+                          <Input placeholder="Ap, Bloco..." value={form.complement} onChange={(e) => setForm({...form, complement: e.target.value})} className="h-14 rounded-2xl border-2" />
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <h3 className="text-2xl font-black flex items-center gap-2">
+                  <CreditCard className="h-6 w-6 text-primary" /> Pagamento
+                </h3>
+                <RadioGroup value={form.paymentMethod} onValueChange={(v) => setForm({...form, paymentMethod: v})} className="grid gap-4">
+                  {config?.pixEnabled && (
+                    <Label htmlFor="p-pix" className={cn(
+                      "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
+                      form.paymentMethod === 'pix' ? "border-primary bg-primary/5" : "border-muted hover:border-primary/20"
+                    )}>
+                      <RadioGroupItem value="pix" id="p-pix" className="sr-only" />
+                      <QrCode className="h-6 w-6 text-emerald-600" />
+                      <span className="font-black text-lg">PIX</span>
+                    </Label>
+                  )}
+                  {config?.cardOnDeliveryEnabled && (
+                    <Label htmlFor="p-card" className={cn(
+                      "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
+                      form.paymentMethod === 'card' ? "border-primary bg-primary/5" : "border-muted hover:border-primary/20"
+                    )}>
+                      <RadioGroupItem value="card" id="p-card" className="sr-only" />
+                      <CreditCard className="h-6 w-6 text-blue-600" />
+                      <span className="font-black text-lg">Cartão na Entrega</span>
+                    </Label>
+                  )}
+                  {config?.cashOnDeliveryEnabled && (
+                    <Label htmlFor="p-cash" className={cn(
+                      "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
+                      form.paymentMethod === 'cash' ? "border-primary bg-primary/5" : "border-muted hover:border-primary/20"
+                    )}>
+                      <RadioGroupItem value="cash" id="p-cash" className="sr-only" />
+                      <Banknote className="h-6 w-6 text-green-600" />
+                      <span className="font-black text-lg">Dinheiro</span>
+                    </Label>
+                  )}
+                </RadioGroup>
+
+                {form.paymentMethod === 'pix' && config?.pixKey && (
+                  <div className="p-6 bg-emerald-50 border-2 border-emerald-200 rounded-[2rem] space-y-4 animate-in fade-in">
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs font-black uppercase text-emerald-700 tracking-widest">Pague via PIX</span>
+                      <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-bold bg-white">{config.pixKeyType}</Badge>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <Input readOnly value={config.pixKey} className="h-12 bg-white border-2 border-emerald-100 font-black text-emerald-900 rounded-xl flex-1" />
+                      <Button onClick={handleCopyPix} size="icon" className="h-12 w-12 rounded-xl bg-emerald-600 shrink-0">
+                        {copied ? <Check className="h-5 w-5 text-white" /> : <Copy className="h-5 w-5 text-white" />}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-black flex items-center gap-2">
-                    <CreditCard className="h-6 w-6 text-primary" /> Pagamento
-                  </h3>
-                  <RadioGroup value={form.paymentMethod} onValueChange={(v) => setForm({...form, paymentMethod: v})} className="grid gap-4">
-                    {config?.pixEnabled && (
-                      <Label htmlFor="p-pix" className={cn(
-                        "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
-                        form.paymentMethod === 'pix' ? "border-primary bg-primary/5 shadow-sm" : "border-muted bg-white hover:border-primary/20"
-                      )}>
-                        <RadioGroupItem value="pix" id="p-pix" className="sr-only" />
-                        <div className="bg-emerald-100 p-2 rounded-xl"><QrCode className="h-6 w-6 text-emerald-600" /></div>
-                        <span className="font-black text-lg">Pagar via PIX</span>
-                      </Label>
-                    )}
-                    {config?.cardOnDeliveryEnabled && (
-                      <Label htmlFor="p-card" className={cn(
-                        "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
-                        form.paymentMethod === 'card' ? "border-primary bg-primary/5 shadow-sm" : "border-muted bg-white hover:border-primary/20"
-                      )}>
-                        <RadioGroupItem value="card" id="p-card" className="sr-only" />
-                        <div className="bg-blue-100 p-2 rounded-xl"><CreditCard className="h-6 w-6 text-blue-600" /></div>
-                        <span className="font-black text-lg">Cartão na Entrega</span>
-                      </Label>
-                    )}
-                    {config?.cashOnDeliveryEnabled && (
-                      <Label htmlFor="p-cash" className={cn(
-                        "flex items-center gap-4 p-5 border-2 rounded-2xl cursor-pointer transition-all", 
-                        form.paymentMethod === 'cash' ? "border-primary bg-primary/5 shadow-sm" : "border-muted bg-white hover:border-primary/20"
-                      )}>
-                        <RadioGroupItem value="cash" id="p-cash" className="sr-only" />
-                        <div className="bg-green-100 p-2 rounded-xl"><Banknote className="h-6 w-6 text-green-600" /></div>
-                        <span className="font-black text-lg">Dinheiro</span>
-                      </Label>
-                    )}
-                  </RadioGroup>
+                {form.paymentMethod === 'cash' && (
+                  <div className="p-6 bg-amber-50 border-2 border-amber-200 rounded-[2rem] space-y-3 animate-in fade-in">
+                    <Label className="text-sm font-black text-amber-800">Precisa de troco?</Label>
+                    <Input placeholder="Troco para quanto? (Ex: R$ 50,00)" value={form.cashChange} onChange={(e) => setForm({...form, cashChange: e.target.value})} className="h-12 bg-white border-2 border-amber-100 font-black rounded-xl" />
+                  </div>
+                )}
+              </div>
 
-                  {form.paymentMethod === 'pix' && config?.pixKey && (
-                    <div className="p-6 bg-emerald-50 border-2 border-emerald-200 rounded-[2rem] space-y-4 animate-in fade-in">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs font-black uppercase text-emerald-700 tracking-widest">Chave para Pagamento</span>
-                        <Badge variant="outline" className="border-emerald-300 text-emerald-700 font-bold bg-white">{config.pixKeyType}</Badge>
-                      </div>
-                      <div className="flex gap-2 items-center">
-                        <Input readOnly value={config.pixKey} className="h-14 bg-white border-2 border-emerald-100 font-black text-emerald-900 rounded-xl text-center flex-1" />
-                        <Button onClick={handleCopyPix} size="icon" className="h-14 w-14 rounded-xl bg-emerald-600 hover:bg-emerald-700 shrink-0 shadow-lg">
-                          {copied ? <Check className="h-6 w-6 text-white" /> : <Copy className="h-6 w-6 text-white" />}
-                        </Button>
-                      </div>
-                      <p className="text-xs text-emerald-600 font-bold text-center px-4">Copie a chave e pague no seu banco. Após o pagamento, finalize o pedido abaixo.</p>
+              <Button 
+                onClick={handleSendToWhatsApp} 
+                disabled={loading || !form.paymentMethod} 
+                className="w-full h-24 rounded-full bg-primary hover:bg-primary/90 text-white text-2xl font-black shadow-2xl shadow-primary/40 mt-10 transform transition hover:scale-[1.02] active:scale-95 disabled:grayscale"
+              >
+                {loading ? <Loader2 className="animate-spin h-10 w-10" /> : (
+                  <div className="flex flex-col items-center">
+                    <span className="text-xs font-black uppercase opacity-80 mb-1">Finalizar Pedido</span>
+                    <div className="flex items-center gap-2">
+                      <Send className="h-7 w-7" /> Enviar para WhatsApp
                     </div>
-                  )}
-
-                  {form.paymentMethod === 'cash' && (
-                    <div className="p-6 bg-amber-50 border-2 border-amber-200 rounded-[2rem] space-y-3 animate-in fade-in">
-                      <Label htmlFor="change" className="text-sm font-black text-amber-800 uppercase tracking-wider">Precisa de troco para quanto?</Label>
-                      <Input id="change" placeholder="Ex: R$ 100,00" value={form.cashChange} onChange={(e) => setForm({...form, cashChange: e.target.value})} className="h-14 bg-white border-2 border-amber-100 font-black rounded-xl text-lg" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Botão habilitado apenas quando pagamento for escolhido */}
-                <Button 
-                  onClick={handleSendToWhatsApp} 
-                  disabled={loading || !config?.isStoreOpen || !form.paymentMethod} 
-                  className="w-full h-24 rounded-full bg-primary hover:bg-primary/90 text-white text-2xl font-black shadow-2xl shadow-primary/40 mt-10 transform transition hover:scale-[1.02] active:scale-95 disabled:grayscale"
-                >
-                  {loading ? <Loader2 className="animate-spin h-10 w-10" /> : (
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-xs font-black uppercase tracking-[0.3em] opacity-80">Enviar Pedido</span>
-                      <div className="flex items-center gap-2">
-                        <Send className="h-7 w-7" /> Finalizar Agora
-                      </div>
-                    </div>
-                  )}
-                </Button>
-                
-                {!config?.isStoreOpen && <p className="text-center text-destructive font-black text-sm uppercase tracking-widest">Loja fechada no momento</p>}
-              </Card>
-            </div>
+                  </div>
+                )}
+              </Button>
+            </Card>
           </div>
         </div>
-      )}
+      </div>
     </main>
   );
 }

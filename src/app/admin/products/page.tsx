@@ -18,10 +18,7 @@ import {
   ExternalLink,
   Wallet,
   ArrowLeft,
-  Percent,
-  X,
-  CreditCard,
-  ChevronDown
+  CreditCard
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -50,13 +47,6 @@ import {
 import { collection, doc, query, orderBy } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 export default function AdminProductsPage() {
   const firestore = useFirestore();
@@ -210,7 +200,7 @@ export default function AdminProductsPage() {
               <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, hasMultipleSizes: !formData.hasMultipleSizes})}>
                 <div className="space-y-0.5">
                   <Label className="font-bold cursor-pointer">Múltiplos Tamanhos?</Label>
-                  <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G (ideal para pizzas)</p>
+                  <p className="text-xs text-muted-foreground">Ative para definir preços P, M e G</p>
                 </div>
                 <Switch checked={formData.hasMultipleSizes} className="pointer-events-none" />
               </div>
@@ -224,7 +214,7 @@ export default function AdminProductsPage() {
                 </div>
               )}
               <div className="grid gap-2">
-                <Label className="font-bold">Imagem do Produto (URL ou Galeria)</Label>
+                <Label className="font-bold">Imagem do Produto</Label>
                 <div className="flex gap-2">
                   <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="h-12 border-2 rounded-xl text-black bg-white flex-1" placeholder="Cole o link da imagem" />
                   <Button type="button" variant="outline" className="h-12 w-12 rounded-xl border-2 p-0" onClick={() => document.getElementById('file-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
@@ -238,22 +228,8 @@ export default function AdminProductsPage() {
               <div className="flex items-center justify-between p-4 bg-muted/20 border-2 rounded-xl cursor-pointer" onClick={() => setFormData({...formData, isPromotion: !formData.isPromotion})}>
                 <Label className="font-bold cursor-pointer">Produto em Promoção?</Label><Switch checked={formData.isPromotion} className="pointer-events-none" />
               </div>
-              {formData.isPromotion && (
-                <div className="grid gap-2 animate-in fade-in">
-                  <Label className="font-bold">Tamanho em Promoção</Label>
-                  <Select value={formData.promotionSize} onValueChange={(v) => setFormData({...formData, promotionSize: v})}>
-                    <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue /></SelectTrigger>
-                    <SelectContent className="bg-white">
-                      <SelectItem value="all" className="text-black">Todos os tamanhos</SelectItem>
-                      <SelectItem value="small" className="text-black">Apenas P (Broto)</SelectItem>
-                      <SelectItem value="medium" className="text-black">Apenas M (Média)</SelectItem>
-                      <SelectItem value="large" className="text-black">Apenas G (Grande)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
             </div>
-            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white shadow-lg shadow-primary/20 transform transition active:scale-95">Salvar Produto</Button></DialogFooter>
+            <DialogFooter><Button onClick={handleSave} className="w-full h-16 rounded-full text-xl font-black bg-primary text-white shadow-lg">Salvar Produto</Button></DialogFooter>
           </DialogContent>
         </Dialog>
       </main>
