@@ -104,9 +104,18 @@ export default function CheckoutPage() {
     setLoading(true);
     const orderId = doc(collection(firestore, 'pedidos')).id;
     let paymentDetails = '';
-    if (form.paymentMethod === 'cash' && form.cashChange) paymentDetails = `Troco para R$ ${form.cashChange}`;
-    else if (form.paymentMethod === 'pix') paymentDetails = `Pagamento via PIX (${config?.pixKeyType || 'Chave'}: ${config?.pixKey || 'N/A'})`;
-    else if (form.paymentMethod === 'card') paymentDetails = 'Cartão na Entrega';
+    let paymentLabel = '';
+
+    if (form.paymentMethod === 'cash') {
+      paymentLabel = 'Dinheiro';
+      paymentDetails = form.cashChange ? `Troco para R$ ${form.cashChange}` : 'Sem troco';
+    } else if (form.paymentMethod === 'pix') {
+      paymentLabel = `PIX (${config?.pixKeyType || 'Chave'})`;
+      paymentDetails = config?.pixKey || 'N/A';
+    } else if (form.paymentMethod === 'card') {
+      paymentLabel = 'Cartão na Entrega';
+      paymentDetails = 'Levar Maquininha';
+    }
 
     const orderData = {
       id: orderId,
@@ -136,19 +145,43 @@ export default function CheckoutPage() {
     items.forEach(item => addDocumentNonBlocking(collection(firestore, 'pedidos', orderId, 'items'), { ...item, orderId }));
 
     const pizzeriaNumber = config?.whatsappNumber || "5511999999999";
-    let msg = `*NOVO PEDIDO - ${config?.restaurantName || 'Pizzaria'}*%0A%0A`;
-    msg += `*TIPO:* ${form.deliveryType === 'delivery' ? 'ENTREGA' : 'RETIRADA NA LOJA'}%0A`;
-    msg += `*CLIENTE:* ${form.name}%0A`;
-    msg += `*FONE:* ${form.phone}%0A`;
+    
+    // Construção da mensagem detalhada para WhatsApp
+    let msg = `*🔥 NOVO PEDIDO - ${config?.restaurantName?.toUpperCase() || 'PIZZARIA'}*%0A%0A`;
+    
+    msg += `*📍 TIPO DE PEDIDO:*%0A`;
+    msg += `${form.deliveryType === 'delivery' ? '🚚 ENTREGA EM CASA' : '🛍️ RETIRADA NA LOJA'}%0A%0A`;
+    
+    msg += `*👤 DADOS DO CLIENTE:*%0A`;
+    msg += `Nome: ${form.name}%0A`;
+    msg += `WhatsApp: ${form.phone}%0A`;
+    
     if (form.deliveryType === 'delivery') {
-      msg += `*ENDEREÇO:* ${form.address}, ${form.neighborhood}${form.complement ? ` (${form.complement})` : ''}%0A`;
+      msg += `Endereço: ${form.address}%0A`;
+      msg += `Bairro: ${form.neighborhood}%0A`;
+      if (form.complement) msg += `Complemento: ${form.complement}%0A`;
     }
-    msg += `%0A*ITENS:*%0A`;
-    items.forEach(i => msg += `- ${i.quantity}x ${i.name} (${i.size})%0A`);
-    msg += `%0A*SUBTOTAL:* R$ ${subtotal.toFixed(2)}`;
-    msg += `%0A*TAXA:* R$ ${deliveryFee.toFixed(2)}`;
-    msg += `%0A*TOTAL: R$ ${total.toFixed(2)}*%0A`;
-    msg += `%0A*PAGAMENTO:* ${form.paymentMethod}${paymentDetails ? ` (${paymentDetails})` : ''}`;
+    
+    msg += `%0A*🍕 ITENS DO PEDIDO:*%0A`;
+    items.forEach(i => {
+      msg += `• ${i.quantity}x ${i.name}%0A`;
+      msg += `  Tam: ${i.size}${i.crust !== 'Tradicional' ? ` | Borda: ${i.crust}` : ''}%0A`;
+      if (i.notes) msg += `  _Obs: ${i.notes}_%0A`;
+    });
+    
+    msg += `%0A*💰 RESUMO DE VALORES:*%0A`;
+    msg += `Subtotal: R$ ${subtotal.toFixed(2)}%0A`;
+    if (form.deliveryType === 'delivery') msg += `Taxa de Entrega: R$ ${deliveryFee.toFixed(2)}%0A`;
+    msg += `*TOTAL: R$ ${total.toFixed(2)}*%0A%0A`;
+    
+    msg += `*💳 FORMA DE PAGAMENTO:*%0A`;
+    msg += `Método: ${paymentLabel}%0A`;
+    if (paymentDetails) msg += `Detalhe: ${paymentDetails}%0A`;
+    
+    if (form.paymentMethod === 'pix') {
+      msg += `%0A⚠️ *AVISO IMPORTANTE:*%0A`;
+      msg += `O pedido só será iniciado após o envio do comprovante do pagamento Pix aqui na conversa.`;
+    }
 
     const whatsappUrl = `https://wa.me/${pizzeriaNumber}?text=${msg}`;
     window.open(whatsappUrl, '_blank');
@@ -190,6 +223,7 @@ export default function CheckoutPage() {
         </div>
       ) : (
         <div className="max-w-5xl mx-auto space-y-10">
+          {/* Seletor de Entrega/Retirada no TOPO */}
           <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
             <div className="space-y-6">
               <h3 className="text-2xl font-black flex items-center gap-2">
@@ -380,6 +414,7 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
+                {/* Botão habilitado apenas quando pagamento for escolhido */}
                 <Button 
                   onClick={handleSendToWhatsApp} 
                   disabled={loading || !config?.isStoreOpen || !form.paymentMethod} 
