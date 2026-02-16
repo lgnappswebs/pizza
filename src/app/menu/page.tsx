@@ -30,6 +30,12 @@ import { useCartStore } from '@/lib/cart-store';
 import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { collection, query, orderBy } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -52,7 +58,6 @@ export default function MenuPage() {
   }, [firestore]);
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
-  
   const bannersQuery = useMemoFirebase(() => collection(firestore, 'banners'), [firestore]);
 
   const { data: categories, isLoading: loadingCats } = useCollection(categoriesQuery);
@@ -101,16 +106,6 @@ export default function MenuPage() {
         });
         setActiveCategory(pizzaName || mainNames[0]);
       }
-      
-      const resetScroll = () => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollLeft = 0;
-        }
-      };
-      
-      resetScroll();
-      setTimeout(resetScroll, 100);
-      setTimeout(resetScroll, 500);
     }
   }, [mainNames, activeCategory]);
 
@@ -164,6 +159,28 @@ export default function MenuPage() {
       setShowSpecialties(true);
       document.getElementById('menu-navigation')?.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const renderBannerContent = (bannerList: any[]) => {
+    if (bannerList.length === 0) return null;
+    if (bannerList.length === 1) {
+      return <MenuBanner banner={bannerList[0]} onBannerClick={handleBannerClick} />;
+    }
+    return (
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[Autoplay({ delay: 3000, stopOnInteraction: false })]}
+        className="w-full"
+      >
+        <CarouselContent>
+          {bannerList.map((banner) => (
+            <CarouselItem key={banner.id}>
+              <MenuBanner banner={banner} onBannerClick={handleBannerClick} />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    );
   };
 
   if (loadingCats || loadingProds || loadingConfigs || loadingBanners) {
@@ -232,11 +249,9 @@ export default function MenuPage() {
             )}
           </div>
 
-          {topBanners.length > 0 && !searchTerm && (
+          {!searchTerm && topBanners.length > 0 && (
             <div className="mb-12 animate-in fade-in duration-700">
-              {topBanners.map(banner => (
-                <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
-              ))}
+              {renderBannerContent(topBanners)}
             </div>
           )}
 
@@ -384,11 +399,9 @@ export default function MenuPage() {
                           </div>
                         )}
 
-                        {middleBanners.length > 0 && activeCategory === name && (
+                        {activeCategory === name && middleBanners.length > 0 && (
                           <div className="animate-in fade-in duration-700">
-                            {middleBanners.map(banner => (
-                              <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
-                            ))}
+                            {renderBannerContent(middleBanners)}
                           </div>
                         )}
 
@@ -425,11 +438,9 @@ export default function MenuPage() {
             </>
           )}
 
-          {bottomBanners.length > 0 && !searchTerm && (
+          {!searchTerm && bottomBanners.length > 0 && (
             <div className="mt-16 animate-in fade-in duration-700">
-              {bottomBanners.map(banner => (
-                <MenuBanner key={banner.id} banner={banner} onBannerClick={handleBannerClick} />
-              ))}
+              {renderBannerContent(bottomBanners)}
             </div>
           )}
         </div>

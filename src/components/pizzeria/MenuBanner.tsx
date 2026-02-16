@@ -37,7 +37,7 @@ export function MenuBanner({ banner, onBannerClick }: MenuBannerProps) {
   return (
     <div 
       className={cn(
-        "relative w-full aspect-[21/9] md:aspect-[4/1] rounded-[2rem] overflow-hidden mb-8 shadow-xl group",
+        "relative w-full aspect-[21/9] md:aspect-[4/1] rounded-[2rem] overflow-hidden shadow-xl group",
         banner.linkCategoryId !== 'none' ? "cursor-pointer hover:scale-[1.01] transition-transform" : ""
       )}
       onClick={handleClick}

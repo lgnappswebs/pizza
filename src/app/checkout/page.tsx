@@ -436,7 +436,6 @@ export default function CheckoutPage() {
             </Card>
           </div>
         </div>
-      )}
-    </main>
-  );
+      </main>
+    );
 }
