@@ -19,7 +19,9 @@ import {
   AlignCenterVertical,
   ArrowDownToLine,
   CreditCard,
-  ArrowLeft
+  ArrowLeft,
+  Type,
+  Link as LinkIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -147,7 +149,7 @@ export default function AdminBannersPage() {
             </div>
           </div>
           <CardContent className="p-4 flex justify-between items-center bg-white">
-            <div className="text-xs text-muted-foreground font-black uppercase">Texto: {banner.textPosition}</div>
+            <div className="text-xs text-muted-foreground font-black uppercase">Posição: {banner.bannerPosition}</div>
             <div className="flex gap-2">
               <Button variant="outline" size="icon" onClick={() => handleOpenDialog(banner)} className="rounded-xl border-2"><Edit2 className="h-4 w-4" /></Button>
               <Button variant="outline" size="icon" onClick={() => handleDelete(banner.id)} className="rounded-xl border-2 text-destructive"><Trash2 className="h-4 w-4" /></Button>
@@ -181,7 +183,7 @@ export default function AdminBannersPage() {
         </Link>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12 mt-20 md:mt-16">
-          <div className="space-y-1">
+          <div className="space-y-1 w-full text-center sm:text-left">
             <h1 className="text-3xl font-black text-black">Gerir Banners</h1>
             <p className="text-muted-foreground font-medium">Organize os destaques por posições</p>
           </div>
@@ -213,26 +215,70 @@ export default function AdminBannersPage() {
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingBanner ? 'Editar' : 'Novo'} Banner</DialogTitle>
             </DialogHeader>
             <div className="grid gap-6 py-4">
-              <div className="grid gap-2"><Label className="font-bold">Título</Label><Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Promoção de Terça" /></div>
               <div className="grid gap-2">
-                <Label className="font-bold">Posição no Menu</Label>
-                <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
-                  <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
+                <Label className="font-bold">Título do Banner</Label>
+                <Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Promoção de Terça" />
+              </div>
+              
+              <div className="grid gap-2">
+                <Label className="font-bold">Descrição / Subtítulo</Label>
+                <Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Peça uma pizza e ganhe outra" />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label className="font-bold">Posição no Menu</Label>
+                  <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
+                    <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="top" className="text-black">Topo do Cardápio</SelectItem>
+                      <SelectItem value="middle" className="text-black">Meio do Cardápio</SelectItem>
+                      <SelectItem value="bottom" className="text-black">Fim do Cardápio</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label className="font-bold">Posição do Texto</Label>
+                  <Select value={formData.textPosition} onValueChange={(v) => setFormData({...formData, textPosition: v})}>
+                    <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="top-left" className="text-black">Topo Esquerda</SelectItem>
+                      <SelectItem value="top-center" className="text-black">Topo Centro</SelectItem>
+                      <SelectItem value="center" className="text-black">Centro</SelectItem>
+                      <SelectItem value="bottom-left" className="text-black">Base Esquerda</SelectItem>
+                      <SelectItem value="bottom-center" className="text-black">Base Centro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <Label className="font-bold">Ao clicar, levar para:</Label>
+                <Select value={formData.linkCategoryId} onValueChange={(v) => setFormData({...formData, linkCategoryId: v})}>
+                  <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
                   <SelectContent className="bg-white">
-                    <SelectItem value="top" className="text-black">Topo do Cardápio</SelectItem>
-                    <SelectItem value="middle" className="text-black">Meio do Cardápio</SelectItem>
-                    <SelectItem value="bottom" className="text-black">Fim do Cardápio</SelectItem>
+                    <SelectItem value="none" className="text-black">Nenhum (Apenas Visual)</SelectItem>
+                    {categories?.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id} className="text-black">{cat.name} - {cat.subName || 'Geral'}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
+
               <div className="grid gap-2">
-                <Label className="font-bold">Imagem</Label>
+                <Label className="font-bold">Imagem do Banner</Label>
                 <div className="flex gap-2">
                   <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12" placeholder="URL da imagem" />
                   <Button type="button" variant="outline" className="shrink-0 rounded-xl border-2 h-12 w-12" onClick={() => document.getElementById('banner-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
+                {formData.imageUrl && (
+                  <div className="mt-2 aspect-video rounded-xl overflow-hidden border-2 border-dashed">
+                    <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
+
               <div 
                 className="flex items-center justify-between p-4 bg-muted/30 rounded-xl border-2 border-dashed cursor-pointer hover:bg-muted/50 transition-colors" 
                 onClick={() => setFormData({...formData, isActive: !formData.isActive})}
