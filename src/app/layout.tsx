@@ -1,3 +1,4 @@
+
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -6,12 +7,12 @@ import { ThemeInjected } from '@/components/pizzeria/ThemeInjected';
 import { CartSync } from '@/components/pizzeria/CartSync';
 
 export const metadata: Metadata = {
-  title: 'PizzApp Rápido - Pizza Quentinha e Saborosa',
+  title: 'Pizza App - O Sabor Original',
   description: 'O melhor aplicativo para pedir pizza na sua cidade com rapidez e facilidade.',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'PizzApp',
+    title: 'Pizza App',
   },
   formatDetection: {
     telephone: false,
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#FF4136',
+  themeColor: '#6C2BD9',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -37,7 +38,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-512.png" />
       </head>
       <body className="font-body antialiased selection:bg-primary/30 min-h-screen relative overflow-x-hidden">
         <FirebaseClientProvider>

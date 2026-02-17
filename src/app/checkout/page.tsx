@@ -40,6 +40,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
@@ -55,6 +56,11 @@ export default function CheckoutPage() {
     cashChange: '',
     deliveryType: 'delivery' as 'delivery' | 'pickup'
   });
+
+  // Hydration fix: ensures client-side state is ready
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const userDocRef = useMemoFirebase(() => user ? doc(firestore, 'users', user.uid) : null, [firestore, user]);
   const { data: userProfile } = useDoc(userDocRef);
@@ -186,6 +192,10 @@ export default function CheckoutPage() {
     clearCart();
     setLoading(false);
   };
+
+  if (!mounted) {
+    return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
+  }
 
   if (isSuccess) {
     return (

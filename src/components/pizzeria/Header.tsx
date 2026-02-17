@@ -11,7 +11,7 @@ import { useUser, useAuth, useFirestore, useCollection, useMemoFirebase, useDoc 
 import { signOut } from 'firebase/auth';
 import { collection, doc } from 'firebase/firestore';
 import * as LucideIcons from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -28,6 +28,11 @@ export function Header() {
   const { user } = useUser();
   const auth = useAuth();
   const firestore = useFirestore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs, isLoading: loadingConfigs } = useCollection(configQuery);
@@ -113,7 +118,7 @@ export function Header() {
             <Button className="relative rounded-full h-14 w-14 md:w-auto md:px-8 bg-primary hover:bg-primary/90 text-white font-black transition-all hover:scale-105 active:scale-95 flex items-center justify-center shadow-xl shadow-primary/20">
               <ShoppingBasket className="h-8 w-8 md:h-7 md:w-7 md:mr-2" />
               <span className="hidden md:inline text-xl">Pedido</span>
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-secondary text-secondary-foreground text-xs font-black border-2 border-background shadow-md">
                   {itemCount}
                 </span>

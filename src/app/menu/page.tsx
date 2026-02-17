@@ -39,11 +39,16 @@ export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
   const [activeCategory, setActiveCategory] = useState<string | null>('loading');
+  const [mounted, setMounted] = useState(false);
   
   const { user } = useUser();
   const cartItems = useCartStore((state) => state.items);
   const total = useCartStore((state) => state.getTotal());
   const firestore = useFirestore();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isAdmin = useMemo(() => {
     const adminEmails = ['lgngregorio@icloud.com', 'admin@pizzapp.com'];
@@ -225,7 +230,7 @@ export default function MenuPage() {
       <Footer />
       
       {/* Botão flutuante do Admin */}
-      {isAdmin && (
+      {mounted && isAdmin && (
         <div className={cn(
           "fixed z-50 transition-all",
           cartItems.length > 0 ? "bottom-32 right-6 md:bottom-36 md:right-12" : "bottom-8 right-6 md:bottom-12 md:right-12"
@@ -238,7 +243,7 @@ export default function MenuPage() {
         </div>
       )}
 
-      {cartItems.length > 0 && config?.isStoreOpen && (
+      {mounted && cartItems.length > 0 && config?.isStoreOpen && (
         <div className="fixed bottom-8 left-4 right-4 md:left-auto md:right-12 z-40 flex justify-center">
           <Link href="/checkout" className="w-full max-w-md">
             <Button className="h-20 w-full px-6 rounded-[2.5rem] bg-secondary text-secondary-foreground text-xl md:text-2xl font-black shadow-2xl flex items-center justify-between border-4 border-white/30">
