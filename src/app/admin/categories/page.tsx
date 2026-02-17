@@ -17,11 +17,8 @@ import {
   ExternalLink,
   ArrowUpDown,
   Wallet,
-  Sparkles,
-  ChevronDown,
-  ChevronUp,
-  Tags,
   FolderTree,
+  Tags,
   ArrowLeft,
   CreditCard
 } from 'lucide-react';
@@ -234,11 +231,11 @@ export default function AdminCategoriesPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 mt-20 md:mt-16">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-black">Categorias</h1>
-            <p className="text-sm md:text-base text-muted-foreground">Gerencie os Grupos Principais e Subcategorias</p>
+            <h1 className="text-2xl md:text-3xl font-black text-black">Categorias</h1>
+            <p className="text-sm md:text-base text-muted-foreground font-medium">Gerencie os Grupos Principais e Subcategorias</p>
           </div>
-          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-12 px-6 font-bold bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
-            <Plus className="mr-2 h-5 w-5" /> Nova Categoria
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary shadow-lg shadow-primary/20 transform transition hover:scale-[1.02] active:scale-95 text-white">
+            <Plus className="mr-2 h-6 w-6" /> Nova Categoria
           </Button>
         </div>
 
@@ -287,7 +284,7 @@ export default function AdminCategoriesPage() {
                   </div>
                 ))}
                 {categories?.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground text-sm md:text-base">
+                  <div className="text-center py-12 text-muted-foreground text-sm md:text-base font-medium italic">
                     Nenhuma categoria encontrada.
                   </div>
                 )}
@@ -297,33 +294,56 @@ export default function AdminCategoriesPage() {
         </Card>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto border-2">
-            <DialogHeader className="pt-10 sm:text-center">
+          <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto border-2 border-primary/20 bg-white">
+            <DialogHeader className="pt-10">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">
                 {editingCategory ? 'Editar Categoria' : 'Nova Categoria'}
               </DialogTitle>
             </DialogHeader>
             <div className="grid gap-6 py-6">
-              <div className="grid gap-3">
+              <div className="grid gap-2">
                 <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2 text-black">
-                  <FolderTree className="h-5 w-5 text-primary" /> Grupo Principal
+                  <FolderTree className="h-5 w-5 text-primary" /> Nome do Grupo Principal
                 </Label>
-                <Input id="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Pizzas" />
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ex: Pizzas, Bebidas, Combos...</p>
+                <Input 
+                  id="name" 
+                  value={formData.name} 
+                  onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                  className="rounded-xl border-2 h-14 text-lg text-black bg-white" 
+                  placeholder="Digite o nome principal" 
+                />
               </div>
               
-              <div className="grid gap-2 border-t pt-4">
+              <div className="grid gap-2 border-t pt-6">
                 <Label htmlFor="subName" className="text-lg font-bold flex items-center gap-2 text-black">
-                  <Tags className="h-5 w-5 text-primary" /> Subcategoria / Variação
+                  <Tags className="h-5 w-5 text-primary" /> Subcategoria ou Variação
                 </Label>
-                <Input id="subName" value={formData.subName} onChange={(e) => setFormData({...formData, subName: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" placeholder="Ex: Salgadas" />
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ex: Salgadas, Doces, 2 Litros...</p>
+                <Input 
+                  id="subName" 
+                  value={formData.subName} 
+                  onChange={(e) => setFormData({...formData, subName: e.target.value})} 
+                  className="rounded-xl border-2 h-14 text-lg text-black bg-white" 
+                  placeholder="Digite a variação (opcional)" 
+                />
               </div>
 
-              <div className="grid gap-2 border-t pt-4">
-                <Label htmlFor="order" className="text-lg font-bold text-black">Ordem de Exibição</Label>
-                <div className="flex items-center gap-2">
-                   <ArrowUpDown className="h-6 w-6 text-muted-foreground" />
-                   <Input id="order" type="number" value={formData.order} onChange={(e) => setFormData({...formData, order: e.target.value})} className="rounded-xl border-2 h-12 text-lg text-black bg-white" />
+              <div className="grid gap-2 border-t pt-6">
+                <div className="flex justify-between items-center">
+                  <Label htmlFor="order" className="text-lg font-bold flex items-center gap-2 text-black">
+                    <ArrowUpDown className="h-5 w-5 text-primary" /> Ordem de Exibição
+                  </Label>
+                  <Badge variant="outline" className="font-black border-2 text-primary">Posição {formData.order}</Badge>
                 </div>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Define a posição no menu (0 é o primeiro)</p>
+                <Input 
+                  id="order" 
+                  type="number" 
+                  value={formData.order} 
+                  onChange={(e) => setFormData({...formData, order: e.target.value})} 
+                  className="rounded-xl border-2 h-14 text-2xl font-black text-black bg-white" 
+                />
               </div>
             </div>
             <DialogFooter>
