@@ -155,7 +155,7 @@ export default function AdminProductsPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 mt-20 md:mt-16">
           <div><h1 className="text-3xl font-black text-black">Produtos</h1><p className="text-muted-foreground font-medium">Gerencie seu cardápio de forma ágil</p></div>
-          <Button onClick={() => handleOpenDialog()} className="rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg"><Plus className="mr-2 h-6 w-6" /> Novo Produto</Button>
+          <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg"><Plus className="mr-2 h-6 w-6" /> Novo Produto</Button>
         </div>
         <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden bg-white">
           <CardHeader className="p-4 border-b">
