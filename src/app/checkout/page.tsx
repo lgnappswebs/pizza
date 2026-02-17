@@ -25,7 +25,8 @@ import {
   Check,
   Truck,
   Store,
-  LogIn
+  LogIn,
+  ShoppingBasket
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -57,7 +58,6 @@ export default function CheckoutPage() {
     deliveryType: 'delivery' as 'delivery' | 'pickup'
   });
 
-  // Hydration fix: ensures client-side state is ready
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -96,10 +96,7 @@ export default function CheckoutPage() {
   };
 
   const handleSendToWhatsApp = async () => {
-    if (!user) {
-      toast({ variant: "destructive", title: "Login necessário", description: "Entre na sua conta para finalizar o pedido." });
-      return;
-    }
+    if (!user) return;
 
     if (!form.name || !form.phone || !form.paymentMethod) {
       toast({ variant: "destructive", title: "Atenção", description: "Preencha seu nome, telefone e forma de pagamento." });
@@ -210,6 +207,27 @@ export default function CheckoutPage() {
     );
   }
 
+  if (items.length === 0) {
+    return (
+      <main className="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
+        <Card className="w-full max-w-2xl rounded-[3rem] border-4 border-dashed border-muted shadow-xl p-12 text-center space-y-8 bg-white">
+          <div className="mx-auto h-32 w-32 bg-muted rounded-full flex items-center justify-center">
+            <ShoppingBasket className="h-16 w-16 text-muted-foreground" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-4xl font-black text-foreground">Carrinho Vazio</h2>
+            <p className="text-xl font-medium text-muted-foreground">Adicione algumas pizzas deliciosas para continuar.</p>
+          </div>
+          <Link href="/menu" className="block w-full">
+            <Button className="w-full h-20 rounded-full bg-primary text-white text-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all">
+              VER CARDÁPIO
+            </Button>
+          </Link>
+        </Card>
+      </main>
+    );
+  }
+
   return (
     <main className="container mx-auto px-4 py-8 relative">
       <Link href="/menu" className="fixed top-4 left-4 md:top-8 md:left-8 flex items-center text-primary font-black hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
@@ -222,6 +240,7 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
+        {/* Prioridade: Como prefere receber no TOPO */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">
