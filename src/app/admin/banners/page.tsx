@@ -18,7 +18,8 @@ import {
   ArrowUpToLine,
   AlignCenterVertical,
   ArrowDownToLine,
-  CreditCard
+  CreditCard,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -174,8 +175,12 @@ export default function AdminBannersPage() {
         <div className="p-4 border-t"><Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive font-bold h-12"><LogOut className="mr-3 h-5 w-5" /> Sair</Button></div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12 mt-16">
+      <main className="flex-1 p-4 md:p-8 pb-32 relative">
+        <Link href="/admin/dashboard" className="fixed md:absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
+        </Link>
+
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12 mt-20 md:mt-16">
           <div className="space-y-1">
             <h1 className="text-3xl font-black text-black">Gerir Banners</h1>
             <p className="text-muted-foreground font-medium">Organize os destaques por posições</p>

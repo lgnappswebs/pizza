@@ -148,8 +148,12 @@ export default function AdminProductsPage() {
         <div className="p-4 border-t"><Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive rounded-xl font-bold h-12"><LogOut className="mr-3 h-5 w-5" /> Sair</Button></div>
       </aside>
 
-      <main className="flex-1 p-4 md:p-8 pb-32">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
+      <main className="flex-1 p-4 md:p-8 pb-32 relative">
+        <Link href="/admin/dashboard" className="fixed md:absolute top-4 left-4 md:top-4 md:left-8 flex items-center text-primary font-bold hover:underline gap-1 z-50 bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-xl border-2 border-primary/10 transition-all hover:scale-105 active:scale-95">
+          <ArrowLeft className="h-5 w-5" /> Voltar ao Painel
+        </Link>
+
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8 mt-20 md:mt-16">
           <div><h1 className="text-3xl font-black text-black">Produtos</h1><p className="text-muted-foreground font-medium">Gerencie seu cardápio de forma ágil</p></div>
           <Button onClick={() => handleOpenDialog()} className="rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg"><Plus className="mr-2 h-6 w-6" /> Novo Produto</Button>
         </div>
