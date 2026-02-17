@@ -24,7 +24,8 @@ import {
   Copy, 
   Check,
   Truck,
-  Store
+  Store,
+  LogIn
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -40,7 +41,7 @@ export default function CheckoutPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
   const firestore = useFirestore();
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const router = useRouter();
   
@@ -89,6 +90,11 @@ export default function CheckoutPage() {
   };
 
   const handleSendToWhatsApp = async () => {
+    if (!user) {
+      toast({ variant: "destructive", title: "Login necessário", description: "Entre na sua conta para finalizar o pedido." });
+      return;
+    }
+
     if (!form.name || !form.phone || !form.paymentMethod) {
       toast({ variant: "destructive", title: "Atenção", description: "Preencha seu nome, telefone e forma de pagamento." });
       return;
@@ -125,7 +131,7 @@ export default function CheckoutPage() {
       createdAt: serverTimestamp(),
       totalAmount: total,
       status: 'New',
-      userId: user?.uid || null,
+      userId: user.uid,
       paymentMethod: form.paymentMethod,
       paymentDetails: paymentDetails,
       deliveryType: form.deliveryType
@@ -206,7 +212,6 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
-        {/* Opção de Entrega ou Retirada no Topo */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">
@@ -395,20 +400,37 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <Button 
-                onClick={handleSendToWhatsApp} 
-                disabled={loading || !form.paymentMethod} 
-                className="w-full h-24 rounded-full bg-primary hover:bg-primary/90 text-white text-2xl font-black shadow-2xl shadow-primary/40 mt-10 transform transition hover:scale-[1.02] active:scale-95 disabled:grayscale"
-              >
-                {loading ? <Loader2 className="animate-spin h-10 w-10" /> : (
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-black uppercase opacity-80 mb-1">Finalizar Pedido</span>
-                    <div className="flex items-center gap-2">
-                      <Send className="h-7 w-7" /> Enviar para WhatsApp
-                    </div>
+              {!user ? (
+                <div className="p-6 bg-primary/5 border-2 border-dashed border-primary/20 rounded-[2rem] space-y-4 mt-10 text-center animate-in fade-in zoom-in-95">
+                  <div className="mx-auto h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center">
+                    <LogIn className="h-8 w-8 text-primary" />
                   </div>
-                )}
-              </Button>
+                  <div className="space-y-1">
+                    <h4 className="text-xl font-black text-black">Quase lá!</h4>
+                    <p className="text-muted-foreground font-medium">Você precisa entrar na sua conta para finalizar o pedido.</p>
+                  </div>
+                  <Link href="/login" className="block">
+                    <Button className="w-full h-16 rounded-full bg-primary text-white text-xl font-black shadow-lg transform transition hover:scale-[1.02] active:scale-95">
+                      Fazer Login / Criar Conta
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <Button 
+                  onClick={handleSendToWhatsApp} 
+                  disabled={loading || !form.paymentMethod} 
+                  className="w-full h-24 rounded-full bg-primary hover:bg-primary/90 text-white text-2xl font-black shadow-2xl shadow-primary/40 mt-10 transform transition hover:scale-[1.02] active:scale-95 disabled:grayscale"
+                >
+                  {loading ? <Loader2 className="animate-spin h-10 w-10" /> : (
+                    <div className="flex flex-col items-center">
+                      <span className="text-xs font-black uppercase opacity-80 mb-1">Finalizar Pedido</span>
+                      <div className="flex items-center gap-2">
+                        <Send className="h-7 w-7" /> Enviar para WhatsApp
+                      </div>
+                    </div>
+                  )}
+                </Button>
+              )}
             </Card>
           </div>
         </div>
