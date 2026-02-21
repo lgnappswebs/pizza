@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -169,11 +168,14 @@ export default function AdminProductsPage() {
               <div className="grid gap-4">
                 {filteredProducts?.map(product => (
                   <div key={product.id} className="flex items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white">
-                    <div className="flex items-center gap-4 min-w-0">
+                    <div className="flex items-center gap-4 min-w-0 flex-1">
                       <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
-                      <div className="min-w-0"><h3 className="font-black truncate text-primary text-lg">{product.name}</h3><p className="text-xs text-muted-foreground truncate">{product.description}</p></div>
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-black truncate text-primary text-lg">{product.name}</h3>
+                        <p className="text-xs text-muted-foreground break-words">{product.description}</p>
+                      </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0 ml-4">
                       <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
                       <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
                     </div>
@@ -196,7 +198,13 @@ export default function AdminProductsPage() {
                 <Label className="font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
                   <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
-                  <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name} - {c.subName || 'Geral'}</SelectItem>)}</SelectContent>
+                  <SelectContent className="bg-white">
+                    {categories?.map(c => (
+                      <SelectItem key={c.id} value={c.id} className="text-black">
+                        {c.name} {c.subName ? `- ${c.subName}` : ''}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
               </div>
               <div 
