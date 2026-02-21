@@ -69,17 +69,30 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    price: '',
+    price: '0,00',
     categoryId: '',
     imageUrl: '',
     isAvailable: true,
     isPromotion: false,
     promotionSize: 'all',
     hasMultipleSizes: false,
-    priceSmall: '',
-    priceMedium: '',
-    priceLarge: ''
+    priceSmall: '0,00',
+    priceMedium: '0,00',
+    priceLarge: '0,00'
   });
+
+  const formatCurrency = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "0,00";
+    const amount = (parseFloat(digits) / 100).toFixed(2);
+    return amount.replace(".", ",");
+  };
+
+  const parseCurrency = (formattedValue: string) => {
+    if (!formattedValue) return 0;
+    const clean = formattedValue.replace(/[^\d]/g, "");
+    return parseFloat(clean) / 100;
+  };
 
   const categoriesQuery = useMemoFirebase(() => query(collection(firestore, 'categorias'), orderBy('order', 'asc')), [firestore]);
   const productsQuery = useMemoFirebase(() => collection(firestore, 'produtos'), [firestore]);
@@ -90,7 +103,6 @@ export default function AdminProductsPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  // Agrupamento de produtos por categoria
   const groupedProducts = useMemo(() => {
     if (!products || !categories) return {};
     const groups: Record<string, any[]> = {};
@@ -106,7 +118,6 @@ export default function AdminProductsPage() {
       groups[catName].push(product);
     });
 
-    // Ordenar chaves dos grupos para manter consistência
     return Object.keys(groups).sort().reduce((acc, key) => {
       acc[key] = groups[key];
       return acc;
@@ -118,10 +129,10 @@ export default function AdminProductsPage() {
   const handleSave = () => {
     const data = {
       ...formData,
-      price: parseFloat(formData.price.replace(',', '.')) || 0,
-      priceSmall: formData.hasMultipleSizes ? parseFloat(formData.priceSmall.replace(',', '.')) : null,
-      priceMedium: formData.hasMultipleSizes ? parseFloat(formData.priceMedium.replace(',', '.')) : null,
-      priceLarge: formData.hasMultipleSizes ? parseFloat(formData.priceLarge.replace(',', '.')) : null,
+      price: parseCurrency(formData.price),
+      priceSmall: formData.hasMultipleSizes ? parseCurrency(formData.priceSmall) : null,
+      priceMedium: formData.hasMultipleSizes ? parseCurrency(formData.priceMedium) : null,
+      priceLarge: formData.hasMultipleSizes ? parseCurrency(formData.priceLarge) : null,
     };
     if (editingProduct) updateDocumentNonBlocking(doc(firestore, 'produtos', editingProduct.id), data);
     else addDocumentNonBlocking(collection(firestore, 'produtos'), data);
@@ -132,17 +143,26 @@ export default function AdminProductsPage() {
     if (product) {
       setEditingProduct(product);
       setFormData({
-        name: product.name, description: product.description, price: (product.price || 0).toString().replace('.', ','),
-        categoryId: product.categoryId, imageUrl: product.imageUrl, isAvailable: product.isAvailable ?? true,
-        isPromotion: product.isPromotion || false, promotionSize: product.promotionSize || 'all',
+        name: product.name, 
+        description: product.description, 
+        price: formatCurrency((product.price || 0).toFixed(2).replace('.', '')),
+        categoryId: product.categoryId, 
+        imageUrl: product.imageUrl, 
+        isAvailable: product.isAvailable ?? true,
+        isPromotion: product.isPromotion || false, 
+        promotionSize: product.promotionSize || 'all',
         hasMultipleSizes: product.hasMultipleSizes || false,
-        priceSmall: product.priceSmall?.toString().replace('.', ',') || '',
-        priceMedium: product.priceMedium?.toString().replace('.', ',') || '',
-        priceLarge: product.priceLarge?.toString().replace('.', ',') || ''
+        priceSmall: formatCurrency((product.priceSmall || 0).toFixed(2).replace('.', '')),
+        priceMedium: formatCurrency((product.priceMedium || 0).toFixed(2).replace('.', '')),
+        priceLarge: formatCurrency((product.priceLarge || 0).toFixed(2).replace('.', ''))
       });
     } else {
       setEditingProduct(null);
-      setFormData({ name: '', description: '', price: '', categoryId: '', imageUrl: '', isAvailable: true, isPromotion: false, promotionSize: 'all', hasMultipleSizes: false, priceSmall: '', priceMedium: '', priceLarge: '' });
+      setFormData({ 
+        name: '', description: '', price: '0,00', categoryId: '', imageUrl: '', 
+        isAvailable: true, isPromotion: false, promotionSize: 'all', 
+        hasMultipleSizes: false, priceSmall: '0,00', priceMedium: '0,00', priceLarge: '0,00' 
+      });
     }
     setIsDialogOpen(true);
   };
@@ -271,12 +291,47 @@ export default function AdminProductsPage() {
                 <Switch checked={formData.hasMultipleSizes} className="pointer-events-none" />
               </div>
               {!formData.hasMultipleSizes ? (
-                <div className="grid gap-2"><Label className="font-bold">Preço Único (R$)</Label><div className="relative"><span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-muted-foreground">R$</span><Input placeholder="0,00" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} className="h-12 pl-10 border-2 rounded-xl text-black bg-white" /></div></div>
+                <div className="grid gap-2">
+                  <Label className="font-bold">Preço Único (R$)</Label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-muted-foreground">R$</span>
+                    <Input 
+                      placeholder="0,00" 
+                      value={formData.price} 
+                      onChange={(e) => setFormData({...formData, price: formatCurrency(e.target.value)})} 
+                      className="h-12 pl-10 border-2 rounded-xl text-black bg-white" 
+                    />
+                  </div>
+                </div>
               ) : (
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="space-y-1"><Label className="text-xs font-bold">P (R$)</Label><Input value={formData.priceSmall} onChange={(e) => setFormData({...formData, priceSmall: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-bold">M (R$)</Label><Input value={formData.priceMedium} onChange={(e) => setFormData({...formData, priceMedium: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
-                  <div className="space-y-1"><Label className="text-xs font-bold">G (R$)</Label><Input value={formData.priceLarge} onChange={(e) => setFormData({...formData, priceLarge: e.target.value})} className="h-10 border-2 rounded-xl text-black bg-white" placeholder="0,00" /></div>
+                  <div className="space-y-1">
+                    <Label className="text-xs font-bold">P (R$)</Label>
+                    <Input 
+                      value={formData.priceSmall} 
+                      onChange={(e) => setFormData({...formData, priceSmall: formatCurrency(e.target.value)})} 
+                      className="h-10 border-2 rounded-xl text-black bg-white" 
+                      placeholder="0,00" 
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs font-bold">M (R$)</Label>
+                    <Input 
+                      value={formData.priceMedium} 
+                      onChange={(e) => setFormData({...formData, priceMedium: formatCurrency(e.target.value)})} 
+                      className="h-10 border-2 rounded-xl text-black bg-white" 
+                      placeholder="0,00" 
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs font-bold">G (R$)</Label>
+                    <Input 
+                      value={formData.priceLarge} 
+                      onChange={(e) => setFormData({...formData, priceLarge: formatCurrency(e.target.value)})} 
+                      className="h-10 border-2 rounded-xl text-black bg-white" 
+                      placeholder="0,00" 
+                    />
+                  </div>
                 </div>
               )}
               <div className="grid gap-2">
