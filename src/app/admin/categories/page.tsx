@@ -64,6 +64,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useToast } from '@/hooks/use-toast';
 
 export default function AdminCategoriesPage() {
@@ -256,48 +262,55 @@ export default function AdminCategoriesPage() {
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
           ) : Object.keys(groupedCategories).length > 0 ? (
-            Object.entries(groupedCategories).map(([groupName, items]) => (
-              <div key={groupName} className="space-y-4">
-                <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border-l-4 border-primary">
-                  <FolderTree className="h-5 w-5 text-primary" />
-                  <h2 className="font-black text-lg uppercase tracking-wider text-primary">{groupName}</h2>
-                </div>
-                <div className="grid grid-cols-1 gap-3 md:gap-4">
-                  {items.map((category) => (
-                    <Card key={category.id} className="rounded-2xl border-2 hover:bg-muted/30 transition-colors bg-white overflow-hidden">
-                      <CardContent className="p-4 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-4 flex-1 min-w-0">
-                          <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground font-bold shrink-0 text-sm">
-                            {category.order}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <Badge variant="secondary" className="text-xs font-black uppercase bg-primary/10 text-primary border-none">
-                                {category.subName || 'Geral'}
-                              </Badge>
-                              <span className="text-[10px] text-muted-foreground font-black uppercase">Subcategoria</span>
+            <Accordion type="multiple" className="w-full space-y-4">
+              {Object.entries(groupedCategories).map(([groupName, items]) => (
+                <AccordionItem key={groupName} value={groupName} className="border-none">
+                  <AccordionTrigger className="flex items-center gap-2 px-4 py-3 bg-primary/5 rounded-xl border-l-4 border-primary hover:no-underline hover:bg-primary/10 transition-all">
+                    <div className="flex items-center gap-2 flex-1 text-left">
+                      <FolderTree className="h-5 w-5 text-primary" />
+                      <h2 className="font-black text-lg uppercase tracking-wider text-primary">{groupName}</h2>
+                      <Badge variant="outline" className="ml-auto bg-white font-black mr-2">{items.length}</Badge>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-4 pb-2">
+                    <div className="grid grid-cols-1 gap-3 md:gap-4">
+                      {items.map((category) => (
+                        <Card key={category.id} className="rounded-2xl border-2 hover:bg-muted/30 transition-colors bg-white overflow-hidden">
+                          <CardContent className="p-4 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-4 flex-1 min-w-0">
+                              <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground font-bold shrink-0 text-sm">
+                                {category.order}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  <Badge variant="secondary" className="text-xs font-black uppercase bg-primary/10 text-primary border-none">
+                                    {category.subName || 'Geral'}
+                                  </Badge>
+                                  <span className="text-[10px] text-muted-foreground font-black uppercase">Subcategoria</span>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 shrink-0">
-                          <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-10 w-10 text-black border-2 bg-white">
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            onClick={() => handleDeleteClick(category)} 
-                            className="rounded-xl h-10 w-10 text-destructive border-2 hover:bg-destructive/10 bg-white"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            ))
+                            <div className="flex gap-2 shrink-0">
+                              <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-10 w-10 text-black border-2 bg-white">
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="outline" 
+                                size="icon" 
+                                onClick={() => handleDeleteClick(category)} 
+                                className="rounded-xl h-10 w-10 text-destructive border-2 hover:bg-destructive/10 bg-white"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           ) : (
             <div className="text-center py-12 text-muted-foreground text-sm md:text-base font-medium italic bg-white rounded-3xl border-2 border-dashed">
               Nenhuma categoria encontrada.
@@ -397,6 +410,7 @@ export default function AdminCategoriesPage() {
           <PizzaIcon className="h-5 w-5 text-amber-600" />
           <span className="text-[12px] font-black uppercase">Produtos</span>
         </Link>
+        
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex flex-col items-center gap-1 min-w-[60px] text-black">
