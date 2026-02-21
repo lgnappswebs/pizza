@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   Plus, 
   Search, 
@@ -17,7 +17,8 @@ import {
   ExternalLink,
   Wallet,
   ArrowLeft,
-  CreditCard
+  CreditCard,
+  FolderTree
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -83,7 +84,28 @@ export default function AdminProductsPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  const filteredProducts = products?.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Agrupamento de produtos por categoria
+  const groupedProducts = useMemo(() => {
+    if (!products || !categories) return {};
+    const groups: Record<string, any[]> = {};
+    
+    const filtered = products.filter(p => 
+      p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    filtered.forEach(product => {
+      const cat = categories.find(c => c.id === product.categoryId);
+      const catName = cat ? `${cat.name} ${cat.subName ? `- ${cat.subName}` : ''}` : 'Sem Categoria';
+      if (!groups[catName]) groups[catName] = [];
+      groups[catName].push(product);
+    });
+
+    // Ordenar chaves dos grupos para manter consistência
+    return Object.keys(groups).sort().reduce((acc, key) => {
+      acc[key] = groups[key];
+      return acc;
+    }, {} as Record<string, any[]>);
+  }, [products, categories, searchTerm]);
 
   const handleLogout = async () => { await signOut(getAuth()); router.push('/admin/login'); };
 
@@ -156,6 +178,7 @@ export default function AdminProductsPage() {
           <div className="w-full text-center sm:text-left"><h1 className="text-3xl font-black text-black">Produtos</h1><p className="text-muted-foreground font-medium">Gerencie seu cardápio de forma ágil</p></div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg"><Plus className="mr-2 h-6 w-6" /> Novo Produto</Button>
         </div>
+        
         <Card className="rounded-2xl border-2 mb-6 shadow-sm overflow-hidden bg-white">
           <CardHeader className="p-4 border-b">
             <div className="relative">
@@ -163,25 +186,43 @@ export default function AdminProductsPage() {
               <Input placeholder="Buscar produto..." className="pl-12 h-12 rounded-xl border-2 text-black bg-white" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="p-4 space-y-8">
             {isLoadingProducts ? <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary" /></div> : (
-              <div className="grid gap-4">
-                {filteredProducts?.map(product => (
-                  <div key={product.id} className="flex items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white">
-                    <div className="flex items-center gap-4 min-w-0 flex-1">
-                      <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
-                      <div className="min-w-0 flex-1">
-                        <h3 className="font-black truncate text-primary text-lg">{product.name}</h3>
-                        <p className="text-xs text-muted-foreground break-words">{product.description}</p>
-                      </div>
+              Object.entries(groupedProducts).length > 0 ? (
+                Object.entries(groupedProducts).map(([catName, productsInCat]) => (
+                  <div key={catName} className="space-y-4">
+                    <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border-l-4 border-primary">
+                      <FolderTree className="h-4 w-4 text-primary" />
+                      <h2 className="font-black text-sm uppercase tracking-wider text-primary">{catName}</h2>
+                      <Badge variant="outline" className="ml-auto bg-white font-black">{productsInCat.length}</Badge>
                     </div>
-                    <div className="flex gap-2 shrink-0 ml-4">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
-                      <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
+                    <div className="grid gap-4">
+                      {productsInCat.map(product => (
+                        <div key={product.id} className="flex items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white">
+                          <div className="flex items-center gap-4 min-w-0 flex-1">
+                            <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-black truncate text-primary text-lg">{product.name}</h3>
+                                {product.isPromotion && <Badge className="bg-secondary text-secondary-foreground text-[10px] h-5">Oferta</Badge>}
+                              </div>
+                              <p className="text-xs text-muted-foreground break-words leading-relaxed">{product.description}</p>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 shrink-0 ml-4">
+                            <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir este produto?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
+                ))
+              ) : (
+                <div className="text-center py-12 text-muted-foreground italic font-medium">
+                  Nenhum produto encontrado.
+                </div>
+              )
             )}
           </CardContent>
         </Card>

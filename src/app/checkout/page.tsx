@@ -81,7 +81,7 @@ export default function CheckoutPage() {
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
-  const subtotal = getTotal();
+  const subtotal = mounted ? getTotal() : 0;
   const deliveryFee = form.deliveryType === 'delivery' ? (config?.deliveryFee || 0) : 0;
   const total = subtotal + deliveryFee;
 
