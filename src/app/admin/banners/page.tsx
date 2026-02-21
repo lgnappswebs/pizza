@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -36,7 +37,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -93,6 +94,17 @@ export default function AdminBannersPage() {
   const bannersTop = useMemo(() => banners?.filter(b => b.bannerPosition === 'top') || [], [banners]);
   const bannersMiddle = useMemo(() => banners?.filter(b => b.bannerPosition === 'middle') || [], [banners]);
   const bannersBottom = useMemo(() => banners?.filter(b => b.bannerPosition === 'bottom') || [], [banners]);
+
+  const groupedCategoriesForSelect = useMemo(() => {
+    if (!categories) return {};
+    const groups: Record<string, any[]> = {};
+    categories.forEach(cat => {
+      const name = cat.name || 'Outros';
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(cat);
+    });
+    return groups;
+  }, [categories]);
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -265,8 +277,15 @@ export default function AdminBannersPage() {
                   <SelectTrigger className="rounded-xl border-2 h-12 text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
                   <SelectContent className="bg-white">
                     <SelectItem value="none" className="text-black">Nenhum (Apenas Visual)</SelectItem>
-                    {categories?.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id} className="text-black">{cat.name} - {cat.subName || 'Geral'}</SelectItem>
+                    {Object.entries(groupedCategoriesForSelect).map(([mainName, subCats]) => (
+                      <SelectGroup key={mainName}>
+                        <SelectLabel className="font-black text-primary px-2 py-1.5 text-[10px] uppercase tracking-widest bg-primary/5">{mainName}</SelectLabel>
+                        {subCats.map(c => (
+                          <SelectItem key={c.id} value={c.id} className="text-black pl-4">
+                            {c.subName || 'Geral'}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>

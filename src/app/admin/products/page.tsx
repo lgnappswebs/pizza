@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -32,7 +33,7 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import Link from 'next/link';
 import { 
@@ -130,6 +131,17 @@ export default function AdminProductsPage() {
       return acc;
     }, {} as Record<string, any[]>);
   }, [products, categories, searchTerm]);
+
+  const groupedCategoriesForSelect = useMemo(() => {
+    if (!categories) return {};
+    const groups: Record<string, any[]> = {};
+    categories.forEach(cat => {
+      const name = cat.name || 'Outros';
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(cat);
+    });
+    return groups;
+  }, [categories]);
 
   const handleLogout = async () => { await signOut(getAuth()); router.push('/admin/login'); };
 
@@ -277,12 +289,19 @@ export default function AdminProductsPage() {
               <div className="grid gap-2">
                 <Label className="font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
-                  <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
+                  <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white">
+                    <SelectValue placeholder="Selecione uma categoria" />
+                  </SelectTrigger>
                   <SelectContent className="bg-white">
-                    {categories?.map(c => (
-                      <SelectItem key={c.id} value={c.id} className="text-black">
-                        {c.name} {c.subName ? `- ${c.subName}` : ''}
-                      </SelectItem>
+                    {Object.entries(groupedCategoriesForSelect).map(([mainName, subCats]) => (
+                      <SelectGroup key={mainName}>
+                        <SelectLabel className="font-black text-primary px-2 py-1.5 text-[10px] uppercase tracking-widest bg-primary/5">{mainName}</SelectLabel>
+                        {subCats.map(c => (
+                          <SelectItem key={c.id} value={c.id} className="text-black pl-4">
+                            {c.subName || 'Geral'}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     ))}
                   </SelectContent>
                 </Select>

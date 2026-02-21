@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useMemo, useEffect } from 'react';
@@ -37,6 +38,7 @@ import { cn } from '@/lib/utils';
 export default function MenuPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSubId, setSelectedSubId] = useState('all');
+  const [activeSubName, setActiveSubName] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('loading');
   const [mounted, setMounted] = useState(false);
   
@@ -98,6 +100,12 @@ export default function MenuPage() {
     }
   }, [mainNames, activeCategory]);
 
+  const handleCategoryChange = (val: string) => {
+    setActiveCategory(val);
+    setSelectedSubId('all');
+    setActiveSubName(null);
+  };
+
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
   const topBanners = useMemo(() => activeBanners.filter(b => b.bannerPosition === 'top'), [activeBanners]);
   const middleBanners = useMemo(() => activeBanners.filter(b => b.bannerPosition === 'middle'), [activeBanners]);
@@ -122,8 +130,9 @@ export default function MenuPage() {
     if (!linkCategoryId || linkCategoryId === 'none') return;
     const targetCat = categories?.find(c => c.id === linkCategoryId);
     if (targetCat) {
-      setActiveCategory(targetCat.name);
+      handleCategoryChange(targetCat.name);
       setSelectedSubId(targetCat.id);
+      setActiveSubName(targetCat.subName || 'Geral');
       document.getElementById('menu-navigation')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
@@ -193,11 +202,11 @@ export default function MenuPage() {
               </div>
             </div>
           ) : (
-            <Tabs value={activeCategory || undefined} className="w-full" onValueChange={setActiveCategory}>
+            <Tabs value={activeCategory || undefined} className="w-full" onValueChange={handleCategoryChange}>
               <div id="menu-navigation" className="flex justify-start md:justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
                 <TabsList className="bg-transparent h-auto flex gap-3">
                   {mainNames.map((name) => (
-                    <TabsTrigger key={name} value={name} className="rounded-2xl px-6 py-3 text-base md:text-lg font-black border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white shadow-sm whitespace-nowrap">
+                    <TabsTrigger key={name} value={name} className="rounded-2xl px-6 py-3 text-base md:text-lg font-black border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white shadow-sm whitespace-nowrap transition-all">
                       {getCategoryIcon(name)} <span className="ml-2">{name}</span>
                     </TabsTrigger>
                   ))}
@@ -207,9 +216,39 @@ export default function MenuPage() {
               {mainNames.map((name) => (
                 <TabsContent key={name} value={name} className="space-y-10">
                   {groupedCategories[name].length > 1 && (
-                    <div className="flex flex-wrap justify-center gap-3">
-                      <Button variant={selectedSubId === 'all' ? 'default' : 'outline'} onClick={() => setSelectedSubId('all')} className="rounded-2xl h-12 px-8 font-black border-2">Tudo</Button>
-                      {groupedCategories[name].map(sub => <Button key={sub.id} variant={selectedSubId === sub.id ? 'default' : 'outline'} onClick={() => setSelectedSubId(sub.id)} className="rounded-2xl h-12 px-8 font-black border-2">{sub.subName || 'Geral'}</Button>)}
+                    <div className="flex justify-center mb-10 min-h-[3rem]">
+                      {selectedSubId === 'all' ? (
+                        <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
+                          {groupedCategories[name].map(sub => (
+                            <Button 
+                              key={sub.id} 
+                              variant="outline" 
+                              onClick={() => {
+                                setSelectedSubId(sub.id);
+                                setActiveSubName(sub.subName || 'Geral');
+                              }} 
+                              className="rounded-2xl h-12 px-8 font-black border-2 hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm"
+                            >
+                              {sub.subName || 'Geral'}
+                            </Button>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="animate-in zoom-in-95 duration-300">
+                          <Button 
+                            variant="ghost" 
+                            onClick={() => {
+                              setSelectedSubId('all');
+                              setActiveSubName(null);
+                            }} 
+                            className="rounded-full h-12 px-6 font-black border-2 flex items-center gap-3 bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-all shadow-md"
+                          >
+                            <span className="text-[10px] uppercase font-black opacity-50 tracking-widest">Vendo:</span>
+                            <span className="text-lg">{activeSubName}</span>
+                            <X className="h-5 w-5 bg-primary text-white rounded-full p-1" />
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   )}
                   {activeCategory === name && middleBanners.length > 0 && <div className="animate-in fade-in">{renderBannerContent(middleBanners)}</div>}
