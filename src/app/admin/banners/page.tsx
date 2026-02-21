@@ -210,26 +210,26 @@ export default function AdminBannersPage() {
         )}
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2 border-primary/20">
+          <DialogContent className="sm:max-w-[500px] rounded-3xl max-h-[90vh] overflow-y-auto border-2 border-primary/20 bg-white">
             <DialogHeader className="pt-10">
               <DialogTitle className="text-3xl font-black text-primary text-center w-full">{editingBanner ? 'Editar' : 'Novo'} Banner</DialogTitle>
             </DialogHeader>
             <div className="grid gap-6 py-4">
               <div className="grid gap-2">
                 <Label className="font-bold">Título do Banner</Label>
-                <Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Promoção de Terça" />
+                <Input value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="rounded-xl border-2 h-12 text-black bg-white" placeholder="Ex: Promoção de Terça" />
               </div>
               
               <div className="grid gap-2">
                 <Label className="font-bold">Descrição / Subtítulo</Label>
-                <Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12" placeholder="Ex: Peça uma pizza e ganhe outra" />
+                <Input value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="rounded-xl border-2 h-12 text-black bg-white" placeholder="Ex: Peça uma pizza e ganhe outra" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label className="font-bold">Posição no Menu</Label>
                   <Select value={formData.bannerPosition} onValueChange={(v) => setFormData({...formData, bannerPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-black bg-white"><SelectValue /></SelectTrigger>
                     <SelectContent className="bg-white">
                       <SelectItem value="top" className="text-black">Topo do Cardápio</SelectItem>
                       <SelectItem value="middle" className="text-black">Meio do Cardápio</SelectItem>
@@ -240,7 +240,7 @@ export default function AdminBannersPage() {
                 <div className="grid gap-2">
                   <Label className="font-bold">Posição do Texto</Label>
                   <Select value={formData.textPosition} onValueChange={(v) => setFormData({...formData, textPosition: v})}>
-                    <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="rounded-xl border-2 h-12 text-black bg-white"><SelectValue /></SelectTrigger>
                     <SelectContent className="bg-white">
                       <SelectItem value="top-left" className="text-black">Topo Esquerda</SelectItem>
                       <SelectItem value="top-center" className="text-black">Topo Centro</SelectItem>
@@ -255,7 +255,7 @@ export default function AdminBannersPage() {
               <div className="grid gap-2">
                 <Label className="font-bold">Ao clicar, levar para:</Label>
                 <Select value={formData.linkCategoryId} onValueChange={(v) => setFormData({...formData, linkCategoryId: v})}>
-                  <SelectTrigger className="rounded-xl border-2 h-12"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
+                  <SelectTrigger className="rounded-xl border-2 h-12 text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
                   <SelectContent className="bg-white">
                     <SelectItem value="none" className="text-black">Nenhum (Apenas Visual)</SelectItem>
                     {categories?.map((cat) => (
@@ -268,8 +268,8 @@ export default function AdminBannersPage() {
               <div className="grid gap-2">
                 <Label className="font-bold">Imagem do Banner</Label>
                 <div className="flex gap-2">
-                  <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12" placeholder="URL da imagem" />
-                  <Button type="button" variant="outline" className="shrink-0 rounded-xl border-2 h-12 w-12" onClick={() => document.getElementById('banner-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
+                  <Input value={formData.imageUrl} onChange={(e) => setFormData({...formData, imageUrl: e.target.value})} className="rounded-xl flex-1 border-2 h-12 text-black bg-white" placeholder="URL da imagem" />
+                  <Button type="button" variant="outline" className="shrink-0 rounded-xl border-2 h-12 w-12 text-black bg-white" onClick={() => document.getElementById('banner-upload')?.click()}><ImageIcon className="h-6 w-6 text-primary" /></Button>
                   <input id="banner-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                 </div>
                 {formData.imageUrl && (

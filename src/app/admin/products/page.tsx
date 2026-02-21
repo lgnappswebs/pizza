@@ -196,7 +196,7 @@ export default function AdminProductsPage() {
                 <Label className="font-bold">Categoria</Label>
                 <Select value={formData.categoryId} onValueChange={(v) => setFormData({...formData, categoryId: v})}>
                   <SelectTrigger className="h-12 border-2 rounded-xl text-black bg-white"><SelectValue placeholder="Selecione uma categoria" /></SelectTrigger>
-                  <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name}</SelectItem>)}</SelectContent>
+                  <SelectContent className="bg-white">{categories?.map(c => <SelectItem key={c.id} value={c.id} className="text-black">{c.name} - {c.subName || 'Geral'}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div 
