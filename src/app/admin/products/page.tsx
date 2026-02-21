@@ -47,6 +47,12 @@ import {
 import { collection, doc, query, orderBy } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function AdminProductsPage() {
   const firestore = useFirestore();
@@ -189,35 +195,41 @@ export default function AdminProductsPage() {
           <CardContent className="p-4 space-y-8">
             {isLoadingProducts ? <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary" /></div> : (
               Object.entries(groupedProducts).length > 0 ? (
-                Object.entries(groupedProducts).map(([catName, productsInCat]) => (
-                  <div key={catName} className="space-y-4">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border-l-4 border-primary">
-                      <FolderTree className="h-4 w-4 text-primary" />
-                      <h2 className="font-black text-sm uppercase tracking-wider text-primary">{catName}</h2>
-                      <Badge variant="outline" className="ml-auto bg-white font-black">{productsInCat.length}</Badge>
-                    </div>
-                    <div className="grid gap-4">
-                      {productsInCat.map(product => (
-                        <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white gap-4">
-                          <div className="flex items-center gap-4 min-w-0 flex-1">
-                            <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center gap-2">
-                                <h3 className="font-black truncate text-primary text-lg">{product.name}</h3>
-                                {product.isPromotion && <Badge className="bg-secondary text-secondary-foreground text-[10px] h-5">Oferta</Badge>}
-                              </div>
-                              <p className="text-xs text-muted-foreground break-words leading-relaxed">{product.description}</p>
-                            </div>
-                          </div>
-                          <div className="flex gap-2 shrink-0 self-end sm:self-auto sm:ml-4">
-                            <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir este produto?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
-                          </div>
+                <Accordion type="multiple" className="w-full space-y-4">
+                  {Object.entries(groupedProducts).map(([catName, productsInCat]) => (
+                    <AccordionItem key={catName} value={catName} className="border-none">
+                      <AccordionTrigger className="flex items-center gap-2 px-4 py-3 bg-primary/5 rounded-xl border-l-4 border-primary hover:no-underline hover:bg-primary/10 transition-all">
+                        <div className="flex items-center gap-2 flex-1 text-left">
+                          <FolderTree className="h-4 w-4 text-primary" />
+                          <h2 className="font-black text-sm uppercase tracking-wider text-primary">{catName}</h2>
+                          <Badge variant="outline" className="ml-auto bg-white font-black mr-2">{productsInCat.length}</Badge>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                ))
+                      </AccordionTrigger>
+                      <AccordionContent className="pt-4 pb-2">
+                        <div className="grid gap-4">
+                          {productsInCat.map(product => (
+                            <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white gap-4 relative">
+                              <div className="flex items-center gap-4 min-w-0 flex-1">
+                                <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2">
+                                    <h3 className="font-black truncate text-primary text-lg">{product.name}</h3>
+                                    {product.isPromotion && <Badge className="bg-secondary text-secondary-foreground text-[10px] h-5">Oferta</Badge>}
+                                  </div>
+                                  <p className="text-xs text-muted-foreground break-words leading-relaxed">{product.description}</p>
+                                </div>
+                              </div>
+                              <div className="flex gap-2 shrink-0 self-end sm:self-auto sm:ml-4">
+                                <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
+                                <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir este produto?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               ) : (
                 <div className="text-center py-12 text-muted-foreground italic font-medium">
                   Nenhum produto encontrado.
