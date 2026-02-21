@@ -240,7 +240,6 @@ export default function CheckoutPage() {
       </div>
 
       <div className="max-w-5xl mx-auto space-y-10">
-        {/* Prioridade: Como prefere receber no TOPO */}
         <Card className="rounded-[2.5rem] border-2 shadow-2xl bg-white p-8">
           <div className="space-y-6">
             <h3 className="text-2xl font-black flex items-center gap-2">

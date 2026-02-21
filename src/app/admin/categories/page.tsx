@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   Plus, 
   Edit2, 
@@ -96,6 +96,17 @@ export default function AdminCategoriesPage() {
   const { data: categories, isLoading: isLoadingCats } = useCollection(categoriesQuery);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
+
+  const groupedCategories = useMemo(() => {
+    if (!categories) return {};
+    const groups: Record<string, any[]> = {};
+    categories.forEach(cat => {
+      const name = cat.name || 'Outros';
+      if (!groups[name]) groups[name] = [];
+      groups[name].push(cat);
+    });
+    return groups;
+  }, [categories]);
 
   if (isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
@@ -239,59 +250,60 @@ export default function AdminCategoriesPage() {
           </Button>
         </div>
 
-        <Card className="rounded-2xl border-2 bg-white">
-          <CardContent className="p-3 md:p-6">
-            {isLoadingCats ? (
-              <div className="flex justify-center py-12">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-3 md:gap-4">
-                {categories?.map((category) => (
-                  <div key={category.id} className="flex items-center justify-between p-3 md:p-4 border-2 rounded-2xl hover:bg-muted/30 transition-colors gap-2 bg-white">
-                    <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
-                      <div className="h-8 w-8 md:h-10 md:w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold shrink-0 text-sm md:text-base">
-                        {category.order}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-x-3 gap-y-1">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] uppercase font-black text-muted-foreground/60 hidden sm:inline">Grupo:</span>
-                            <p className="font-black text-base md:text-lg truncate text-primary">{category.name}</p>
+        <div className="space-y-8">
+          {isLoadingCats ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+          ) : Object.keys(groupedCategories).length > 0 ? (
+            Object.entries(groupedCategories).map(([groupName, items]) => (
+              <div key={groupName} className="space-y-4">
+                <div className="flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border-l-4 border-primary">
+                  <FolderTree className="h-5 w-5 text-primary" />
+                  <h2 className="font-black text-lg uppercase tracking-wider text-primary">{groupName}</h2>
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:gap-4">
+                  {items.map((category) => (
+                    <Card key={category.id} className="rounded-2xl border-2 hover:bg-muted/30 transition-colors bg-white overflow-hidden">
+                      <CardContent className="p-4 flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                          <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground font-bold shrink-0 text-sm">
+                            {category.order}
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-[10px] uppercase font-black text-muted-foreground/60 hidden sm:inline">Sub:</span>
-                            <Badge variant="secondary" className="text-[10px] md:text-xs font-bold truncate max-w-[150px] bg-muted border-none text-black">
-                              {category.subName || 'Geral'}
-                            </Badge>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="secondary" className="text-xs font-black uppercase bg-primary/10 text-primary border-none">
+                                {category.subName || 'Geral'}
+                              </Badge>
+                              <span className="text-[10px] text-muted-foreground font-black uppercase">Subcategoria</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex gap-1.5 md:gap-2 shrink-0">
-                      <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-black border-2 bg-white">
-                        <Edit2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        onClick={() => handleDeleteClick(category)} 
-                        className="rounded-xl h-8 w-8 md:h-10 md:w-10 text-destructive border-2 hover:bg-destructive/10 bg-white"
-                      >
-                        <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-                {categories?.length === 0 && (
-                  <div className="text-center py-12 text-muted-foreground text-sm md:text-base font-medium italic">
-                    Nenhuma categoria encontrada.
-                  </div>
-                )}
+                        <div className="flex gap-2 shrink-0">
+                          <Button variant="outline" size="icon" onClick={() => handleOpenDialog(category)} className="rounded-xl h-10 w-10 text-black border-2 bg-white">
+                            <Edit2 className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            onClick={() => handleDeleteClick(category)} 
+                            className="rounded-xl h-10 w-10 text-destructive border-2 hover:bg-destructive/10 bg-white"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            ))
+          ) : (
+            <div className="text-center py-12 text-muted-foreground text-sm md:text-base font-medium italic bg-white rounded-3xl border-2 border-dashed">
+              Nenhuma categoria encontrada.
+            </div>
+          )}
+        </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-[450px] rounded-3xl max-h-[90vh] overflow-y-auto border-2 border-primary/20 bg-white">
