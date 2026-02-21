@@ -18,7 +18,8 @@ import {
   IceCream,
   LayoutGrid,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -40,6 +41,7 @@ export default function MenuPage() {
   const [selectedSubId, setSelectedSubId] = useState('all');
   const [activeSubName, setActiveSubName] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>('loading');
+  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   
   const { user } = useUser();
@@ -104,6 +106,8 @@ export default function MenuPage() {
     setActiveCategory(val);
     setSelectedSubId('all');
     setActiveSubName(null);
+    // Submenu starts closed when switching tabs unless explicitly clicked
+    setIsSubMenuOpen(false);
   };
 
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
@@ -133,6 +137,7 @@ export default function MenuPage() {
       handleCategoryChange(targetCat.name);
       setSelectedSubId(targetCat.id);
       setActiveSubName(targetCat.subName || 'Geral');
+      setIsSubMenuOpen(false);
       document.getElementById('menu-navigation')?.scrollIntoView({ behavior: 'smooth' });
     }
   };
@@ -206,8 +211,25 @@ export default function MenuPage() {
               <div id="menu-navigation" className="flex justify-start md:justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
                 <TabsList className="bg-transparent h-auto flex gap-3">
                   {mainNames.map((name) => (
-                    <TabsTrigger key={name} value={name} className="rounded-2xl px-6 py-3 text-base md:text-lg font-black border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white shadow-sm whitespace-nowrap transition-all">
-                      {getCategoryIcon(name)} <span className="ml-2">{name}</span>
+                    <TabsTrigger 
+                      key={name} 
+                      value={name} 
+                      onClick={() => {
+                        if (activeCategory === name) {
+                          setIsSubMenuOpen(!isSubMenuOpen);
+                        } else {
+                          // When switching to a new main tab, we don't automatically open sub-menu 
+                          // but the user clicked it, so let's reveal subcategories for convenience
+                          setIsSubMenuOpen(true);
+                        }
+                      }}
+                      className="rounded-2xl px-6 py-3 text-base md:text-lg font-black border-2 border-muted data-[state=active]:border-primary data-[state=active]:bg-primary data-[state=active]:text-white shadow-sm whitespace-nowrap transition-all flex items-center gap-2"
+                    >
+                      {getCategoryIcon(name)} 
+                      <span className="ml-2">{name}</span>
+                      {activeCategory === name && groupedCategories[name].length > 1 && (
+                        <ChevronDown className={cn("h-4 w-4 transition-transform", isSubMenuOpen ? "rotate-180" : "")} />
+                      )}
                     </TabsTrigger>
                   ))}
                 </TabsList>
@@ -216,23 +238,26 @@ export default function MenuPage() {
               {mainNames.map((name) => (
                 <TabsContent key={name} value={name} className="space-y-10">
                   {groupedCategories[name].length > 1 && (
-                    <div className="flex justify-center mb-10 min-h-[3rem]">
+                    <div className="flex justify-center mb-10 min-h-0">
                       {selectedSubId === 'all' ? (
-                        <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
-                          {groupedCategories[name].map(sub => (
-                            <Button 
-                              key={sub.id} 
-                              variant="outline" 
-                              onClick={() => {
-                                setSelectedSubId(sub.id);
-                                setActiveSubName(sub.subName || 'Geral');
-                              }} 
-                              className="rounded-2xl h-12 px-8 font-black border-2 hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm"
-                            >
-                              {sub.subName || 'Geral'}
-                            </Button>
-                          ))}
-                        </div>
+                        isSubMenuOpen && (
+                          <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
+                            {groupedCategories[name].map(sub => (
+                              <Button 
+                                key={sub.id} 
+                                variant="outline" 
+                                onClick={() => {
+                                  setSelectedSubId(sub.id);
+                                  setActiveSubName(sub.subName || 'Geral');
+                                  setIsSubMenuOpen(false); // Hide the list after picking
+                                }} 
+                                className="rounded-2xl h-12 px-8 font-black border-2 hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm"
+                              >
+                                {sub.subName || 'Geral'}
+                              </Button>
+                            ))}
+                          </div>
+                        )
                       ) : (
                         <div className="animate-in zoom-in-95 duration-300">
                           <Button 
@@ -240,6 +265,7 @@ export default function MenuPage() {
                             onClick={() => {
                               setSelectedSubId('all');
                               setActiveSubName(null);
+                              setIsSubMenuOpen(true); // Re-open sub menu when clearing filter
                             }} 
                             className="rounded-full h-12 px-6 font-black border-2 flex items-center gap-3 bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-all shadow-md"
                           >
