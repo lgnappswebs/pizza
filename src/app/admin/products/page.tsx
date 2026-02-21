@@ -198,7 +198,7 @@ export default function AdminProductsPage() {
                     </div>
                     <div className="grid gap-4">
                       {productsInCat.map(product => (
-                        <div key={product.id} className="flex items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white">
+                        <div key={product.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border-2 rounded-2xl hover:bg-muted/30 transition-all bg-white gap-4">
                           <div className="flex items-center gap-4 min-w-0 flex-1">
                             <div className="h-16 w-16 relative rounded-xl overflow-hidden border shrink-0"><img src={product.imageUrl} alt="" className="object-cover w-full h-full" /></div>
                             <div className="min-w-0 flex-1">
@@ -209,7 +209,7 @@ export default function AdminProductsPage() {
                               <p className="text-xs text-muted-foreground break-words leading-relaxed">{product.description}</p>
                             </div>
                           </div>
-                          <div className="flex gap-2 shrink-0 ml-4">
+                          <div className="flex gap-2 shrink-0 self-end sm:self-auto sm:ml-4">
                             <Button variant="outline" size="icon" onClick={() => handleOpenDialog(product)} className="rounded-xl border-2 h-10 w-10"><Edit2 className="h-4 w-4" /></Button>
                             <Button variant="outline" size="icon" onClick={() => { if(confirm('Excluir este produto?')) deleteDocumentNonBlocking(doc(firestore, 'produtos', product.id)); }} className="rounded-xl border-2 text-destructive h-10 w-10"><Trash2 className="h-4 w-4" /></Button>
                           </div>
