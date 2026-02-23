@@ -13,6 +13,7 @@ export interface CartItem {
   crust?: string;
   notes?: string;
   imageUrl?: string;
+  flavors?: string[]; // Lista de nomes dos sabores (ex: ["Calabresa", "Frango"])
 }
 
 interface CartStore {
@@ -34,7 +35,8 @@ export const useCartStore = create<CartStore>()(
           i.id === item.id && 
           i.size === item.size && 
           i.crust === item.crust && 
-          i.notes === item.notes
+          i.notes === item.notes &&
+          JSON.stringify(i.flavors) === JSON.stringify(item.flavors)
         );
         if (existingItem) {
           set({

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -165,7 +166,12 @@ export default function CheckoutPage() {
     }
     msg += `%0A*🍕 ITENS DO PEDIDO:*%0A`;
     items.forEach(i => {
-      msg += `• ${i.quantity}x ${i.name}%0A`;
+      if (i.flavors && i.flavors.length > 1) {
+        msg += `• ${i.quantity}x PIZZA MEIO A MEIO%0A`;
+        msg += `  Sabores: ${i.flavors.join(' / ')}%0A`;
+      } else {
+        msg += `• ${i.quantity}x ${i.name}%0A`;
+      }
       msg += `  Tam: ${i.size}${i.crust && i.crust !== 'Tradicional' ? ` | Borda: ${i.crust}` : ''}%0A`;
       if (i.notes) msg += `  _Obs: ${i.notes}_%0A`;
     });
@@ -295,7 +301,9 @@ export default function CheckoutPage() {
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-black truncate text-lg">{item.name}</h4>
+                            <h4 className="font-black truncate text-lg">
+                              {item.flavors && item.flavors.length > 1 ? `Meio ${item.flavors[0]} / Meio ${item.flavors[1]}` : item.name}
+                            </h4>
                             <p className="text-xs text-muted-foreground font-bold uppercase">{item.size} {item.crust && item.crust !== 'Tradicional' ? `• ${item.crust}` : ''}</p>
                           </div>
                           <span className="font-black text-primary text-lg">R$ {(item.price * item.quantity).toFixed(2)}</span>

@@ -106,7 +106,7 @@ export default function MenuPage() {
     setActiveCategory(val);
     setSelectedSubId('all');
     setActiveSubName(null);
-    setIsSubMenuOpen(false); // Oculta subcategorias ao trocar categoria principal
+    setIsSubMenuOpen(false); 
   };
 
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
@@ -202,7 +202,15 @@ export default function MenuPage() {
             <div className="space-y-8">
               <h2 className="text-2xl font-black">Resultados para "{searchTerm}"</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {searchedProducts.map(p => <ProductCard key={p.id} {...p} category={p.categoryId} />)}
+                {searchedProducts.map(p => (
+                  <ProductCard 
+                    key={p.id} 
+                    {...p} 
+                    category={p.categoryId} 
+                    allProducts={products || []}
+                    categoryName={categories?.find(c => c.id === p.categoryId)?.name || ""}
+                  />
+                ))}
               </div>
             </div>
           ) : (
@@ -240,18 +248,17 @@ export default function MenuPage() {
                         isSubMenuOpen && (
                           <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
                             {groupedCategories[name].map(sub => (
-                              <Button 
+                              <button 
                                 key={sub.id} 
-                                variant="outline" 
                                 onClick={() => {
                                   setSelectedSubId(sub.id);
                                   setActiveSubName(sub.subName || 'Geral');
-                                  setIsSubMenuOpen(false); // Fecha ao selecionar
+                                  setIsSubMenuOpen(false); 
                                 }} 
-                                className="rounded-2xl h-12 px-8 font-black border-2 hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm"
+                                className="rounded-2xl h-12 px-8 font-black border-2 border-muted bg-white hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm transition-all"
                               >
                                 {sub.subName || 'Geral'}
-                              </Button>
+                              </button>
                             ))}
                           </div>
                         )
@@ -279,7 +286,15 @@ export default function MenuPage() {
                     {products?.filter(p => {
                       const pCat = categories?.find(c => c.id === p.categoryId);
                       return pCat && pCat.name === name && (selectedSubId === 'all' || p.categoryId === selectedSubId);
-                    }).map(product => <ProductCard key={product.id} {...product} category={product.categoryId} />)}
+                    }).map(product => (
+                      <ProductCard 
+                        key={product.id} 
+                        {...product} 
+                        category={product.categoryId} 
+                        allProducts={products || []}
+                        categoryName={name}
+                      />
+                    ))}
                   </div>
                 </TabsContent>
               ))}
