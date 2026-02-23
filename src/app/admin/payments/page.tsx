@@ -137,7 +137,11 @@ export default function AdminPaymentsPage() {
           <NavItem href="/admin/banners" icon={ImageIcon} label="Banners" colorClass="text-orange-500" />
           <NavItem href="/admin/settings" icon={SettingsIcon} label="Personalizar App" colorClass="text-blue-600" />
           <div className="pt-4 border-t mt-4">
-            <NavItem href="/menu" icon={ExternalLink} label="Ver Cardápio" colorClass="text-primary" />
+            <Link href="/menu">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+                <ExternalLink className="mr-3 h-5 w-5 text-primary" /> Ver Cardápio
+              </Button>
+            </Link>
           </div>
         </nav>
         <div className="p-4 border-t">

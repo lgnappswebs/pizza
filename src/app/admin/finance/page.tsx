@@ -125,7 +125,7 @@ export default function AdminFinancePage() {
     }
 
     const delivered = reportOrders.filter(o => o.status === 'Delivered');
-    const total = delivered.reduce((acc, o) => acc + (o.totalAmount || 0), 0);
+    const total = delivered.reduce((acc, o) => acc + (order.totalAmount || 0), 0);
 
     let text = `*RELATÓRIO FINANCEIRO - ${config?.restaurantName || 'PIZZAPP'}*\n`;
     text += `*Período:* ${periodLabel}\n`;

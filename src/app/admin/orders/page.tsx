@@ -7,24 +7,24 @@ import {
   MapPin, 
   Phone, 
   User, 
-  Loader2,
-  CheckCircle2,
-  Truck,
-  Timer,
-  LayoutDashboard,
-  Pizza as PizzaIcon,
-  Settings as SettingsIcon,
-  LogOut,
-  Layers,
-  Image as ImageIcon,
-  ExternalLink,
-  Wallet,
-  Plus,
-  Trash2,
-  ArrowLeft,
-  CreditCard,
-  QrCode,
-  Banknote
+  Loader2, 
+  CheckCircle2, 
+  Truck, 
+  Timer, 
+  LayoutDashboard, 
+  Pizza as PizzaIcon, 
+  Settings as SettingsIcon, 
+  LogOut, 
+  Layers, 
+  Image as ImageIcon, 
+  ExternalLink, 
+  Wallet, 
+  Plus, 
+  Trash2, 
+  ArrowLeft, 
+  CreditCard, 
+  QrCode, 
+  Banknote 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -44,8 +44,8 @@ import {
   useCollection, 
   useFirestore, 
   useMemoFirebase, 
-  updateDocumentNonBlocking,
-  deleteDocumentNonBlocking,
+  updateDocumentNonBlocking, 
+  deleteDocumentNonBlocking, 
   useUser 
 } from '@/firebase';
 import { collection, query, orderBy, doc } from 'firebase/firestore';

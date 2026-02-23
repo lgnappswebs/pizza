@@ -184,14 +184,21 @@ export default function AdminBannersPage() {
       <aside className="w-64 bg-white border-r hidden md:flex flex-col h-screen sticky top-0">
         <div className="p-6 border-b"><h2 className="text-2xl font-black text-primary truncate">{config?.restaurantName || "Admin"}</h2></div>
         <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
-          <Link href="/admin/products"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos</Button></Link>
-          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
-          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
-          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
-          <Link href="/admin/payments"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
-          <Link href="/admin/banners"><Button variant="secondary" className="w-full justify-start rounded-xl font-bold h-12 text-black"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
-          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold h-12 text-black hover:text-primary"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar</Button></Link>
+          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
+          <Link href="/admin/products"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos</Button></Link>
+          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
+          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
+          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
+          <Link href="/admin/payments"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
+          <Link href="/admin/banners"><Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
+          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar</Button></Link>
+          <div className="pt-4 border-t mt-4">
+            <Link href="/menu">
+              <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+                <ExternalLink className="mr-3 h-5 w-5 text-primary" /> Ver Cardápio
+              </Button>
+            </Link>
+          </div>
         </nav>
         <div className="p-4 border-t"><Button onClick={handleLogout} variant="ghost" className="w-full justify-start text-destructive font-bold h-12"><LogOut className="mr-3 h-5 w-5" /> Sair</Button></div>
       </aside>
