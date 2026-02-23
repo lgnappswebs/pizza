@@ -210,7 +210,7 @@ export default function AdminBannersPage() {
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 mb-12 mt-20 md:mt-16">
           <div className="space-y-1 w-full text-center sm:text-left">
-            <h1 className="text-3xl font-black text-black">Gerir Banners</h1>
+            <h1 className="text-3xl font-black text-black">Gerar Banners</h1>
             <p className="text-muted-foreground font-medium">Organize os destaques por posições</p>
           </div>
           <Button onClick={() => handleOpenDialog()} className="w-full sm:w-auto rounded-full h-14 px-8 font-black bg-primary text-white shadow-lg">

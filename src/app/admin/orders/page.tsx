@@ -38,7 +38,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/dialog";
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -329,20 +329,20 @@ export default function AdminOrdersPage() {
         )}
 
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <AlertDialogContent className="rounded-3xl border-2 bg-white">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
-              <AlertDialogDescription className="text-lg text-black">
+          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+            <div className="bg-white rounded-3xl border-2 p-6 max-w-md w-full space-y-4">
+              <h3 className="text-2xl font-black text-destructive">Confirmar Exclusão</h3>
+              <p className="text-lg text-black">
                 Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita e removerá o registro do sistema financeiro.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="gap-2">
-              <AlertDialogCancel className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
-                Sim, Excluir Registro
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
+              </p>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</Button>
+                <Button onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
+                  Sim, Excluir Registro
+                </Button>
+              </div>
+            </div>
+          </div>
         </AlertDialog>
       </main>
 

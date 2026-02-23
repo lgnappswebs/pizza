@@ -111,14 +111,6 @@ export default function AdminPaymentsPage() {
     });
   };
 
-  const NavItem = ({ href, icon: Icon, label, colorClass, active = false }: any) => (
-    <Link href={href}>
-      <Button variant={active ? "secondary" : "ghost"} className={`w-full justify-start rounded-xl font-bold text-lg h-12 text-black ${!active && 'hover:text-primary'}`}>
-        <Icon className={`mr-3 h-5 w-5 ${colorClass}`} /> {label}
-      </Button>
-    </Link>
-  );
-
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
@@ -128,14 +120,14 @@ export default function AdminPaymentsPage() {
           </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
-          <NavItem href="/admin/dashboard" icon={LayoutDashboard} label="Painel" colorClass="text-blue-600" />
-          <NavItem href="/admin/products" icon={PizzaIcon} label="Produtos" colorClass="text-amber-600" />
-          <NavItem href="/admin/categories" icon={Layers} label="Categorias" colorClass="text-emerald-600" />
-          <NavItem href="/admin/orders" icon={Package} label="Pedidos" colorClass="text-purple-600" />
-          <NavItem href="/admin/finance" icon={Wallet} label="Financeiro" colorClass="text-emerald-600" />
-          <NavItem href="/admin/payments" icon={CreditCard} label="Pagamentos" colorClass="text-green-600" active />
-          <NavItem href="/admin/banners" icon={ImageIcon} label="Banners" colorClass="text-orange-500" />
-          <NavItem href="/admin/settings" icon={SettingsIcon} label="Personalizar App" colorClass="text-blue-600" />
+          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
+          <Link href="/admin/products"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos</Button></Link>
+          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
+          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
+          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
+          <Link href="/admin/payments"><Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
+          <Link href="/admin/banners"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
+          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App</Button></Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
               <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
