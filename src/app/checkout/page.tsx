@@ -167,7 +167,8 @@ export default function CheckoutPage() {
     msg += `%0A*🍕 ITENS DO PEDIDO:*%0A`;
     items.forEach(i => {
       if (i.flavors && i.flavors.length > 1) {
-        msg += `• ${i.quantity}x PIZZA MEIO A MEIO%0A`;
+        const flavorLabel = i.flavors.length === 2 ? 'MEIO A MEIO' : `${i.flavors.length} SABORES`;
+        msg += `• ${i.quantity}x PIZZA ${flavorLabel}%0A`;
         msg += `  Sabores: ${i.flavors.join(' / ')}%0A`;
       } else {
         msg += `• ${i.quantity}x ${i.name}%0A`;
@@ -302,7 +303,7 @@ export default function CheckoutPage() {
                         <div className="flex justify-between items-start">
                           <div>
                             <h4 className="font-black truncate text-lg">
-                              {item.flavors && item.flavors.length > 1 ? `Meio ${item.flavors[0]} / Meio ${item.flavors[1]}` : item.name}
+                              {item.flavors && item.flavors.length > 1 ? `Pizza ${item.flavors.length} Sabores (${item.flavors.join(' / ')})` : item.name}
                             </h4>
                             <p className="text-xs text-muted-foreground font-bold uppercase">{item.size} {item.crust && item.crust !== 'Tradicional' ? `• ${item.crust}` : ''}</p>
                           </div>
