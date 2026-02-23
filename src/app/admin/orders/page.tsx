@@ -38,7 +38,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { 
   useCollection, 
@@ -51,7 +51,7 @@ import {
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 import {
@@ -66,6 +66,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function AdminOrdersPage() {
   const firestore = useFirestore();
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   
@@ -153,42 +154,42 @@ export default function AdminOrdersPage() {
         </div>
         <nav className="flex-1 p-4 space-y-2">
           <Link href="/admin/dashboard">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/dashboard' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel
             </Button>
           </Link>
           <Link href="/admin/products">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/products' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos
             </Button>
           </Link>
           <Link href="/admin/categories">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/categories' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+            <Button variant={pathname === '/admin/orders' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos
             </Button>
           </Link>
           <Link href="/admin/finance">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/finance' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
             </Button>
           </Link>
           <Link href="/admin/payments">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/payments' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
             </Button>
           </Link>
           <Link href="/admin/banners">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/banners' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
             </Button>
           </Link>
           <Link href="/admin/settings">
-            <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
+            <Button variant={pathname === '/admin/settings' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
               <SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App
             </Button>
           </Link>
@@ -329,20 +330,22 @@ export default function AdminOrdersPage() {
         )}
 
         <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-          <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl border-2 p-6 max-w-md w-full space-y-4">
-              <h3 className="text-2xl font-black text-destructive">Confirmar Exclusão</h3>
-              <p className="text-lg text-black">
+          <AlertDialogContent className="rounded-3xl border-2 bg-white">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
+              <AlertDialogDescription className="text-lg text-black">
                 Tem certeza que deseja excluir permanentemente este pedido? Esta ação não pode ser desfeita e removerá o registro do sistema financeiro.
-              </p>
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</Button>
-                <Button onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
-                  Sim, Excluir Registro
-                </Button>
-              </div>
-            </div>
-          </div>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="gap-2">
+              <AlertDialogCancel asChild>
+                <Button variant="outline" className="rounded-full h-12 font-bold text-black border-2 bg-white">Cancelar</Button>
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete} className="rounded-full h-12 font-bold bg-destructive hover:bg-destructive/90 text-white">
+                Sim, Excluir Registro
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
         </AlertDialog>
       </main>
 

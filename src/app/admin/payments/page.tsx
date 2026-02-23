@@ -38,7 +38,7 @@ import {
   useUser 
 } from '@/firebase';
 import { collection, doc } from 'firebase/firestore';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
 import {
   DropdownMenu,
@@ -51,6 +51,7 @@ import {
 export default function AdminPaymentsPage() {
   const firestore = useFirestore();
   const router = useRouter();
+  const pathname = usePathname();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -120,14 +121,46 @@ export default function AdminPaymentsPage() {
           </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin/dashboard"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel</Button></Link>
-          <Link href="/admin/products"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos</Button></Link>
-          <Link href="/admin/categories"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias</Button></Link>
-          <Link href="/admin/orders"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos</Button></Link>
-          <Link href="/admin/finance"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro</Button></Link>
-          <Link href="/admin/payments"><Button variant="secondary" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black"><CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos</Button></Link>
-          <Link href="/admin/banners"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners</Button></Link>
-          <Link href="/admin/settings"><Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary"><SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App</Button></Link>
+          <Link href="/admin/dashboard">
+            <Button variant={pathname === '/admin/dashboard' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel
+            </Button>
+          </Link>
+          <Link href="/admin/products">
+            <Button variant={pathname === '/admin/products' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos
+            </Button>
+          </Link>
+          <Link href="/admin/categories">
+            <Button variant={pathname === '/admin/categories' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias
+            </Button>
+          </Link>
+          <Link href="/admin/orders">
+            <Button variant={pathname === '/admin/orders' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos
+            </Button>
+          </Link>
+          <Link href="/admin/finance">
+            <Button variant={pathname === '/admin/finance' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
+            </Button>
+          </Link>
+          <Link href="/admin/payments">
+            <Button variant={pathname === '/admin/payments' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
+            </Button>
+          </Link>
+          <Link href="/admin/banners">
+            <Button variant={pathname === '/admin/banners' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
+            </Button>
+          </Link>
+          <Link href="/admin/settings">
+            <Button variant={pathname === '/admin/settings' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+              <SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App
+            </Button>
+          </Link>
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
               <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
