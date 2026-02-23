@@ -331,7 +331,7 @@ export default function AdminCategoriesPage() {
                 <Label htmlFor="name" className="text-lg font-bold flex items-center gap-2 text-black">
                   <FolderTree className="h-5 w-5 text-primary" /> Nome do Grupo Principal
                 </Label>
-                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ex: Pizzas, Bebidas, Combos...</p>
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">Ex: PizzAS, Bebidas, Combos...</p>
                 <Input 
                   id="name" 
                   value={formData.name} 

@@ -135,7 +135,7 @@ export default function MenuPage() {
     if (targetCat) {
       handleCategoryChange(targetCat.name);
       setSelectedSubId(targetCat.id);
-      setActiveSubName(targetCat.subName || 'Geral');
+      setActiveSubName(targetCat.subName?.toUpperCase() === 'DOCE' ? 'DOCES' : (targetCat.subName || 'Geral'));
       setIsSubMenuOpen(false);
       document.getElementById('menu-navigation')?.scrollIntoView({ behavior: 'smooth' });
     }
@@ -247,19 +247,22 @@ export default function MenuPage() {
                       {selectedSubId === 'all' ? (
                         isSubMenuOpen && (
                           <div className="flex flex-wrap justify-center gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
-                            {groupedCategories[name].map(sub => (
-                              <button 
-                                key={sub.id} 
-                                onClick={() => {
-                                  setSelectedSubId(sub.id);
-                                  setActiveSubName(sub.subName || 'Geral');
-                                  setIsSubMenuOpen(false); 
-                                }} 
-                                className="rounded-2xl h-12 px-8 font-black border-2 border-muted bg-white hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm transition-all"
-                              >
-                                {sub.subName || 'Geral'}
-                              </button>
-                            ))}
+                            {groupedCategories[name].map(sub => {
+                              const subDisplayName = (sub.subName?.toUpperCase() === 'DOCE') ? 'DOCES' : (sub.subName || 'Geral');
+                              return (
+                                <button 
+                                  key={sub.id} 
+                                  onClick={() => {
+                                    setSelectedSubId(sub.id);
+                                    setActiveSubName(subDisplayName);
+                                    setIsSubMenuOpen(false); 
+                                  }} 
+                                  className="rounded-2xl h-12 px-8 font-black border-2 border-muted bg-white hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm transition-all"
+                                >
+                                  {subDisplayName}
+                                </button>
+                              );
+                            })}
                           </div>
                         )
                       ) : (

@@ -503,7 +503,7 @@ export default function AdminFinancePage() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black">
+                <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black font-bold">
                   <CreditCard className="mr-2 h-4 w-4 text-green-600" /> Pagamentos
                 </Link>
               </DropdownMenuItem>
