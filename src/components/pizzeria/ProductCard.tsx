@@ -135,6 +135,14 @@ export function ProductCard({
     return getPrice() * 1.25;
   };
 
+  // Preço para exibição no card (Média por padrão se houver múltiplos tamanhos)
+  const displayPrice = useMemo(() => {
+    if (hasMultipleSizes) {
+      return priceMedium || price;
+    }
+    return price;
+  }, [hasMultipleSizes, priceMedium, price]);
+
   const handleAddToCart = () => {
     const finalPrice = getPrice();
     const finalFlavors = [name];
@@ -204,10 +212,10 @@ export function ProductCard({
           <div className="flex flex-col items-end shrink-0">
             {isCurrentSizeOnPromotion() && (
               <span className="text-sm md:text-base text-muted-foreground/60 line-through font-bold">
-                R$ {getOriginalPrice().toFixed(2)}
+                R$ {(displayPrice * 1.25).toFixed(2)}
               </span>
             )}
-            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">R$ {price.toFixed(2)}</span>
+            <span className="text-2xl md:text-3xl font-black text-primary tracking-tighter">R$ {displayPrice.toFixed(2)}</span>
           </div>
         </div>
         <p className="text-muted-foreground text-sm line-clamp-2 font-medium">{description}</p>
