@@ -161,7 +161,7 @@ export default function MenuPage() {
     );
   };
 
-  if (loadingCats || loadingProds) {
+  if (!mounted || loadingCats || loadingProds) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-12 w-12 text-primary animate-spin" /></div>;
   }
 
@@ -192,7 +192,13 @@ export default function MenuPage() {
 
           <div className="max-w-xl mx-auto mb-12 relative group">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input placeholder="O que deseja saborear hoje?" className="h-14 pl-12 pr-12 rounded-full border-2 text-lg font-black shadow-lg" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            <Input 
+              suppressHydrationWarning
+              placeholder="O que deseja saborear hoje?" 
+              className="h-14 pl-12 pr-12 rounded-full border-2 text-lg font-black shadow-lg" 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+            />
             {searchTerm && <button onClick={() => setSearchTerm('')} className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground p-1"><X className="h-5 w-5" /></button>}
           </div>
 

@@ -66,7 +66,7 @@ export function Header() {
     ? (LucideIcons as any)[config.logoIconName] 
     : PizzaIconDefault;
 
-  if (loadingConfigs) return <header className="h-28 w-full border-b bg-background/95"></header>;
+  if (!mounted || loadingConfigs) return <header className="h-28 w-full border-b bg-background/95"></header>;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 min-h-28 flex flex-col justify-center">

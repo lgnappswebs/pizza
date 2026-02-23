@@ -35,7 +35,7 @@ import {
 import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
 import { useRouter, usePathname } from 'next/navigation';
 import { getAuth, signOut } from 'firebase/auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,10 +49,15 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 export default function AdminDashboard() {
+  const [mounted, setMounted] = useState(false);
   const firestore = useFirestore();
   const router = useRouter();
   const pathname = usePathname();
   const { user, isUserLoading } = useUser();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -75,7 +80,7 @@ export default function AdminDashboard() {
   const config = configs?.[0];
   const unreadCount = notifications?.length || 0;
 
-  if (isUserLoading || !user) {
+  if (!mounted || isUserLoading || !user) {
     return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin h-12 w-12 text-primary" /></div>;
   }
 
@@ -110,6 +115,17 @@ export default function AdminDashboard() {
     { title: 'Receita Total', value: `R$ ${totalRevenue.toFixed(2)}`, icon: Wallet, color: 'text-secondary', href: '/admin/finance' },
   ];
 
+  const sideNavItems = [
+    { label: 'Painel', href: '/admin/dashboard', icon: LayoutDashboard, iconColor: 'text-blue-600' },
+    { label: 'Produtos', href: '/admin/products', icon: PizzaIcon, iconColor: 'text-amber-600' },
+    { label: 'Categorias', href: '/admin/categories', icon: Layers, iconColor: 'text-emerald-600' },
+    { label: 'Pedidos', href: '/admin/orders', icon: Package, iconColor: 'text-purple-600' },
+    { label: 'Financeiro', href: '/admin/finance', icon: Wallet, iconColor: 'text-emerald-600' },
+    { label: 'Pagamentos', href: '/admin/payments', icon: CreditCard, iconColor: 'text-green-600' },
+    { label: 'Banners', href: '/admin/banners', icon: ImageIcon, iconColor: 'text-orange-500' },
+    { label: 'Personalizar App', href: '/admin/settings', icon: SettingsIcon, iconColor: 'text-blue-600' },
+  ];
+
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col md:flex-row">
       <aside className="w-64 bg-white border-r hidden md:flex flex-col sticky top-0 h-screen">
@@ -119,46 +135,13 @@ export default function AdminDashboard() {
           </h2>
         </div>
         <nav className="flex-1 p-4 space-y-2">
-          <Link href="/admin/dashboard">
-            <Button variant={pathname === '/admin/dashboard' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <LayoutDashboard className="mr-3 h-5 w-5 text-blue-600" /> Painel
-            </Button>
-          </Link>
-          <Link href="/admin/products">
-            <Button variant={pathname === '/admin/products' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <PizzaIcon className="mr-3 h-5 w-5 text-amber-600" /> Produtos
-            </Button>
-          </Link>
-          <Link href="/admin/categories">
-            <Button variant={pathname === '/admin/categories' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <Layers className="mr-3 h-5 w-5 text-emerald-600" /> Categorias
-            </Button>
-          </Link>
-          <Link href="/admin/orders">
-            <Button variant={pathname === '/admin/orders' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <Package className="mr-3 h-5 w-5 text-purple-600" /> Pedidos
-            </Button>
-          </Link>
-          <Link href="/admin/finance">
-            <Button variant={pathname === '/admin/finance' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <Wallet className="mr-3 h-5 w-5 text-emerald-600" /> Financeiro
-            </Button>
-          </Link>
-          <Link href="/admin/payments">
-            <Button variant={pathname === '/admin/payments' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <CreditCard className="mr-3 h-5 w-5 text-green-600" /> Pagamentos
-            </Button>
-          </Link>
-          <Link href="/admin/banners">
-            <Button variant={pathname === '/admin/banners' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <ImageIcon className="mr-3 h-5 w-5 text-orange-500" /> Banners
-            </Button>
-          </Link>
-          <Link href="/admin/settings">
-            <Button variant={pathname === '/admin/settings' ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
-              <SettingsIcon className="mr-3 h-5 w-5 text-blue-600" /> Personalizar App
-            </Button>
-          </Link>
+          {sideNavItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Button variant={pathname === item.href ? 'secondary' : 'ghost'} className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black">
+                <item.icon className={cn("mr-3 h-5 w-5", item.iconColor)} /> {item.label}
+              </Button>
+            </Link>
+          ))}
           <div className="pt-4 border-t mt-4">
             <Link href="/menu">
               <Button variant="ghost" className="w-full justify-start rounded-xl font-bold text-lg h-12 text-black hover:text-primary">
@@ -325,33 +308,33 @@ export default function AdminDashboard() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 rounded-2xl p-2 shadow-2xl mb-4 bg-white border-2">
             <DropdownMenuItem asChild>
-              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black">
+              <Link href="/admin/orders" className="flex items-center h-10 rounded-xl text-black font-bold">
                 <Package className="mr-2 h-4 w-4 text-purple-600" /> Pedidos
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black">
+              <Link href="/admin/finance" className="flex items-center h-10 rounded-xl text-black font-bold">
                 <Wallet className="mr-2 h-4 w-4 text-emerald-600" /> Financeiro
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black">
+              <Link href="/admin/payments" className="flex items-center h-10 rounded-xl text-black font-bold">
                 <CreditCard className="mr-2 h-4 w-4 text-green-600" /> Pagamentos
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black">
+              <Link href="/admin/banners" className="flex items-center h-10 rounded-xl text-black font-bold">
                 <ImageIcon className="mr-2 h-4 w-4 text-orange-500" /> Banners
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black">
+              <Link href="/admin/settings" className="flex items-center h-10 rounded-xl text-black font-bold">
                 <SettingsIcon className="mr-2 h-4 w-4 text-blue-600" /> Personalizar App
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-bold">
+              <Link href="/menu" className="flex items-center h-10 rounded-xl text-primary font-black">
                 <ExternalLink className="mr-2 h-4 w-4 text-primary" /> Ver Cardápio
               </Link>
             </DropdownMenuItem>

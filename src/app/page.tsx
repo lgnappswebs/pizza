@@ -1,6 +1,7 @@
 
 "use client"
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -11,15 +12,20 @@ import { collection } from 'firebase/firestore';
 import * as LucideIcons from 'lucide-react';
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const firestore = useFirestore();
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs, isLoading } = useCollection(configQuery);
   const config = configs?.[0];
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const heroPlaceholder = PlaceHolderImages.find(img => img.id === 'hero-pizza');
   const logoPlaceholder = PlaceHolderImages.find(img => img.id === 'pizzeria-logo');
 
-  if (isLoading) {
+  if (!mounted || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-black">
         <Loader2 className="h-12 w-12 text-primary animate-spin" />
