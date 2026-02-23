@@ -368,7 +368,7 @@ export default function AdminBannersPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </nav>
+      </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-20 bg-white border-t flex md:hidden items-center justify-around px-2 z-50">
         <Link href="/admin/dashboard" className="flex flex-col items-center gap-1 text-black min-w-[60px]">
