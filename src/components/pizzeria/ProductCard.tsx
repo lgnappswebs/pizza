@@ -382,6 +382,9 @@ export function ProductCard({
                                 <span className="text-[10px] line-through opacity-50 font-bold">R$ {((sPrice || price) * 1.25).toFixed(2)}</span>
                               )}
                               <span className="text-sm font-black opacity-80">R$ {sPrice?.toFixed(2)}</span>
+                              <span className="text-[10px] font-black text-primary/60 uppercase tracking-widest leading-none mt-1">
+                                {s === 'Pequena' ? '6 fatias' : s === 'Média' ? '8 fatias' : '12 fatias'}
+                              </span>
                             </div>
                           </Label>
                         </div>
