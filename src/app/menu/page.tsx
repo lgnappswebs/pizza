@@ -106,8 +106,7 @@ export default function MenuPage() {
     setActiveCategory(val);
     setSelectedSubId('all');
     setActiveSubName(null);
-    // Submenu starts closed when switching tabs unless explicitly clicked
-    setIsSubMenuOpen(false);
+    setIsSubMenuOpen(false); // Oculta subcategorias ao trocar categoria principal
   };
 
   const activeBanners = useMemo(() => banners?.filter(b => b.isActive) || [], [banners]);
@@ -218,8 +217,6 @@ export default function MenuPage() {
                         if (activeCategory === name) {
                           setIsSubMenuOpen(!isSubMenuOpen);
                         } else {
-                          // When switching to a new main tab, we don't automatically open sub-menu 
-                          // but the user clicked it, so let's reveal subcategories for convenience
                           setIsSubMenuOpen(true);
                         }
                       }}
@@ -249,7 +246,7 @@ export default function MenuPage() {
                                 onClick={() => {
                                   setSelectedSubId(sub.id);
                                   setActiveSubName(sub.subName || 'Geral');
-                                  setIsSubMenuOpen(false); // Hide the list after picking
+                                  setIsSubMenuOpen(false); // Fecha ao selecionar
                                 }} 
                                 className="rounded-2xl h-12 px-8 font-black border-2 hover:bg-primary/5 hover:border-primary/30 text-black shadow-sm"
                               >
@@ -265,7 +262,7 @@ export default function MenuPage() {
                             onClick={() => {
                               setSelectedSubId('all');
                               setActiveSubName(null);
-                              setIsSubMenuOpen(true); // Re-open sub menu when clearing filter
+                              setIsSubMenuOpen(true);
                             }} 
                             className="rounded-full h-12 px-6 font-black border-2 flex items-center gap-3 bg-primary/5 text-primary border-primary/20 hover:bg-primary/10 transition-all shadow-md"
                           >
@@ -293,7 +290,6 @@ export default function MenuPage() {
       </main>
       <Footer />
       
-      {/* Botão flutuante do Admin */}
       {mounted && isAdmin && (
         <div className={cn(
           "fixed z-50 transition-all",

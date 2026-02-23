@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -277,7 +278,6 @@ export default function AdminSettingsPage() {
         </div>
 
         <div className="max-w-4xl mx-auto space-y-8 pb-20">
-          {/* Configurações Gerais */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -370,7 +370,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Status da Loja */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-yellow-500/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -415,7 +414,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Textos do Cardápio */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -434,7 +432,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Hero Banner */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -457,7 +454,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Aparência e Cores */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -519,7 +515,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Contato e Endereço */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">
@@ -548,7 +543,6 @@ export default function AdminSettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Redes Sociais */}
           <Card className="rounded-3xl border-2 shadow-sm bg-white">
             <CardHeader className="bg-primary/5 border-b px-8 py-6">
               <CardTitle className="flex items-center gap-2 text-2xl font-black text-black">

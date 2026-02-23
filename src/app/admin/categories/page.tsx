@@ -379,7 +379,7 @@ export default function AdminCategoriesPage() {
           </DialogContent>
         </Dialog>
 
-        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <AlertDialogContent className="rounded-3xl border-2 bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-destructive">Confirmar Exclusão</AlertDialogTitle>
