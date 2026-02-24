@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -18,45 +17,53 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const auth = useAuth();
   const firestore = useFirestore();
   const { user, isUserLoading } = useUser();
   const { toast } = useToast();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const configQuery = useMemoFirebase(() => collection(firestore, 'configuracoes'), [firestore]);
   const { data: configs } = useCollection(configQuery);
   const config = configs?.[0];
 
   useEffect(() => {
-    if (!isUserLoading && user) {
+    if (mounted && !isUserLoading && user) {
       router.push('/menu');
     }
-  }, [user, isUserLoading, router]);
+  }, [user, isUserLoading, router, mounted]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    initiateEmailSignIn(auth, email, password);
-    
-    setTimeout(() => {
-      if (auth.currentUser) {
-        toast({
-          title: "Bem-vindo de volta!",
-          description: "Login realizado com sucesso."
-        });
-        router.push('/menu');
-      } else {
-        setLoading(false);
-        toast({
-          variant: "destructive",
-          title: "Erro ao entrar",
-          description: "E-mail ou senha incorretos."
-        });
-      }
-    }, 1500);
+    try {
+      await initiateEmailSignIn(auth, email, password);
+      toast({
+        title: "Bem-vindo de volta!",
+        description: "Login realizado com sucesso."
+      });
+      router.push('/menu');
+    } catch (error: any) {
+      setLoading(false);
+      let message = "E-mail ou senha incorretos.";
+      if (error.code === 'auth/user-not-found') message = "Usuário não encontrado.";
+      if (error.code === 'auth/wrong-password') message = "Senha incorreta.";
+      
+      toast({
+        variant: "destructive",
+        title: "Erro ao entrar",
+        description: message
+      });
+    }
   };
+
+  if (!mounted) return null;
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4 bg-muted/30 relative">
@@ -69,17 +76,17 @@ export default function LoginPage() {
           <CardTitle className="text-3xl font-black text-primary">
             {config?.restaurantName || 'Entrar'}
           </CardTitle>
-          <CardDescription>Acesse sua conta para pedir mais rápido</CardDescription>
+          <CardDescription className="font-medium text-muted-foreground">Acesse sua conta para pedir mais rápido</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email" className="font-bold text-black">E-mail</Label>
               <Input 
                 id="email" 
                 type="email" 
                 placeholder="seu@email.com" 
-                className="h-12 rounded-xl text-black"
+                className="h-12 rounded-xl text-black border-2"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -87,8 +94,8 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label htmlFor="password">Senha</Label>
-                <Link href="/forgot-password" size="sm" className="text-sm text-primary hover:underline">
+                <Label htmlFor="password" title="Senha" className="font-bold text-black">Senha</Label>
+                <Link href="/forgot-password" size="sm" className="text-sm text-primary font-bold hover:underline">
                   Esqueceu a senha?
                 </Link>
               </div>
@@ -97,7 +104,7 @@ export default function LoginPage() {
                   id="password" 
                   type={showPassword ? "text" : "password"} 
                   placeholder="••••••••" 
-                  className="h-12 rounded-xl pr-10 text-black"
+                  className="h-12 rounded-xl pr-10 text-black border-2"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -111,16 +118,16 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
-            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-bold bg-primary text-white">
+            <Button type="submit" disabled={loading} className="w-full h-14 rounded-full text-xl font-black bg-primary text-white shadow-lg shadow-primary/20 transform transition active:scale-95">
               {loading ? <Loader2 className="h-6 w-6 animate-spin mr-2" /> : <LogIn className="mr-2 h-6 w-6" />}
               Entrar
             </Button>
           </form>
           
-          <div className="text-center space-y-4">
-            <p className="text-sm text-muted-foreground">Ainda não tem uma conta?</p>
+          <div className="text-center space-y-4 pt-4 border-t border-dashed">
+            <p className="text-sm text-muted-foreground font-medium">Ainda não tem uma conta?</p>
             <Link href="/register">
-              <Button variant="outline" className="w-full h-12 rounded-full font-bold text-black border-2">
+              <Button variant="outline" className="w-full h-12 rounded-full font-black text-black border-2 hover:bg-muted/50 transition-all">
                 <UserPlus className="mr-2 h-5 w-5" /> Criar nova conta
               </Button>
             </Link>
